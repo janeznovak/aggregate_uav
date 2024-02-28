@@ -1,0 +1,11 @@
+@import '../../../@theme/styles/themes';
+
+:host {
+  width: 100%;
+}
+
+@include nb-install-component() {
+  nb-card {
+    transform: translate3d(0, 0, 0);
+  }
+}

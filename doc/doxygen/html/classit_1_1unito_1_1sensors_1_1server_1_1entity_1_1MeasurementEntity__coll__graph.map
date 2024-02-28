@@ -1,0 +1,4 @@
+<map id="it.unito.sensors.server.entity.MeasurementEntity" name="it.unito.sensors.server.entity.MeasurementEntity">
+<area shape="rect" id="node1" title="This entity represents a set of data coming from a node at a specific time." alt="" coords="5,109,196,151"/>
+<area shape="rect" id="node2" href="$classit_1_1unito_1_1sensors_1_1server_1_1entity_1_1MeasurementData.html" title=" " alt="" coords="5,5,196,47"/>
+</map>

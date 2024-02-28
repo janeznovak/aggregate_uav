@@ -1,0 +1,372 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+  <world name="biblioteca">
+    <physics type="ode" name="split_unthrottled3">
+      <real_time_update_rate>1000.0</real_time_update_rate>
+      <max_step_size>0.001</max_step_size>
+      <!--max_contacts>5</max_contacts-->
+      <ode>
+        <solver>
+          <type>quick</type>
+          <!--iters>1</iters-->
+          <sor>1.4</sor>
+          <thread_position_correction>1</thread_position_correction>
+          <island_threads>4</island_threads>
+        </solver>
+      </ode>
+    </physics>
+    <actor name="actor3">
+      <pose> 5 12 1 1.57 0 0</pose>
+      <skin>
+        <filename>file://media/models/walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>file://media/models/walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <animation name="stand_up">
+        <filename>file://media/models/stand_up.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <animation name="run">
+        <filename>file://media/models/run.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <animation name="sitting">
+        <filename>file://media/models/sitting.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <animation name="talk_a">
+        <filename>file://media/models/talk_a.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <animation name="stand">
+        <filename>file://media/models/stand.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <animation name="sit_down">
+        <filename>file://media/models/sit_down.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <animation name="moonwalk">
+        <filename>file://media/models/moonwalk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+        <plugin name="actor3_plugin" filename="libgazebo_actor_ros_planar_move.so">
+          <namespace>/wb_3</namespace>
+          <commandTopic>cmd_vel</commandTopic>
+          <odometryTopic>odom</odometryTopic>
+          <odometryFrame>odom</odometryFrame>
+          <odometryRate>20.0</odometryRate>
+          <robotBaseFrame>actor_pose</robotBaseFrame>
+          <scaling collision="LHipJoint_LeftUpLeg_collision" scale="
+            0.01 0.001 0.001 "/>
+          <scaling collision="LeftUpLeg_LeftLeg_collision" scale="
+            8.0 8.0 1.0 "/>
+          <scaling collision="LeftLeg_LeftFoot_collision" scale="
+            8.0 8.0 1.0 "/>
+          <scaling collision="LeftFoot_LeftToeBase_collision" scale="
+            4.0 4.0 1.5 "/>
+          <scaling collision="RHipJoint_RightUpLeg_collision" scale="
+            0.01 0.001 0.001 "/>
+          <scaling collision="RightUpLeg_RightLeg_collision" scale="
+            8.0 8.0 1.0 "/>
+          <scaling collision="RightLeg_RightFoot_collision" scale="
+            8.0 8.0 1.0 "/>
+          <scaling collision="RightFoot_RightToeBase_collision" scale="
+            4.0 4.0 1.5 "/>
+          <scaling collision="LowerBack_Spine_collision" scale="
+            12.0 20.0 5.0 " pose="0.05 0 0 0 -0.2 0"/>
+          <scaling collision="Spine_Spine1_collision" scale="
+            0.01 0.001 0.001 "/>
+          <scaling collision="Neck_Neck1_collision" scale="
+            0.01 0.001 0.001 "/>
+          <scaling collision="Neck1_Head_collision" scale="
+            5.0 5.0 3.0 "/>
+          <scaling collision="LeftShoulder_LeftArm_collision" scale="
+            0.01 0.001 0.001 "/>
+          <scaling collision="LeftArm_LeftForeArm_collision" scale="
+            5.0 5.0 1.0 "/>
+          <scaling collision="LeftForeArm_LeftHand_collision" scale="
+            5.0 5.0 1.0 "/>
+          <scaling collision="LeftFingerBase_LeftHandIndex1_collision" scale="
+            4.0 4.0 3.0 "/>
+          <scaling collision="RightShoulder_RightArm_collision" scale="
+            0.01 0.001 0.001 "/>
+          <scaling collision="RightArm_RightForeArm_collision" scale="
+            5.0 5.0 1.0 "/>
+          <scaling collision="RightForeArm_RightHand_collision" scale="
+            5.0 5.0 1.0 "/>
+          <scaling collision="RightFingerBase_RightHandIndex1_collision" scale="
+            4.0 4.0 3.0 "/>
+          <random_movement>0</random_movement>
+          <automatic_trigger>0</automatic_trigger>
+          <minY>0.0</minY>
+          <maxY>0.0</maxY>
+          <minX>0.0</minX>
+          <maxX>0.0</maxX>
+        </plugin>
+    </actor>
+    <actor name="actor2">
+      <pose> 2 4 1 1.57 0 0</pose>
+      <skin>
+        <filename>file://media/models/walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>file://media/models/walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <animation name="stand_up">
+        <filename>file://media/models/stand_up.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <animation name="run">
+        <filename>file://media/models/run.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <animation name="sitting">
+        <filename>file://media/models/sitting.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <animation name="talk_a">
+        <filename>file://media/models/talk_a.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <animation name="stand">
+        <filename>file://media/models/stand.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <animation name="sit_down">
+        <filename>file://media/models/sit_down.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <animation name="moonwalk">
+        <filename>file://media/models/moonwalk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+    <plugin name="actor2_plugin" filename="libgazebo_actor_ros_planar_move.so">
+      <namespace>/wb_2</namespace>
+      <commandTopic>cmd_vel</commandTopic>
+      <odometryTopic>odom</odometryTopic>
+      <odometryFrame>odom</odometryFrame>
+      <odometryRate>20.0</odometryRate>
+      <robotBaseFrame>actor_pose</robotBaseFrame>
+      <scaling collision="LHipJoint_LeftUpLeg_collision" scale="
+        0.01 0.001 0.001 "/>
+      <scaling collision="LeftUpLeg_LeftLeg_collision" scale="
+        8.0 8.0 1.0 "/>
+      <scaling collision="LeftLeg_LeftFoot_collision" scale="
+        8.0 8.0 1.0 "/>
+      <scaling collision="LeftFoot_LeftToeBase_collision" scale="
+        4.0 4.0 1.5 "/>
+      <scaling collision="RHipJoint_RightUpLeg_collision" scale="
+        0.01 0.001 0.001 "/>
+      <scaling collision="RightUpLeg_RightLeg_collision" scale="
+        8.0 8.0 1.0 "/>
+      <scaling collision="RightLeg_RightFoot_collision" scale="
+        8.0 8.0 1.0 "/>
+      <scaling collision="RightFoot_RightToeBase_collision" scale="
+        4.0 4.0 1.5 "/>
+      <scaling collision="LowerBack_Spine_collision" scale="
+        12.0 20.0 5.0 " pose="0.05 0 0 0 -0.2 0"/>
+      <scaling collision="Spine_Spine1_collision" scale="
+        0.01 0.001 0.001 "/>
+      <scaling collision="Neck_Neck1_collision" scale="
+        0.01 0.001 0.001 "/>
+      <scaling collision="Neck1_Head_collision" scale="
+        5.0 5.0 3.0 "/>
+      <scaling collision="LeftShoulder_LeftArm_collision" scale="
+        0.01 0.001 0.001 "/>
+      <scaling collision="LeftArm_LeftForeArm_collision" scale="
+        5.0 5.0 1.0 "/>
+      <scaling collision="LeftForeArm_LeftHand_collision" scale="
+        5.0 5.0 1.0 "/>
+      <scaling collision="LeftFingerBase_LeftHandIndex1_collision" scale="
+        4.0 4.0 3.0 "/>
+      <scaling collision="RightShoulder_RightArm_collision" scale="
+        0.01 0.001 0.001 "/>
+      <scaling collision="RightArm_RightForeArm_collision" scale="
+        5.0 5.0 1.0 "/>
+      <scaling collision="RightForeArm_RightHand_collision" scale="
+        5.0 5.0 1.0 "/>
+      <scaling collision="RightFingerBase_RightHandIndex1_collision" scale="
+        4.0 4.0 3.0 "/>
+      <random_movement>1</random_movement>
+      <automatic_trigger>0</automatic_trigger>
+      <minY>17.0</minY>
+      <maxY>23.0</maxY>
+      <minX>4.0</minX>
+      <maxX>7.0</maxX>
+    </plugin>
+  </actor>
+    <actor name="actor1">
+      <pose> 1 1 1 1.57 0 0</pose>
+      <skin>
+        <filename>file://media/models/walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>file://media/models/walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <animation name="stand_up">
+        <filename>file://media/models/stand_up.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <animation name="run">
+        <filename>file://media/models/run.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <animation name="sitting">
+        <filename>file://media/models/sitting.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <animation name="talk_a">
+        <filename>file://media/models/talk_a.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <animation name="stand">
+        <filename>file://media/models/stand.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <animation name="sit_down">
+        <filename>file://media/models/sit_down.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <animation name="moonwalk">
+        <filename>file://media/models/moonwalk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+    <plugin name="actor1_plugin" filename="libgazebo_actor_ros_planar_move.so">
+      <namespace>/wb_1</namespace>
+      <commandTopic>cmd_vel</commandTopic>
+      <odometryTopic>odom</odometryTopic>
+      <odometryFrame>odom</odometryFrame>
+      <odometryRate>20.0</odometryRate>
+      <robotBaseFrame>actor_pose</robotBaseFrame>
+      <scaling collision="LHipJoint_LeftUpLeg_collision" scale="
+        0.01 0.001 0.001 "/>
+      <scaling collision="LeftUpLeg_LeftLeg_collision" scale="
+        8.0 8.0 1.0 "/>
+      <scaling collision="LeftLeg_LeftFoot_collision" scale="
+        8.0 8.0 1.0 "/>
+      <scaling collision="LeftFoot_LeftToeBase_collision" scale="
+        4.0 4.0 1.5 "/>
+      <scaling collision="RHipJoint_RightUpLeg_collision" scale="
+        0.01 0.001 0.001 "/>
+      <scaling collision="RightUpLeg_RightLeg_collision" scale="
+        8.0 8.0 1.0 "/>
+      <scaling collision="RightLeg_RightFoot_collision" scale="
+        8.0 8.0 1.0 "/>
+      <scaling collision="RightFoot_RightToeBase_collision" scale="
+        4.0 4.0 1.5 "/>
+      <scaling collision="LowerBack_Spine_collision" scale="
+        12.0 20.0 5.0 " pose="0.05 0 0 0 -0.2 0"/>
+      <scaling collision="Spine_Spine1_collision" scale="
+        0.01 0.001 0.001 "/>
+      <scaling collision="Neck_Neck1_collision" scale="
+        0.01 0.001 0.001 "/>
+      <scaling collision="Neck1_Head_collision" scale="
+        5.0 5.0 3.0 "/>
+      <scaling collision="LeftShoulder_LeftArm_collision" scale="
+        0.01 0.001 0.001 "/>
+      <scaling collision="LeftArm_LeftForeArm_collision" scale="
+        5.0 5.0 1.0 "/>
+      <scaling collision="LeftForeArm_LeftHand_collision" scale="
+        5.0 5.0 1.0 "/>
+      <scaling collision="LeftFingerBase_LeftHandIndex1_collision" scale="
+        4.0 4.0 3.0 "/>
+      <scaling collision="RightShoulder_RightArm_collision" scale="
+        0.01 0.001 0.001 "/>
+      <scaling collision="RightArm_RightForeArm_collision" scale="
+        5.0 5.0 1.0 "/>
+      <scaling collision="RightForeArm_RightHand_collision" scale="
+        5.0 5.0 1.0 "/>
+      <scaling collision="RightFingerBase_RightHandIndex1_collision" scale="
+        4.0 4.0 3.0 "/>
+      <random_movement>1</random_movement>
+      <automatic_trigger>0</automatic_trigger>
+      <minX>3.0</minX>
+      <maxX>6.0</maxX>
+      <minY>3.0</minY>
+      <maxY>7.0</maxY>
+    </plugin>
+  </actor>
+
+      <scene>
+          <ambient>1 1 1 1</ambient>
+          <background>0.3 0.7 0.9 1</background>
+          <shadows>0</shadows>
+          <grid>1</grid>
+      </scene>
+    <model name="floor">
+      <pose>0 0 -0.20  0 0 0</pose>
+      <static>true</static>
+      <link name="main">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://use_case_resources/hospital/meshes/demo_floor.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>model://use_case_resources/hospital/meshes/demo_floor.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+      <link name="Fan2">
+          <pose>5.0154 -0.2952 6.12 0 0 0</pose>
+          <light type="directional" name="fan_light">
+              <diffuse>1 1 1 1</diffuse>
+              <specular>0.3 0.3 0.3 1</specular>
+              <attenuation>
+                  <range>50</range>
+                  <linear>0</linear>
+                  <constant>0</constant>
+                  <quadratic>0</quadratic>
+              </attenuation>
+              <cast_shadows>true</cast_shadows>
+              <intensity>1.0</intensity>
+          </light>
+      </link>
+      <joint name="world_joint" type="fixed">
+          <parent>world</parent>
+          <child>main</child>
+      </joint>
+      <joint name="light_joint" type="fixed">
+          <parent>main</parent>
+          <child>Fan2</child>
+      </joint>
+    </model>
+  </world>
+</sdf>

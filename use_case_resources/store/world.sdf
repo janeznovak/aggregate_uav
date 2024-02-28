@@ -1,0 +1,243 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+  <world name="biblioteca">
+    <physics type="ode" name="split_unthrottled3">
+      <real_time_update_rate>1000.0</real_time_update_rate>
+      <max_step_size>0.001</max_step_size>
+      <!--max_contacts>5</max_contacts-->
+      <ode>
+        <solver>
+          <type>quick</type>
+          <!--iters>1</iters-->
+          <sor>1.4</sor>
+          <thread_position_correction>1</thread_position_correction>
+          <island_threads>4</island_threads>
+        </solver>
+      </ode>
+    </physics>
+    <scene>
+      <ambient>1 1 1 1</ambient>
+      <background>0.3 0.7 0.9 1</background>
+      <shadows>0</shadows>
+      <grid>1</grid>
+    </scene>
+    <model name="floor">
+      <pose>0 0 0.0  0 0 0</pose>
+      <static>true</static>
+      <link name="main">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://use_case_resources/store/meshes/floor.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>model://use_case_resources/store/meshes/floor-collision.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+      <link name="shelf1">
+        <pose>0.0 0.0 0.0 0 0 0</pose>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://use_case_resources/store/meshes/shelf.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>model://use_case_resources/store/meshes/shelf-collision.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+      <link name="shelf2">
+        <pose>0.0 2.0 0.0 0 0 0</pose>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://use_case_resources/store/meshes/shelf.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>model://use_case_resources/store/meshes/shelf-collision.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+      <link name="shelf3">
+        <pose>0.0 4.0 0.0 0 0 0</pose>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://use_case_resources/store/meshes/shelf.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>model://use_case_resources/store/meshes/shelf-collision.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+      <link name="shelf4">
+        <pose>0.0 6.0 0.0 0 0 0</pose>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://use_case_resources/store/meshes/shelf.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>model://use_case_resources/store/meshes/shelf-collision.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+      <link name="shelf5">
+        <pose>0.0 8.0 0.0 0 0 0</pose>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://use_case_resources/store/meshes/shelf.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>model://use_case_resources/store/meshes/shelf-collision.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+      <link name="right-shelf1">
+        <pose>2.8 0.0 0.0 0 0 0</pose>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://use_case_resources/store/meshes/shelf.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>model://use_case_resources/store/meshes/shelf-collision.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+      <link name="right-shelf2">
+        <pose>2.8 2.0 0.0 0 0 0</pose>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://use_case_resources/store/meshes/shelf.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>model://use_case_resources/store/meshes/shelf-collision.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+      <link name="right-shelf3">
+        <pose>2.8 4.0 0.0 0 0 0</pose>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://use_case_resources/store/meshes/shelf.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>model://use_case_resources/store/meshes/shelf-collision.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+      <link name="right-shelf4">
+        <pose>2.8 6.0 0.0 0 0 0</pose>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://use_case_resources/store/meshes/shelf.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>model://use_case_resources/store/meshes/shelf-collision.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+      <link name="right-shelf5">
+        <pose>2.8 8.0 0.0 0 0 0</pose>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://use_case_resources/store/meshes/shelf.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>model://use_case_resources/store/meshes/shelf-collision.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+      <joint name="world_joint" type="fixed">
+          <parent>world</parent>
+          <child>main</child>
+      </joint>
+    </model>
+    <light type="point" name="light1">
+      <pose>1.9 3.3 3.0 0 0 0</pose>
+      <diffuse>127 127 127 127</diffuse>
+      <specular>0.3 0.3 0.3 1</specular>
+      <attenuation>
+        <linear>0.01</linear>
+        <constant>0.5</constant>
+        <quadratic>0</quadratic>
+      </attenuation>
+      <cast_shadows>true</cast_shadows>
+      <intensity>1.0</intensity>
+    </light>
+    <light type="point" name="light2">
+      <pose>1.9 6.6 3.0 0 0 0</pose>
+      <diffuse>127 127 127 127</diffuse>
+      <specular>0.3 0.3 0.3 1</specular>
+      <attenuation>
+        <linear>0.01</linear>
+        <constant>0.5</constant>
+        <quadratic>0</quadratic>
+      </attenuation>
+      <cast_shadows>true</cast_shadows>
+      <intensity>1.0</intensity>
+    </light>
+  </world>
+</sdf>

@@ -1,0 +1,5 @@
+<map id="it.unito.sensors.server.service.WearableSosFileHandler" name="it.unito.sensors.server.service.WearableSosFileHandler">
+<area shape="rect" id="node1" title="WearableSosFileHandler polls and handles wearable sos files." alt="" coords="287,50,489,91"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,5,239,61"/>
+<area shape="rect" id="node3" href="$interfaceit_1_1unito_1_1sensors_1_1server_1_1util_1_1IWatcher.html" title="Interface used to watch a folder finding new files." alt="" coords="34,86,210,127"/>
+</map>

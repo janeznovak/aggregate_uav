@@ -1,0 +1,12 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" title=" " alt="" coords="5,274,112,301"/>
+<area shape="rect" id="node2" href="$interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1DeviceRepository.html" title="The repository of Device Entity." alt="" coords="160,5,376,47"/>
+<area shape="rect" id="node3" href="$interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1FeedbackRepository.html" title="The repository of Feedback Entity." alt="" coords="160,71,376,112"/>
+<area shape="rect" id="node4" href="$interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1GoalRepository.html" title="The repository of Goal Entity." alt="" coords="160,136,376,177"/>
+<area shape="rect" id="node5" href="$interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1ItemRepository.html" title="The repository of Item Entity." alt="" coords="160,201,376,243"/>
+<area shape="rect" id="node6" href="$interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1MeasurementRepository.html" title="The repository of Measurement Entity." alt="" coords="160,267,376,308"/>
+<area shape="rect" id="node7" href="$interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1NeighbourRepository.html" title="The repository of Neighbour Entity." alt="" coords="160,332,376,373"/>
+<area shape="rect" id="node8" href="$interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1NodeRepository.html" title="The repository of Node Entity." alt="" coords="160,397,376,439"/>
+<area shape="rect" id="node9" href="$interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1WearableFeedbackRepository.html" title="The repository of Feedback Entity." alt="" coords="160,463,376,504"/>
+<area shape="rect" id="node10" href="$interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1WearableRepository.html" title="The repository of Wearable Entity." alt="" coords="160,528,376,569"/>
+</map>

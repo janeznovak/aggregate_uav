@@ -1,0 +1,5 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$interfaceit_1_1unito_1_1sensors_1_1server_1_1entity_1_1EnumCode.html" title="Interface used by classes with &quot;code&quot; getter to represent a string identifier." alt="" coords="5,39,196,80"/>
+<area shape="rect" id="node2" href="$enumit_1_1unito_1_1sensors_1_1server_1_1entity_1_1GoalStatusEnum.html" title="Enum represents list of possible goals of the goal state machine (see docs to view the state diagram)..." alt="" coords="244,5,435,47"/>
+<area shape="rect" id="node3" href="$enumit_1_1unito_1_1sensors_1_1server_1_1entity_1_1GoalSubCodeEnum.html" title="Enum represents list of possible sub code of the goal." alt="" coords="244,71,435,112"/>
+</map>

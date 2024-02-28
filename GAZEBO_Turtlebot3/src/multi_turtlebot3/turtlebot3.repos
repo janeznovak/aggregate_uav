@@ -1,0 +1,29 @@
+repositories:
+  multi_turtlebot3/turtlebot3_msgs:
+    type: git
+    url: https://github.com/ROBOTIS-GIT/turtlebot3_msgs.git
+    version: ros2-devel
+  multi_turtlebot3/turtlebot3_simulations:
+    type: git
+    url: git@github.com:Gior26/turtlebot3_simulations.git
+    version: humble-devel
+  utils/DynamixelSDK:
+    type: git
+    url: https://github.com/ROBOTIS-GIT/DynamixelSDK.git
+    version: ros2-devel
+  utils/hls_lfcd_lds_driver:
+    type: git
+    url: https://github.com/ROBOTIS-GIT/hls_lfcd_lds_driver.git
+    version: ros2-devel
+  utils/ld08_driver:
+    type: git
+    url: https://github.com/ROBOTIS-GIT/ld08_driver.git
+    version: ros2-devel
+  battery_services:
+    type: git
+    url: git@github.com:Gior26/battery_services.git
+    version: master
+  gazebo_ros_batteries:
+    type: git
+    url: git@github.com:Gior26/gazebo_ros_batteries.git
+    version: master

@@ -1,0 +1,22 @@
+@import '../../../../@theme/styles/themes';
+
+@include nb-install-component() {
+  nb-card {
+    transform: translate3d(0, 0, 0);
+  }
+
+  .refresh-button-goals {
+    text-align: end;
+    i {
+      font-size: 25px;
+    }
+  }
+
+  ::ng-deep .abort-goal-icon {
+    height: 0;
+  }
+
+  ::ng-deep .hide-abort-icon .abort-goal-icon {
+    display: none;
+  }
+}

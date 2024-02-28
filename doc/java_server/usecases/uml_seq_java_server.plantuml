@@ -1,0 +1,163 @@
+@startuml
+!pragma teoz true
+autonumber
+title Sequence diagram of Java Sensors_Web
+
+actor User as user
+
+box "Web Application" #LightPink
+    participant Sensors_Web as web_application
+end box
+
+box "Java API" #LightBlue
+    participant GoalResource as java_server_api_goal
+    participant FeedbackResource as java_server_api_feedback
+    participant MeasurementResource as java_server_api_measurement
+    participant StatsResource as java_server_api_stats
+end box
+
+box "Java Service" #DarkTurquoise
+    participant Goal_Service as java_server_service_goal
+    participant Action_Service as java_server_service_action
+    participant Feedback_Service as java_server_service_feedback
+    participant Measurement_Service as java_server_service_measurement
+    participant Storage_Service as java_server_service_storage
+end box
+
+box "Java Repositories" #Coral
+    participant NodeRepository as java_server_repository_node
+end box
+
+database Sensors_DB as java_server_db
+collections Storage as poc_storage
+
+box "Server Proxies" #Moccasin
+    participant Server_Inbound_Proxy as server_inbound_proxy_ros2
+    participant Server_Outbound_Proxy as server_outbound_proxy_ros2
+end box
+
+box "ROS2 DDS" #LightGreen
+queue message_to_robot as message_to_robot
+queue message_from_robot as message_from_robot
+end box
+
+== Start of "Create new Goal from User" ==
+
+user -> web_application: Searches an item
+web_application -> java_server_api_goal: POST /goals with ITEM_CODE={X}
+java_server_api_goal -> java_server_service_goal: Send request to create new goal to service BE
+
+activate java_server_service_goal
+    java_server_service_goal -> java_server_service_goal: Find item with CODE={X} in table ITEMS
+    java_server_service_goal -> java_server_db: SELECT * FROM ITEMS WHERE CODE={X}
+    java_server_db --> java_server_service_goal
+    java_server_service_goal -> java_server_service_goal: Create new goal if ITEM_CODE exists
+    java_server_service_goal -> java_server_db: Execute CREATE sql statement
+    java_server_db --> java_server_service_goal
+    java_server_service_goal -> java_server_service_goal: Convert DTO to CSV file
+    java_server_service_goal -> java_server_service_storage: Convert absolute filename to relative, using /Storage as base_path
+    java_server_service_goal -> java_server_service_storage: Copy file to Storage
+    java_server_service_storage -> poc_storage: Copy file
+    poc_storage --> java_server_service_storage: File copied
+    java_server_service_storage --> java_server_service_goal
+deactivate java_server_service_goal
+group If Proxies are running
+    poc_storage -> server_outbound_proxy_ros2: Polling on folder /Storage/from_user/goals
+    server_outbound_proxy_ros2 -> message_to_robot: Create FileMessage ROS2 and send to DDS
+end
+
+java_server_service_goal --> java_server_api_goal
+java_server_api_goal --> user
+
+== End of "Create new Goal from User" ==
+
+== Start of "Create new Feedback from Robot" ==
+
+autonumber 1
+
+group If Proxies are running
+    poc_storage -> server_inbound_proxy_ros2: Polling on folder /Storage/from_ap/to_web/actions/#nodeId/
+    message_from_robot -> server_inbound_proxy_ros2: New message received
+    server_inbound_proxy_ros2 -> poc_storage: copy message feedback to folder /Storage/from_robot/#nodeId/to_web/feedback/
+    note bottom
+        the path of file (and filename) is sent from sender: server_inbound_proxy_ros2 just copy file, there is not business logic
+    end note
+end
+
+poc_storage -> java_server_service_feedback: Polling on folder /Storage/from_robot/#nodeId/to_web/feedback/
+... waiting ...
+poc_storage -> java_server_service_feedback: New file of feedback found
+activate java_server_service_feedback
+    java_server_service_feedback -> java_server_service_feedback: Convert txt file to CSVFeedbackDTO
+        activate java_server_service_goal
+            java_server_service_feedback -> java_server_service_goal: Update status of input goal in table GOALS (RUNNING or REACHED)
+            java_server_service_goal -> java_server_db: Execute UPDATE sql statement
+            java_server_db --> java_server_service_goal
+            java_server_service_goal --> java_server_service_feedback
+        deactivate java_server_service_goal
+    java_server_service_feedback -> java_server_service_feedback: Add new feedback data (pos_x, pos_y, orient_w, battery_charge) to table FEEDBACKS for NODE_ID={nodeId}
+    java_server_service_feedback -> java_server_db: Execute CREATE sql statement
+    java_server_db --> java_server_service_feedback
+deactivate java_server_service_feedback
+
+== End of "Create new Feedback from Robot" ==
+
+== Start of "Read and persist new Action from AP" ==
+
+autonumber 1
+
+group If Proxies are running
+    message_from_robot -> server_inbound_proxy_ros2: New message received
+    server_inbound_proxy_ros2 -> poc_storage: copy message action to folder /Storage/from_ap/to_web/actions/#nodeId/
+    note bottom
+        the path of file (and filename) is sent from sender: server_inbound_proxy_ros2 just copy file, there is not business logic
+    end note
+end
+
+poc_storage -> java_server_service_action: Polling on folder /Storage/from_ap/to_web/actions/#nodeId/
+... ...waiting... ...
+poc_storage -> java_server_service_action: New file of action found
+activate java_server_service_action
+    java_server_service_action -> java_server_service_action: Convert txt file to CSVActionDTO
+    java_server_service_action -> java_server_service_goal: Update status of input goal in table GOALS (RUNNING or UNKNOWN or ABORTED)
+    java_server_service_goal -> java_server_db: Execute UPDATE sql statement
+    java_server_db --> java_server_service_goal
+deactivate java_server_service_action
+
+== End of "Read and persist new Action from AP" ==
+
+== Start of "Retrieve Feedback from Robots" ==
+
+autonumber 1
+
+user -> web_application: Get last feedback from robot with ID={nodeId}
+web_application -> java_server_api_feedback: GET /feedbacks/node/{nodeId}/last
+java_server_api_feedback --> java_server_service_feedback: Find last feedback, with last timestamp from FEEDBACKS with NODE_ID=nodeId
+activate java_server_service_feedback
+    java_server_service_feedback -> java_server_repository_node: Find and validate nodeId
+    java_server_repository_node --> java_server_service_feedback
+    java_server_service_feedback -> java_server_db: SELECT * FROM FEEDBACKS WHERE NODE_ID={nodeId} ORDER BY timestamp DESC LIMIT 1
+    java_server_db --> java_server_service_feedback
+deactivate java_server_service_feedback
+java_server_service_feedback -> web_application
+web_application --> user
+
+autonumber 1
+
+user -> web_application: Get feedbacks from robot with ID={nodeId}
+web_application -> java_server_api_feedback: GET /feedbacks/node/{nodeId}
+java_server_api_feedback --> java_server_service_feedback: Find all feedbacks from FEEDBACKS with NODE_ID=nodeId
+activate java_server_service_feedback
+    java_server_service_feedback -> java_server_repository_node: Find and validate nodeId
+    java_server_repository_node --> java_server_service_feedback
+    java_server_service_feedback -> java_server_db: SELECT * FROM FEEDBACKS WHERE NODE_ID={nodeId} ORDER BY timestamp ASC
+    java_server_db --> java_server_service_feedback
+deactivate java_server_service_feedback
+java_server_service_feedback -> web_application
+web_application --> user
+
+== End of "Retrieve Feedback from Robots" ==
+
+@enduml
+
+

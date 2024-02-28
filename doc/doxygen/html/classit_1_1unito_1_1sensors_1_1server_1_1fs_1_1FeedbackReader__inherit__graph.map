@@ -1,0 +1,4 @@
+<map id="it.unito.sensors.server.fs.FeedbackReader" name="it.unito.sensors.server.fs.FeedbackReader">
+<area shape="rect" id="node1" title="FeedbackReader transforms a csv file containing feedbacks to DTOs." alt="" coords="19,95,189,136"/>
+<area shape="rect" id="node2" href="$interfaceit_1_1unito_1_1sensors_1_1server_1_1fs_1_1Reader.html" title=" " alt="" coords="5,5,203,47"/>
+</map>

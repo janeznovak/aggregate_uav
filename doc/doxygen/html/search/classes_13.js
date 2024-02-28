@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['wearableentity_1488',['WearableEntity',['../classit_1_1unito_1_1sensors_1_1server_1_1entity_1_1WearableEntity.html',1,'it::unito::sensors::server::entity']]],
+  ['wearablefeedbackdata_1489',['WearableFeedbackData',['../structwearable__feedback_1_1WearableFeedbackData.html',1,'wearable_feedback']]],
+  ['wearablefeedbackdto_1490',['WearableFeedbackDTO',['../classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1WearableFeedbackDTO.html',1,'it::unito::sensors::server::dto']]],
+  ['wearablefeedbackdtomapper_1491',['WearableFeedbackDTOMapper',['../classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1mapper_1_1WearableFeedbackDTOMapper.html',1,'it::unito::sensors::server::dto::mapper']]],
+  ['wearablefeedbackentity_1492',['WearableFeedbackEntity',['../classit_1_1unito_1_1sensors_1_1server_1_1entity_1_1WearableFeedbackEntity.html',1,'it::unito::sensors::server::entity']]],
+  ['wearablefeedbackfilehandler_1493',['WearableFeedbackFileHandler',['../classit_1_1unito_1_1sensors_1_1server_1_1service_1_1WearableFeedbackFileHandler.html',1,'it::unito::sensors::server::service']]],
+  ['wearablefeedbackproperties_1494',['WearableFeedbackProperties',['../classit_1_1unito_1_1sensors_1_1server_1_1configuration_1_1dto_1_1WearableFeedbackProperties.html',1,'it::unito::sensors::server::configuration::dto']]],
+  ['wearablefeedbackreader_1495',['WearableFeedbackReader',['../classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1WearableFeedbackReader.html',1,'it::unito::sensors::server::fs']]],
+  ['wearablefeedbackrepository_1496',['WearableFeedbackRepository',['../interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1WearableFeedbackRepository.html',1,'it::unito::sensors::server::repository']]],
+  ['wearablefeedbackresource_1497',['WearableFeedbackResource',['../classit_1_1unito_1_1sensors_1_1server_1_1controller_1_1WearableFeedbackResource.html',1,'it::unito::sensors::server::controller']]],
+  ['wearablefeedbackscheduler_1498',['WearableFeedbackScheduler',['../classit_1_1unito_1_1sensors_1_1server_1_1runner_1_1WearableFeedbackScheduler.html',1,'it::unito::sensors::server::runner']]],
+  ['wearablefeedbackservice_1499',['WearableFeedbackService',['../classit_1_1unito_1_1sensors_1_1server_1_1service_1_1WearableFeedbackService.html',1,'it::unito::sensors::server::service']]],
+  ['wearablefeedbacksosresource_1500',['WearableFeedbackSOSResource',['../classit_1_1unito_1_1sensors_1_1server_1_1controller_1_1WearableFeedbackSOSResource.html',1,'it::unito::sensors::server::controller']]],
+  ['wearableinformationreader_1501',['WearableInformationReader',['../classwearable__reader_1_1wearable__reader_1_1WearableInformationReader.html',1,'wearable_reader::wearable_reader']]],
+  ['wearableproperties_1502',['WearableProperties',['../classit_1_1unito_1_1sensors_1_1server_1_1configuration_1_1dto_1_1WearableProperties.html',1,'it::unito::sensors::server::configuration::dto']]],
+  ['wearablerepository_1503',['WearableRepository',['../interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1WearableRepository.html',1,'it::unito::sensors::server::repository']]],
+  ['wearableresource_1504',['WearableResource',['../classit_1_1unito_1_1sensors_1_1server_1_1controller_1_1WearableResource.html',1,'it::unito::sensors::server::controller']]],
+  ['wearablesosfilehandler_1505',['WearableSosFileHandler',['../classit_1_1unito_1_1sensors_1_1server_1_1service_1_1WearableSosFileHandler.html',1,'it::unito::sensors::server::service']]],
+  ['wearablesosproperties_1506',['WearableSosProperties',['../classit_1_1unito_1_1sensors_1_1server_1_1configuration_1_1dto_1_1WearableSosProperties.html',1,'it::unito::sensors::server::configuration::dto']]],
+  ['wearablesosreader_1507',['WearableSosReader',['../classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1WearableSosReader.html',1,'it::unito::sensors::server::fs']]],
+  ['wearablesosscheduler_1508',['WearableSosScheduler',['../classit_1_1unito_1_1sensors_1_1server_1_1runner_1_1WearableSosScheduler.html',1,'it::unito::sensors::server::runner']]],
+  ['wearablestatus_1509',['WearableStatus',['../structWearableStatus.html',1,'']]],
+  ['webconfig_1510',['WebConfig',['../classit_1_1unito_1_1sensors_1_1server_1_1configuration_1_1WebConfig.html',1,'it::unito::sensors::server::configuration']]],
+  ['writer_1511',['Writer',['../interfaceit_1_1unito_1_1sensors_1_1server_1_1fs_1_1Writer.html',1,'it::unito::sensors::server::fs']]],
+  ['writer_3c_20goaldto_20_3e_1512',['Writer&lt; GoalDTO &gt;',['../interfaceit_1_1unito_1_1sensors_1_1server_1_1fs_1_1Writer.html',1,'it::unito::sensors::server::fs']]]
+];

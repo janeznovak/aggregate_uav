@@ -1,0 +1,11 @@
+string wearable_code
+int32 priority
+int32 heart_rate_per_minute
+float32 body_temperature
+int32 oxygenation
+bool accidental_fall_sos_triggered
+bool heart_rate_sos_triggered
+bool body_temperature_sos_triggered
+bool oxygenation_sos_triggered
+bool follow_triggered
+int64 unix_timestamp

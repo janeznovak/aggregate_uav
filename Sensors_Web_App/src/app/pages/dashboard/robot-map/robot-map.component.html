@@ -1,0 +1,9 @@
+<div class="col-md-12 col-lg-12 col-xxxl-12">
+    <nb-card accent="primary">
+        <nb-card-header>Percorso dei robot</nb-card-header>
+        <nb-card-body>
+            <ngx-canvas [options]="options" (drawComplete)="drawComplete($event)"></ngx-canvas>
+            <!-- <nb-checkbox [(ngModel)]="autoReload" status="warning">Abilita realtime</nb-checkbox> -->
+        </nb-card-body>
+    </nb-card>
+</div>

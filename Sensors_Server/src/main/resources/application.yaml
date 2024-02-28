@@ -1,0 +1,86 @@
+server:
+  tomcat:
+    connection-timeout=100s
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:mydb
+    username: sa
+    password: password
+    driverClassName: org.h2.Driver
+  sql:
+    init:
+      data-locations:
+        - classpath:data.sql
+        - "${SQL_INIT_DATA:classpath:data-library.sql}"
+    initialization-mode: always
+  resources:
+    add-mappings: false
+  jpa:
+    spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true
+#    properties:
+#      hibernate:
+#        show_sql: true
+#        format_sql: true
+  data:
+    rest:
+      defaultMediaType:application/json
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings.trace: false
+      settings.web-allow-others: false
+#logging:
+#  level:
+#    org:
+#      hibernate:
+#        type: trace
+
+logging:
+  level:
+    org.zalando.logbook: INFO # set to TRACE to enable HTTP logging
+
+app:
+  placeholder:
+    robot: "#ROBOT"
+    wearable: "#WEARABLE"
+  robot:
+    names:
+      # - tb3_1
+      # - tb3_2
+      # - tb3_3
+    example: "${APP_ROBOT_EXAMPLE:tb3_#ROBOT}"
+    count: ${APP_ROBOT_COUNT:10}
+  wearable:
+    codes:
+    # - wb_1
+    # - wb_2
+    # - wb_3
+    example: "${APP_WEARABLE_EXAMPLE:wb_#WEARABLE}"
+    count: ${APP_WEARABLE_COUNT:10}
+  goal_state_machine:
+    callback:
+      REACHED:
+        type: "bash"
+        goal_actions:
+          - "SOS"
+        name: "restart_actor_walking.sh"
+    timeout:
+      REACHED: 20
+  storage:
+    path: "${APP_STORAGE_PATH:../Storage}"
+  scripts:
+    path: "${APP_SCRIPTS_PATH:../PoC}"
+  goal:
+    path_to_write: "${APP_GOAL_PATH_TO_WRITE:${app.storage.path}/from_user/goals/}"
+  action:
+    path_to_read: "${APP_ACTION_PATH_TO_READ:${app.storage.path}/from_ap/to_web/actions/#ROBOT/}"
+  feedback:
+    path_to_read: "${APP_FEEDBACK_PATH_TO_READ:${app.storage.path}/from_robot/#ROBOT/to_web/feedback/}"
+  wearable_feedback:
+    path_to_read: "${APP_WEARABLE_FEEDBACK_PATH_TO_READ:${app.storage.path}/from_wearable/#WEARABLE/to_web/feedback/}"
+  wearable_sos:
+    path_to_read: "${APP_WEARABLE_SOS_PATH_TO_READ:${app.storage.path}/from_wearable/#WEARABLE/to_web/sos/}"

@@ -1,0 +1,4 @@
+<map id="it.unito.sensors.server.entity.GoalSubCodeEnum" name="it.unito.sensors.server.entity.GoalSubCodeEnum">
+<area shape="rect" id="node1" title="Enum represents list of possible sub code of the goal." alt="" coords="5,95,196,136"/>
+<area shape="rect" id="node2" href="$interfaceit_1_1unito_1_1sensors_1_1server_1_1entity_1_1EnumCode.html" title="Interface used by classes with &quot;code&quot; getter to represent a string identifier." alt="" coords="5,5,196,47"/>
+</map>

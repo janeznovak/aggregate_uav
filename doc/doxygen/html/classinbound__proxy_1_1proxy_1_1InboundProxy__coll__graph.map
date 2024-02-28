@@ -1,0 +1,4 @@
+<map id="inbound_proxy.proxy.InboundProxy" name="inbound_proxy.proxy.InboundProxy">
+<area shape="rect" id="node1" title="Class extending ROS2 Node use to convert message received FROM topic INTO file." alt="" coords="5,80,196,121"/>
+<area shape="rect" id="node2" title=" " alt="" coords="74,5,127,32"/>
+</map>

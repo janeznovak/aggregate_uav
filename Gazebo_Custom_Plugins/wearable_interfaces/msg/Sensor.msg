@@ -1,0 +1,7 @@
+string wearable_code
+int32 heart_rate_per_minute
+float32 body_temperature
+int32 oxygenation
+int32 goal_status
+string goal_code
+int64 unix_timestamp

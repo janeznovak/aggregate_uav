@@ -1,0 +1,4 @@
+<map id="it.unito.sensors.server.fs.GoalWriter" name="it.unito.sensors.server.fs.GoalWriter">
+<area shape="rect" id="node1" title="GoalWriter sends to the storage a list of GoalDTO, writing in a file." alt="" coords="5,95,176,136"/>
+<area shape="rect" id="node2" href="$interfaceit_1_1unito_1_1sensors_1_1server_1_1fs_1_1Writer.html" title=" " alt="" coords="5,5,176,47"/>
+</map>

@@ -1,0 +1,57 @@
+<div class="col-md-12 col-lg-12 col-xxxl-12">
+    <nb-card accent="primary">
+        <nb-card-header>
+            Trova il tuo libro
+        </nb-card-header>
+        <nb-card-body>
+            <nb-stepper #stepper (stepChange)="handleStepChange($event)">
+            <nb-step [stepControl]="firstForm" label="Inserisci">
+                <form [formGroup]="firstForm" (ngSubmit)="onFirstSubmit()" class="step-container">
+                <p class="lorem">
+                    Inserisci qui per favore il codice del libro da cercare. Il sistema invierà un robot di supporto allo scaffale corretto, per accompagnarti nella ricerca.
+                </p>
+                <div class="input-group">
+                    <input type="text" placeholder="Codice libro" class="form-control" formControlName="firstCtrl" [(ngModel)]="itemName"
+                            [ngClass]="{'form-control-danger': firstForm.invalid && (firstForm.dirty || firstForm.touched)}">
+                </div>
+                <div>
+                    <button nbButton status="primary" nbStepperNext>Avanti</button>
+                </div>
+                </form>
+            </nb-step>
+            <nb-step label="Conferma">
+                <form class="step-container">
+                    <p class="lorem">
+                        Sei sicuro di voler cercare il libro <b>{{itemName}}</b>? Il sistema cercherà il libro per te!
+                    </p>
+                <button nbButton status="error" nbStepperPrevious>prev</button>
+                <button nbButton status="primary" nbStepperNext>next</button>
+                </form>
+            </nb-step>
+            <nb-step label="Fine">
+                <form class="step-container">
+                <p class="lorem">
+                    Il sistema sta processando la tua richiesta...
+                </p>
+                </form>
+            </nb-step>
+            <nb-step [hidden]="true" label="Fine">
+                <div class="step-container">
+                <h4>Complimenti!</h4>
+                <h5>Il codice dell'operazione è {{goalCode}}</h5>
+                <p>Il robot ha trovato dove è il libro e a breve ti accompagnerà verso di esso!</p>
+                <button nbButton (click)="stepper.reset()">Cerca un nuovo libro</button>
+                </div>
+            </nb-step>
+            <nb-step #errorstep  [hidden]="true" label="Errore">
+                <div class="step-container">
+                <h4>Errore!</h4>
+                <h5>Il sistema non ha trovato il tuo libro</h5>
+                <p>Controlla i dati: puoi riprovare a fare un'altra ricerca</p>
+                <button nbButton (click)="stepper.reset()">Cerca un nuovo libro</button>
+                </div>
+            </nb-step>
+            </nb-stepper>
+        </nb-card-body>
+    </nb-card>
+</div>

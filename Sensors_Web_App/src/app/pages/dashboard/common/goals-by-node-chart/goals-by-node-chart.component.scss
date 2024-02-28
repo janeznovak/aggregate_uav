@@ -1,0 +1,13 @@
+@import '../../../../@theme/styles/themes';
+
+@include nb-install-component() {
+  .ngx-goals-by-node-chart-content {
+    display: block;
+    width: 100%;
+
+    ::ng-deep chart {
+      display: block;
+      height: nb-theme(card-height-small);
+    }
+  }
+}

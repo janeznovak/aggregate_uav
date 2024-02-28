@@ -1,0 +1,18 @@
+<map id="PoC/AP_Engine/lib/common_data.hpp" name="PoC/AP_Engine/lib/common_data.hpp">
+<area shape="rect" id="node1" title="data common to AP and FW." alt="" coords="315,5,503,47"/>
+<area shape="rect" id="node2" title=" " alt="" coords="772,319,827,345"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,319,116,345"/>
+<area shape="rect" id="node4" title=" " alt="" coords="292,319,349,345"/>
+<area shape="rect" id="node5" title=" " alt="" coords="938,95,997,121"/>
+<area shape="rect" id="node6" href="$feedback__parser_8h.html" title="Parse feedback files." alt="" coords="435,95,566,121"/>
+<area shape="rect" id="node16" href="$wearable__feedback__parser_8h.html" title="Parse wearable feedback files." alt="" coords="223,95,411,121"/>
+<area shape="rect" id="node7" title=" " alt="" coords="450,319,522,345"/>
+<area shape="rect" id="node8" title=" " alt="" coords="152,169,231,196"/>
+<area shape="rect" id="node9" title=" " alt="" coords="434,169,495,196"/>
+<area shape="rect" id="node10" title=" " alt="" coords="255,169,317,196"/>
+<area shape="rect" id="node11" title=" " alt="" coords="341,169,410,196"/>
+<area shape="rect" id="node12" href="$poc__config_8hpp.html" title="Main configuration of the AP Engine." alt="" coords="571,169,681,196"/>
+<area shape="rect" id="node13" title=" " alt="" coords="583,319,637,345"/>
+<area shape="rect" id="node14" title=" " alt="" coords="559,244,610,271"/>
+<area shape="rect" id="node15" href="$poc__utils_8hpp.html" title=" " alt="" coords="437,244,535,271"/>
+</map>
