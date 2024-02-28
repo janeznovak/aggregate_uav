@@ -6,9 +6,7 @@ Components for FCPP - Crazyflie Project
 Documentation is available under doc folder:
 - *java_server*: documentation of Sensors\_Server
 - *ros2*: documentation of components written for ROS2 (humble version)
-- *library_measures*: measures of library use case set in Library Campus Luigi Einaudi"   
 - *usecase*: some sequence diagrams to depict the relation of components
-- *how_to_upgrade_wifi_firmware_iotnode*: as per folder name, manual and binary file to update wifi driver for STM32 IoT Node
 - *doxygen*: components documented using doxygen (https://www.doxygen.nl/). 
 
 The doxygen documentation can be compiled in /doc/doxygen folder, using
