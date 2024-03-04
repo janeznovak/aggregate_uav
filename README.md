@@ -54,7 +54,7 @@ Install Maven 3.8.8+ version
 To launch a simulation execute from the root of the repository:
 
 ```bash
-./Poc/turtlebot3_run.bash
+./PoC/turtlebot3_run.sh
 ```
 
 The script will list the components that need to be compiled to run,
