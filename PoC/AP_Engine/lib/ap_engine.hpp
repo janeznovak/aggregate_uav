@@ -219,8 +219,8 @@ namespace fcpp
             // and previous state is NOT REACHED: new color is "reached" and deletes goal storage
             if (feedback::GoalStatus::REACHED != node.storage(node_external_status{})) {
                 new_color = fcpp::color(fcpp::coordination::reached_goal_color);
-                // resetting processing status
-                node.storage(node_process_status{}) = ProcessingStatus::IDLE;
+                // set to terminating processing status
+                node.storage(node_process_status{}) = ProcessingStatus::TERMINATING;
                 // update time 
                 update_last_goal_update_time(CALL);
 
@@ -446,14 +446,6 @@ namespace fcpp
                 float percent_charge = node.storage(node_battery_charge{})/100.0;
                 
                 if (nt == node_type::ROBOT) {//i'm robot
-                    // if i reached current goal, then terminate the process
-                    if (common::get<goal_code>(g) == node.storage(node_process_goal{}) && //i was running current goal in the process
-                        common::get<goal_code>(g) == node.storage(node_external_goal{}) && //the robot was running current goal
-                        feedback::GoalStatus::REACHED == node.storage(node_external_status{}) && //the robot reached the goal
-                        ProcessingStatus::SELECTED != node.storage(node_process_status{})) { //but now i'm idle
-                        return ends_processed_goal(CALL, prev_rank, prev_leader_for_round, prev_lazy_detection_leader, prev_lazy_detection_stable_for_round, nt, g, s);
-                    } 
-
                     // if i'm terminating the current goal, i have to terminate goal for all nodes
                     if (common::get<goal_code>(g) == node.storage(node_process_goal{}) && //i was running current goal in the process
                         common::get<goal_code>(g) == node.storage(node_external_goal{}) && //the robot was running current goal
