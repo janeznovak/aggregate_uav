@@ -56,7 +56,7 @@ const string DEFAULT_ALG_USED               = to_string(ElectionAlgorithm::LAZY)
 const string AP_CUSTOM_GRAPH_DIAMETER_KEY   = "AP_CUSTOM_GRAPH_DIAMETER";
 const int DEFAULT_CUSTOM_GRAPH_DIAMETER     = NULL_INT_VALUE;
 const string AP_BG_IMAGE                    = "AP_BG_IMAGE";
-const string DEFAULT_BG_IMAGE               = "library.jpg";
+const string DEFAULT_BG_IMAGE               = "library.png";
 const string ABORT_ACTION                   = "ABORT";
 const string GOAL_ACTION                    = "GOAL";
 const string SOS_ACTION                     = "SOS";
@@ -120,6 +120,7 @@ const std::string BG_IMAGE                  = read_string_env(AP_BG_IMAGE, DEFAU
 /* SIMULATOR */
 const float NODE_SIZE              = 0.3;
 const float NODE_SHADOW_SIZE       = 0.4;
+const float LABEL_SIZE             = 0.008;
 
 /* LEADER ELECTION */
 const ElectionAlgorithm ALG_USED   = ElectionAlgorithmMapper().get_algorithm(ALG_USED_STR);

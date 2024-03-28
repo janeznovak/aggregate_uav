@@ -302,7 +302,7 @@ namespace fcpp
         // AP PROCESS
 
         //! @brief A robot has reached a goal and now try to terminate the process
-        FUN tuple<real_t, device_t, int, tuple<device_t, int>> ends_processed_goal(ARGS, 
+        FUN rank_data_type ends_processed_goal(ARGS, 
             real_t prev_rank, int prev_leader_for_round, 
             device_t prev_lazy_detection_leader, int prev_lazy_detection_stable_for_round, 
             node_type nt, goal_tuple_type const& g, status* s) { CODE
@@ -433,7 +433,7 @@ namespace fcpp
             // [3] -> "lazy" leaders detection info
             //      [0] -> node uid of other leader detected
             //      [1] -> counter of how many rounds the detection info is stable
-            old(CALL, make_tuple(INF, node.uid, 0, make_tuple(node.uid, 0)), [&] (tuple<real_t, device_t, int, tuple<device_t, int>> prev_tuple) {
+            old(CALL, make_tuple(INF, node.uid, 0, make_tuple(node.uid, 0)), [&] (rank_data_type prev_tuple) {
 
                 // retrieve data from previous round
                 real_t prev_rank = get<0>(prev_tuple);
@@ -714,7 +714,7 @@ namespace fcpp
                 node.storage(node_size{}) = NODE_SIZE;
             }
             if (node.storage(node_label_size{}) == 0) {
-                node.storage(node_label_size{}) = 0.008;
+                node.storage(node_label_size{}) = LABEL_SIZE;
             }
             node.storage(node_label_text{})   = "R."+std::to_string(node.uid);
             node.storage(node_shape{})        = shape::sphere;
@@ -802,7 +802,7 @@ namespace fcpp
                 node.storage(node_size{}) = NODE_SIZE;
             }
             if (node.storage(node_label_size{}) == 0) {
-                node.storage(node_label_size{}) = 0.008;
+                node.storage(node_label_size{}) = LABEL_SIZE;
             }
             node.storage(node_shape{})        = shape::star;
             node.storage(node_label_color{})  = fcpp::color(fcpp::BLACK);
@@ -947,18 +947,21 @@ namespace fcpp
             
         }
 
-        // ! @brief Exports for the main function.
-        struct main_t : public export_list<
-            goal_tuple_type,
-            robot_phase, 
-            spawn_t<goal_tuple_type, status>, 
-            tuple<real_t, device_t>,
-            tuple<real_t, device_t, int, tuple<device_t, int>>,
-            tuple<tuple<real_t, device_t>, fcpp::hops_t>,
+        //! @brief Export types used by the *_connection functions.
+        FUN_EXPORT any_connection_t = export_list<
             int,
-            bool
-        > {};
+            bool,
+            goal_tuple_type,
+            robot_phase,
+            rank_data_type
+        >;
 
+        //! @brief Export types used by the main function (update it when expanding the program).
+        struct main_t : public export_list<
+            any_connection_t, 
+            spawn_t<goal_tuple_type, status>, 
+            diameter_election_t<tuple<real_t, device_t>>
+        > {};
 
     }
 }
