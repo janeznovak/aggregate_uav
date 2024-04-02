@@ -1,6 +1,9 @@
 var searchData=
 [
-  ['reached_2547',['REACHED',['../namespacewearable__feedback.html#a04be84daa99f6a8b6650e43523bf10a9a0e02eb4894766e022b5cefcb39db826a',1,'wearable_feedback']]],
-  ['robot_2548',['ROBOT',['../common__data_8hpp.html#a6a276b85e2da28c5f9c3dbce61c55682a9c3a09b4e8dfc7b3eaa6ae184f94b815',1,'common_data.hpp']]],
-  ['running_2549',['RUNNING',['../namespacecreate3__coverage.html#abc08f83fabbaa9208a05686255f1a36ba43491564ebcfd38568918efbd6e840fd',1,'create3_coverage::RUNNING()'],['../namespacewearable__feedback.html#a04be84daa99f6a8b6650e43523bf10a9a43491564ebcfd38568918efbd6e840fd',1,'wearable_feedback::RUNNING()']]]
+  ['selected_2088',['SELECTED',['../common__data_8hpp.html#ad382be1a0583b9c675deee416c52b4a8ac841881b7f65d9e69aa9c932ca4427c8',1,'common_data.hpp']]],
+  ['stl_5f06p_2089',['STL_06P',['../namespaceldlidar.html#af712d1a7890914df199cbf5fb4b74f14af3547a2466ae79f68f4a2504decb4784',1,'ldlidar']]],
+  ['stl_5f26_2090',['STL_26',['../namespaceldlidar.html#af712d1a7890914df199cbf5fb4b74f14a52d74c3df99203c9762f1cd26b5d27fb',1,'ldlidar']]],
+  ['stl_5f27l_2091',['STL_27L',['../namespaceldlidar.html#af712d1a7890914df199cbf5fb4b74f14a81531f697c2e2e79349601bae4b4aa59',1,'ldlidar']]],
+  ['stop_2092',['STOP',['../namespaceldlidar.html#ab76d3a30bfb2cea1715af1066e6ade29a615a46af313786fc4e349f34118be111',1,'ldlidar']]],
+  ['success_2093',['SUCCESS',['../namespacecreate3__coverage.html#abc08f83fabbaa9208a05686255f1a36bad0749aaba8b833466dfcbb0428e4f89c',1,'create3_coverage']]]
 ];

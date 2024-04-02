@@ -21,8 +21,5 @@ var dir_5feaf366f039e012e89185092a9a041d =
     ] ],
     [ "StatusReportDTO.java", "StatusReportDTO_8java.html", [
       [ "StatusReportDTO", "classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1StatusReportDTO.html", "classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1StatusReportDTO" ]
-    ] ],
-    [ "WearableFeedbackDTO.java", "WearableFeedbackDTO_8java.html", [
-      [ "WearableFeedbackDTO", "classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1WearableFeedbackDTO.html", null ]
     ] ]
 ];

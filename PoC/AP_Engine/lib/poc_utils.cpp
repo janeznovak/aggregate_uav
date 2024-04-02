@@ -4,41 +4,6 @@
 
 using namespace std;
 
-//! @brief String representation of a ElectionAlgorithm.
-std::string to_string(ElectionAlgorithm ea) {
-    switch (ea) {
-        case ElectionAlgorithm::GREEDY:
-            return "GREEDY";
-
-        case ElectionAlgorithm::LAZY:
-            return "LAZY";
-
-        default:
-            return "";
-    }
-}
-
-ElectionAlgorithmMapper::ElectionAlgorithmMapper()
-{
-    algorithm_map[to_string(ElectionAlgorithm::GREEDY)] = ElectionAlgorithm::GREEDY;
-    algorithm_map[to_string(ElectionAlgorithm::LAZY)] = ElectionAlgorithm::LAZY;
-}
-
-ElectionAlgorithm ElectionAlgorithmMapper::get_algorithm(const std::string& algorithm_name) const
-{
-    auto it = algorithm_map.find(algorithm_name);
-    if (it != algorithm_map.end())
-    {
-        std::cerr << "Known algorithm " << algorithm_name << " to be used" << endl;
-        return it->second;
-    }
-    else
-    {
-        std::cerr << "Unknown algorithm " << algorithm_name << " to be used: so use default GREEDY alg" << endl;
-        // default
-        return ElectionAlgorithm::LAZY; 
-    }
-}
 
 std::string get_env_var(const char* env_key, const std::string& default_value) {
     const char* env_value = std::getenv(env_key);
@@ -56,16 +21,6 @@ std::vector<std::string> generate_robot_names(const std::string& robot_prefix, c
 
     for (int i = start; i < start+robots_count; ++i) {
         prefixes.push_back(robot_prefix + std::to_string(i));
-    }
-
-    return prefixes;
-}
-
-std::vector<std::string> generate_wearable_names(const std::string& wearable_prefix, const int start, const int wearable_count) {
-    std::vector<std::string> prefixes;
-
-    for (int i = start; i < start+wearable_count; ++i) {
-        prefixes.push_back(wearable_prefix + std::to_string(i));
     }
 
     return prefixes;
@@ -90,10 +45,6 @@ double read_double_env(const std::string& env_key, const double default_double) 
 // TODO: use a map instead of a vector
 std::string  get_robot_name(std::vector<std::string> robots, int node_uid) {
     std::string robot_name = "";
-    if (robots.size() > 1){
-        return robots[node_uid-1]; // convert node.uid to index of array
-    } else {
-        return robots[0]; // there is only a robot set in embedded mode
-    }
+    return robots[node_uid]; // convert node.uid to index of array
     return robot_name;
 }

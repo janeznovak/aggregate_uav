@@ -13,7 +13,6 @@
 #include <vector>
 #include <mutex>
 #include "feedback_parser.h"
-#include "wearable_feedback_parser.h"
 
 enum class ProcessingStatus
 {
@@ -34,9 +33,8 @@ O& operator<<(O& o, ProcessingStatus s) {
 
 enum class node_type
 {
-    KIOSK,
-    ROBOT,
-    WEARABLE
+    ROBOT_MASTER,
+    ROBOT_SLAVE
 };
 
 //! @brief String representation of a node_type.
@@ -62,13 +60,6 @@ struct RobotStatus {
     float orient_w;
     float battery_percent_charge; //TODO: add other battery fields;
     feedback::GoalStatus goal_status;
-    string goal_code;
-};
-
-struct WearableStatus {       
-    float pos_x;
-    float pos_y;
-    wearable_feedback::GoalStatus goal_status;
     string goal_code;
 };
 
@@ -100,8 +91,6 @@ namespace std {
 
 extern std::unordered_map<std::string,std::vector<RobotStatus>> RobotStatesMap;
 extern std::mutex RobotStatesMutex;
-extern std::unordered_map<std::string,std::vector<WearableStatus>> WearableStatesMap;
-extern std::mutex WearableStatesMutex;
 extern std::vector<InputGoal> InputGoalList;
 extern std::mutex GoalMutex;
 #endif

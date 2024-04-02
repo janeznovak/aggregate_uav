@@ -26,14 +26,5 @@ var dir_a6d86ad0ae8b228cb80fed81b7335819 =
     ] ],
     [ "StorageProperties.java", "StorageProperties_8java.html", [
       [ "StorageProperties", "classit_1_1unito_1_1sensors_1_1server_1_1configuration_1_1dto_1_1StorageProperties.html", null ]
-    ] ],
-    [ "WearableFeedbackProperties.java", "WearableFeedbackProperties_8java.html", [
-      [ "WearableFeedbackProperties", "classit_1_1unito_1_1sensors_1_1server_1_1configuration_1_1dto_1_1WearableFeedbackProperties.html", null ]
-    ] ],
-    [ "WearableProperties.java", "WearableProperties_8java.html", [
-      [ "WearableProperties", "classit_1_1unito_1_1sensors_1_1server_1_1configuration_1_1dto_1_1WearableProperties.html", null ]
-    ] ],
-    [ "WearableSosProperties.java", "WearableSosProperties_8java.html", [
-      [ "WearableSosProperties", "classit_1_1unito_1_1sensors_1_1server_1_1configuration_1_1dto_1_1WearableSosProperties.html", null ]
     ] ]
 ];

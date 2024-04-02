@@ -39,15 +39,3 @@ INSERT INTO NODES (id, name) VALUES (SEQ_NODE.nextval, 'cr3_17');
 INSERT INTO NODES (id, name) VALUES (SEQ_NODE.nextval, 'cr3_18');
 INSERT INTO NODES (id, name) VALUES (SEQ_NODE.nextval, 'cr3_19');
 INSERT INTO NODES (id, name) VALUES (SEQ_NODE.nextval, 'cr3_20');
-
--- list of wearables preconfigured at boot time
-INSERT INTO WEARABLES (id, code, description) VALUES (SEQ_WEARABLE.nextval, 'wb_1', 'paziente 1');
-INSERT INTO WEARABLES (id, code, description) VALUES (SEQ_WEARABLE.nextval, 'wb_2', 'paziente 2');
-INSERT INTO WEARABLES (id, code, description) VALUES (SEQ_WEARABLE.nextval, 'wb_3', 'paziente 3');
-INSERT INTO WEARABLES (id, code, description) VALUES (SEQ_WEARABLE.nextval, 'wb_4', 'paziente 4');
-INSERT INTO WEARABLES (id, code, description) VALUES (SEQ_WEARABLE.nextval, 'wb_5', 'paziente 5');
-INSERT INTO WEARABLES (id, code, description)  VALUES (SEQ_WEARABLE.nextval, 'wb_6', 'paziente 6');
-INSERT INTO WEARABLES (id, code, description)  VALUES (SEQ_WEARABLE.nextval, 'wb_7', 'paziente 7');
-INSERT INTO WEARABLES (id, code, description)  VALUES (SEQ_WEARABLE.nextval, 'wb_8', 'paziente 8');
-INSERT INTO WEARABLES (id, code, description)  VALUES (SEQ_WEARABLE.nextval, 'wb_9', 'paziente 9');
-INSERT INTO WEARABLES (id, code, description)  VALUES (SEQ_WEARABLE.nextval, 'wb_10', 'paziente 10');

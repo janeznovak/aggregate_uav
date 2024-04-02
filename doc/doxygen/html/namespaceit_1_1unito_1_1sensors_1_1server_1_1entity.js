@@ -11,7 +11,5 @@ var namespaceit_1_1unito_1_1sensors_1_1server_1_1entity =
     [ "MeasurementData", "classit_1_1unito_1_1sensors_1_1server_1_1entity_1_1MeasurementData.html", null ],
     [ "MeasurementEntity", "classit_1_1unito_1_1sensors_1_1server_1_1entity_1_1MeasurementEntity.html", null ],
     [ "NeighbourEntity", "classit_1_1unito_1_1sensors_1_1server_1_1entity_1_1NeighbourEntity.html", null ],
-    [ "NodeEntity", "classit_1_1unito_1_1sensors_1_1server_1_1entity_1_1NodeEntity.html", "classit_1_1unito_1_1sensors_1_1server_1_1entity_1_1NodeEntity" ],
-    [ "WearableEntity", "classit_1_1unito_1_1sensors_1_1server_1_1entity_1_1WearableEntity.html", "classit_1_1unito_1_1sensors_1_1server_1_1entity_1_1WearableEntity" ],
-    [ "WearableFeedbackEntity", "classit_1_1unito_1_1sensors_1_1server_1_1entity_1_1WearableFeedbackEntity.html", null ]
+    [ "NodeEntity", "classit_1_1unito_1_1sensors_1_1server_1_1entity_1_1NodeEntity.html", "classit_1_1unito_1_1sensors_1_1server_1_1entity_1_1NodeEntity" ]
 ];

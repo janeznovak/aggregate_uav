@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['electionalgorithm_2496',['ElectionAlgorithm',['../poc__utils_8hpp.html#a492436b98c3116eef5efd8819cd4f572',1,'poc_utils.hpp']]]
+  ['filestatus_2042',['FileStatus',['../file__watcher_8hpp.html#a0a785734a2e4d29ff32532d92a03b40c',1,'file_watcher.hpp']]],
+  ['filtertype_2043',['FilterType',['../namespaceldlidar.html#a497660da92b3f240a4e8df699d48191a',1,'ldlidar']]]
 ];

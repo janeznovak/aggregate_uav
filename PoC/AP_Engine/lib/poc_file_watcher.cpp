@@ -14,7 +14,6 @@
 #include "poc_config.hpp"
 #include "goal_parser.h"
 #include "feedback_parser.h"
-#include "wearable_feedback_parser.h"
 
 #include "poc_file_watcher.hpp"
 #include "file_watcher.hpp"
@@ -92,14 +91,6 @@ void new_file_feedback_callback(std::string file_path) {
   std::filesystem::remove(file_path);
 }
 
-// FEEDBACK FROM WEARABLE MANAGEMENT
-void new_file_wearable_feedback_callback(std::string file_path) {
-  // std::cout << "Wearable feedback File created: " << file_path << endl;
-  new_file_callback(file_path, wearable_feedback::manager::FeedbackManager::new_line_feedback);
-  // delete file
-  std::filesystem::remove(file_path);
-}
-
 // OTHERS FILE MANAGEMENT
 void create_other_test(std::string path_to_watch) {
   std::cout << "Test File created: " << path_to_watch << endl;
@@ -123,24 +114,12 @@ void poc_file_watcher::run_watch_files() {
       watch_file_fn(input_folder_state, ".*.txt$", new_file_feedback_callback);
   };
 
-  auto feedback_wearables = [&](std::string wearable_code)
-  {
-      std::string input_folder_state = string(INPUT_FOLDER_BASE_PATH) + std::regex_replace(INPUT_FOLDER_FROM_WEARABLES_FEEDBACK, std::regex(WEARABLES_PLACEHOLDER), wearable_code);
-      std::cout << "Watching wearable feedback information from folder: " << input_folder_state << endl;
-      std::cout << endl;
-      watch_file_fn(input_folder_state, ".*.txt$", new_file_wearable_feedback_callback);
-  };
-
   // run watching threads
   thread th1(goal);
   std::vector<thread> th_states;
   for (std::string robot_name: ROBOTS) {
     th_states.push_back(thread(feedback_robots, robot_name));
   }
-  for (std::string wearable_name: WEARABLES) {
-    th_states.push_back(thread(feedback_wearables, wearable_name));
-  }
-
   th1.detach();
   for (auto it = begin (th_states); it != end (th_states); ++it) {
     it->detach();

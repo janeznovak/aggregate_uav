@@ -52,10 +52,9 @@ var NAVTREE =
     [ "Files", "files.html", [
       [ "File List", "files.html", "files_dup" ],
       [ "File Members", "globals.html", [
-        [ "All", "globals.html", "globals_dup" ],
+        [ "All", "globals.html", null ],
         [ "Functions", "globals_func.html", null ],
         [ "Variables", "globals_vars.html", null ],
-        [ "Typedefs", "globals_type.html", null ],
         [ "Enumerations", "globals_enum.html", null ],
         [ "Macros", "globals_defs.html", null ]
       ] ]
@@ -65,15 +64,13 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"",
-"ap__engine__setup_8hpp.html#a1d22853b2d23a5138627e7e81337bd2c",
-"classgazebo_1_1GazeboRosBatteryPrivate.html#ace3493f20273b863fd403204e2d61680",
-"classldlidar_1_1LDLidarDriver.html#a54fedad7432db7e1db0bf0eff0ccd7f8",
-"dir_2fb49051d8b6882c123a13da36568bf0.html",
-"globals_w.html",
-"namespacefcpp_1_1coordination.html#aaf67733c218fd82dab172cf36559a8ee",
-"poc__config_8hpp.html#a5ea2bd7864bf04b1d742fa871872cf16",
-"structfcpp_1_1os_1_1transceiver_1_1data__type.html#aca0238e93574690cba56f601782db24f"
+"ActionFileHandler_8java.html",
+"classFileWatcher.html",
+"classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1FeedbackDTO.html",
+"common__data_8hpp.html#a6c54548299386109a65a479f9baf3075",
+"functions_y.html",
+"namespaceinbound__proxy_1_1board__config.html#aa7360fc11956c9fdb961401059b57b1d",
+"rotate-behavior_8hpp_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

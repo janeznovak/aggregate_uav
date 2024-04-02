@@ -24,7 +24,6 @@ int main() {
  
     int speed = 0;
     int robots = ROBOTS_COUNT;  
-    int wearables = WEARABLES_COUNT;
     std::string background_image = BG_IMAGE;
     std::unordered_map<std::string, std::vector<device_t>> nodes_by_goal_subcode = 
         {
@@ -53,7 +52,7 @@ int main() {
         "NODES AP Engine",
         background_image,
         0,
-        robots + wearables + 1 /*KIOSK*/,
+        robots,
         1,
         fcpp::coordination::amin,
         fcpp::coordination::amax,

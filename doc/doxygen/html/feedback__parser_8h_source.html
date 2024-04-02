@@ -125,20 +125,20 @@ $(document).ready(function(){initNavTree('feedback__parser_8h_source.html',''); 
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">namespace </span>feedback</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;{</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;  <span class="keyword">enum class</span> <a class="code" href="namespacewearable__feedback.html#a04be84daa99f6a8b6650e43523bf10a9">GoalStatus</a></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;  <span class="keyword">enum class</span> GoalStatus</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    {</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <a class="code" href="namespacewearable__feedback.html#a04be84daa99f6a8b6650e43523bf10a9ae58094f5482412132ed4b262e335fdc9">NO_GOAL</a> = -1,</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <a class="code" href="namespacewearable__feedback.html#a04be84daa99f6a8b6650e43523bf10a9a0e02eb4894766e022b5cefcb39db826a">REACHED</a>,</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <a class="code" href="namespacewearable__feedback.html#a04be84daa99f6a8b6650e43523bf10a9a4e6c860e5da10e31c5fd9cb76ddc2025">ABORTED</a>,</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <a class="code" href="namespacewearable__feedback.html#a04be84daa99f6a8b6650e43523bf10a9ab9e14d9b2886bcff408b85aefa780419">FAILED</a>,</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        NO_GOAL = -1,</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        REACHED,</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        ABORTED,</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        FAILED,</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <a class="code" href="namespacecreate3__coverage.html#abc08f83fabbaa9208a05686255f1a36ba43491564ebcfd38568918efbd6e840fd">RUNNING</a>,</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <a class="code" href="namespacewearable__feedback.html#a04be84daa99f6a8b6650e43523bf10a9a696b031073e74bf2cb98e5ef201d4aa3">UNKNOWN</a></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        UNKNOWN</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    };</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  std::string <a class="code" href="common__data_8cpp.html#a6c54548299386109a65a479f9baf3075">to_string</a>(<a class="code" href="namespacewearable__feedback.html#a04be84daa99f6a8b6650e43523bf10a9">feedback::GoalStatus</a> s);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  std::string <a class="code" href="common__data_8cpp.html#a6c54548299386109a65a479f9baf3075">to_string</a>(feedback::GoalStatus s);</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> O&gt;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  O&amp; <a class="code" href="common__data_8hpp.html#a17e44ec22f51efaf8562e9a814d6993a">operator&lt;&lt;</a>(O&amp; o, <a class="code" href="namespacewearable__feedback.html#a04be84daa99f6a8b6650e43523bf10a9">feedback::GoalStatus</a> s) {</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  O&amp; <a class="code" href="common__data_8hpp.html#a17e44ec22f51efaf8562e9a814d6993a">operator&lt;&lt;</a>(O&amp; o, feedback::GoalStatus s) {</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;      o &lt;&lt; <a class="code" href="common__data_8cpp.html#a6c54548299386109a65a479f9baf3075">to_string</a>(s);</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;      <span class="keywordflow">return</span> o;</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  }</div>
@@ -149,7 +149,7 @@ $(document).ready(function(){initNavTree('feedback__parser_8h_source.html',''); 
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordtype">float</span> pos_y;</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordtype">float</span> orient_w;</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordtype">float</span> battery_percent_charge; <span class="comment">//TODO: add other battery fields</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <a class="code" href="namespacewearable__feedback.html#a04be84daa99f6a8b6650e43523bf10a9">GoalStatus</a> goal_status;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    GoalStatus goal_status;</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordtype">string</span> goal_code;</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  };</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
@@ -177,16 +177,10 @@ $(document).ready(function(){initNavTree('feedback__parser_8h_source.html',''); 
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="acommon__data_8cpp_html_a6c54548299386109a65a479f9baf3075"><div class="ttname"><a href="common__data_8cpp.html#a6c54548299386109a65a479f9baf3075">to_string</a></div><div class="ttdeci">std::string to_string(ProcessingStatus s)</div><div class="ttdoc">String representation of a ProcessingStatus.</div><div class="ttdef"><b>Definition:</b> common_data.cpp:11</div></div>
 <div class="ttc" id="acommon__data_8hpp_html"><div class="ttname"><a href="common__data_8hpp.html">common_data.hpp</a></div><div class="ttdoc">data common to AP and FW.</div></div>
-<div class="ttc" id="acommon__data_8hpp_html_a17e44ec22f51efaf8562e9a814d6993a"><div class="ttname"><a href="common__data_8hpp.html#a17e44ec22f51efaf8562e9a814d6993a">operator&lt;&lt;</a></div><div class="ttdeci">O &amp; operator&lt;&lt;(O &amp;o, ProcessingStatus s)</div><div class="ttdoc">Printing ProcessingStatus.</div><div class="ttdef"><b>Definition:</b> common_data.hpp:30</div></div>
+<div class="ttc" id="acommon__data_8hpp_html_a17e44ec22f51efaf8562e9a814d6993a"><div class="ttname"><a href="common__data_8hpp.html#a17e44ec22f51efaf8562e9a814d6993a">operator&lt;&lt;</a></div><div class="ttdeci">O &amp; operator&lt;&lt;(O &amp;o, ProcessingStatus s)</div><div class="ttdoc">Printing ProcessingStatus.</div><div class="ttdef"><b>Definition:</b> common_data.hpp:29</div></div>
 <div class="ttc" id="anamespacecreate3__coverage_html_abc08f83fabbaa9208a05686255f1a36ba43491564ebcfd38568918efbd6e840fd"><div class="ttname"><a href="namespacecreate3__coverage.html#abc08f83fabbaa9208a05686255f1a36ba43491564ebcfd38568918efbd6e840fd">create3_coverage::State::RUNNING</a></div><div class="ttdeci">@ RUNNING</div></div>
 <div class="ttc" id="anamespacerobot__reader_1_1store_html_add687bf8c7284af0192fc242b6d28f43"><div class="ttname"><a href="namespacerobot__reader_1_1store.html#add687bf8c7284af0192fc242b6d28f43">robot_reader.store.content</a></div><div class="ttdeci">content</div><div class="ttdef"><b>Definition:</b> store.py:23</div></div>
-<div class="ttc" id="anamespacestd_html"><div class="ttname"><a href="namespacestd.html">std</a></div><div class="ttdef"><b>Definition:</b> common_data.hpp:91</div></div>
-<div class="ttc" id="anamespacewearable__feedback_html_a04be84daa99f6a8b6650e43523bf10a9"><div class="ttname"><a href="namespacewearable__feedback.html#a04be84daa99f6a8b6650e43523bf10a9">wearable_feedback::GoalStatus</a></div><div class="ttdeci">GoalStatus</div><div class="ttdef"><b>Definition:</b> wearable_feedback_parser.h:38</div></div>
-<div class="ttc" id="anamespacewearable__feedback_html_a04be84daa99f6a8b6650e43523bf10a9a0e02eb4894766e022b5cefcb39db826a"><div class="ttname"><a href="namespacewearable__feedback.html#a04be84daa99f6a8b6650e43523bf10a9a0e02eb4894766e022b5cefcb39db826a">wearable_feedback::GoalStatus::REACHED</a></div><div class="ttdeci">@ REACHED</div></div>
-<div class="ttc" id="anamespacewearable__feedback_html_a04be84daa99f6a8b6650e43523bf10a9a4e6c860e5da10e31c5fd9cb76ddc2025"><div class="ttname"><a href="namespacewearable__feedback.html#a04be84daa99f6a8b6650e43523bf10a9a4e6c860e5da10e31c5fd9cb76ddc2025">wearable_feedback::GoalStatus::ABORTED</a></div><div class="ttdeci">@ ABORTED</div></div>
-<div class="ttc" id="anamespacewearable__feedback_html_a04be84daa99f6a8b6650e43523bf10a9a696b031073e74bf2cb98e5ef201d4aa3"><div class="ttname"><a href="namespacewearable__feedback.html#a04be84daa99f6a8b6650e43523bf10a9a696b031073e74bf2cb98e5ef201d4aa3">wearable_feedback::GoalStatus::UNKNOWN</a></div><div class="ttdeci">@ UNKNOWN</div></div>
-<div class="ttc" id="anamespacewearable__feedback_html_a04be84daa99f6a8b6650e43523bf10a9ab9e14d9b2886bcff408b85aefa780419"><div class="ttname"><a href="namespacewearable__feedback.html#a04be84daa99f6a8b6650e43523bf10a9ab9e14d9b2886bcff408b85aefa780419">wearable_feedback::GoalStatus::FAILED</a></div><div class="ttdeci">@ FAILED</div></div>
-<div class="ttc" id="anamespacewearable__feedback_html_a04be84daa99f6a8b6650e43523bf10a9ae58094f5482412132ed4b262e335fdc9"><div class="ttname"><a href="namespacewearable__feedback.html#a04be84daa99f6a8b6650e43523bf10a9ae58094f5482412132ed4b262e335fdc9">wearable_feedback::GoalStatus::NO_GOAL</a></div><div class="ttdeci">@ NO_GOAL</div></div>
+<div class="ttc" id="anamespacestd_html"><div class="ttname"><a href="namespacestd.html">std</a></div><div class="ttdef"><b>Definition:</b> common_data.hpp:82</div></div>
 <div class="ttc" id="apoc__config_8hpp_html"><div class="ttname"><a href="poc__config_8hpp.html">poc_config.hpp</a></div><div class="ttdoc">Main configuration of the AP Engine.</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

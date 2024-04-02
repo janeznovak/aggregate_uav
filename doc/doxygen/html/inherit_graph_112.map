@@ -1,3 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classit_1_1unito_1_1sensors_1_1server_1_1entity_1_1GoalEntity.html" title="This entity represents goals managed by a node." alt="" coords="5,5,196,47"/>
+<area shape="rect" id="node1" href="$interfaceit_1_1unito_1_1sensors_1_1server_1_1fs_1_1Reader.html" title=" " alt="" coords="5,5,181,47"/>
+<area shape="rect" id="node2" href="$classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1ActionReader.html" title="ActionReader transforms a csv file containing actions to DTOs." alt="" coords="229,5,400,47"/>
 </map>

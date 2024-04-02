@@ -4,6 +4,5 @@ var poc__file__watcher_8cpp =
     [ "new_file_callback", "poc__file__watcher_8cpp.html#aeb12acbb005092ac6fe22aaac996890c", null ],
     [ "new_file_feedback_callback", "poc__file__watcher_8cpp.html#a39b86dc7a115e66ba1bb64e4b712fdde", null ],
     [ "new_file_goal_callback", "poc__file__watcher_8cpp.html#a6cf34c7c8e7c142af52ead916b0bff9c", null ],
-    [ "new_file_wearable_feedback_callback", "poc__file__watcher_8cpp.html#afb1519274eb5a0ed5111f9dd57db2e16", null ],
     [ "watch_file_fn", "poc__file__watcher_8cpp.html#a038fb6db7550b4887e190884d55c6069", null ]
 ];

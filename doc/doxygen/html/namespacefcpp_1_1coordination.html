@@ -110,6 +110,7 @@ Namespaces</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfcpp_1_1coordination_1_1main__t.html">main_t</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export types used by the main function (update it when expanding the program).  <a href="structfcpp_1_1coordination_1_1main__t.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
@@ -140,15 +141,6 @@ Functions</h2></td></tr>
 <tr class="memitem:a5f038525d7899877b70bfeb163dd96a2"><td class="memItemLeft" align="right" valign="top">FUN void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacefcpp_1_1coordination.html#a5f038525d7899877b70bfeb163dd96a2">remove_goal_from_computing_map</a> (ARGS, std::string <a class="el" href="structfcpp_1_1coordination_1_1tags_1_1goal__code.html">goal_code</a>)</td></tr>
 <tr class="memdesc:a5f038525d7899877b70bfeb163dd96a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove current goal to computing map.  <a href="namespacefcpp_1_1coordination.html#a5f038525d7899877b70bfeb163dd96a2">More...</a><br /></td></tr>
 <tr class="separator:a5f038525d7899877b70bfeb163dd96a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aee9531156377cd0fc48374e547927346"><td class="memItemLeft" align="right" valign="top">FUN bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacefcpp_1_1coordination.html#aee9531156377cd0fc48374e547927346">check_if_other_prioritised_goal_exists</a> (ARGS, std::string current_goal_code)</td></tr>
-<tr class="memdesc:aee9531156377cd0fc48374e547927346"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if exists other prioritised goals that are different from current.  <a href="namespacefcpp_1_1coordination.html#aee9531156377cd0fc48374e547927346">More...</a><br /></td></tr>
-<tr class="separator:aee9531156377cd0fc48374e547927346"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a313b14e48e267a5a98fcf90ade4de69b"><td class="memItemLeft" align="right" valign="top">FUN bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacefcpp_1_1coordination.html#a313b14e48e267a5a98fcf90ade4de69b">check_if_im_enabled_for_subcode</a> (ARGS, std::string subcode)</td></tr>
-<tr class="memdesc:a313b14e48e267a5a98fcf90ade4de69b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the robot is enabled for specific subcode.  <a href="namespacefcpp_1_1coordination.html#a313b14e48e267a5a98fcf90ade4de69b">More...</a><br /></td></tr>
-<tr class="separator:a313b14e48e267a5a98fcf90ade4de69b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af81a58fa3366f97a24c897843d5555f6"><td class="memItemLeft" align="right" valign="top">FUN real_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacefcpp_1_1coordination.html#af81a58fa3366f97a24c897843d5555f6">run_rank_node</a> (ARGS, float percent_charge, <a class="el" href="common__data_8hpp.html#a6a276b85e2da28c5f9c3dbce61c55682">node_type</a> nt, <a class="el" href="namespacefcpp_1_1option_1_1data.html#aa96a8a30f9993a84a5b86eddf17bcb60">goal_tuple_type</a> const &amp;g)</td></tr>
-<tr class="memdesc:af81a58fa3366f97a24c897843d5555f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute new rank for node, using battery and distance from goal.  <a href="namespacefcpp_1_1coordination.html#af81a58fa3366f97a24c897843d5555f6">More...</a><br /></td></tr>
-<tr class="separator:af81a58fa3366f97a24c897843d5555f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae83ebb90364a5c19afe82480b4a4e7dc"><td class="memItemLeft" align="right" valign="top">FUN void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacefcpp_1_1coordination.html#ae83ebb90364a5c19afe82480b4a4e7dc">send_stop_command_to_robot</a> (ARGS, string action, device_t node_uid, <a class="el" href="namespacefcpp_1_1option_1_1data.html#aa96a8a30f9993a84a5b86eddf17bcb60">goal_tuple_type</a> const &amp;g, <a class="el" href="common__data_8hpp.html#ad382be1a0583b9c675deee416c52b4a8">ProcessingStatus</a> ps)</td></tr>
 <tr class="memdesc:ae83ebb90364a5c19afe82480b4a4e7dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send "stop" command to robot and change "node_process_status" after it.  <a href="namespacefcpp_1_1coordination.html#ae83ebb90364a5c19afe82480b4a4e7dc">More...</a><br /></td></tr>
 <tr class="separator:ae83ebb90364a5c19afe82480b4a4e7dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -173,21 +165,15 @@ Functions</h2></td></tr>
 <tr class="memitem:a1b87851c9919fc7b31ed4233067539aa"><td class="memItemLeft" align="right" valign="top">FUN void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacefcpp_1_1coordination.html#a1b87851c9919fc7b31ed4233067539aa">manage_no_goal_status</a> (ARGS)</td></tr>
 <tr class="memdesc:a1b87851c9919fc7b31ed4233067539aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Manage state machine when robot has not yet executed a goal.  <a href="namespacefcpp_1_1coordination.html#a1b87851c9919fc7b31ed4233067539aa">More...</a><br /></td></tr>
 <tr class="separator:a1b87851c9919fc7b31ed4233067539aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad822fe020dcd1508c255ebb017366976"><td class="memItemLeft" align="right" valign="top">FUN tuple&lt; real_t, device_t, int, tuple&lt; device_t, int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacefcpp_1_1coordination.html#ad822fe020dcd1508c255ebb017366976">ends_processed_goal</a> (ARGS, real_t prev_rank, int prev_leader_for_round, device_t prev_lazy_detection_leader, int prev_lazy_detection_stable_for_round, <a class="el" href="common__data_8hpp.html#a6a276b85e2da28c5f9c3dbce61c55682">node_type</a> nt, <a class="el" href="namespacefcpp_1_1option_1_1data.html#aa96a8a30f9993a84a5b86eddf17bcb60">goal_tuple_type</a> const &amp;g, status *s)</td></tr>
-<tr class="memdesc:ad822fe020dcd1508c255ebb017366976"><td class="mdescLeft">&#160;</td><td class="mdescRight">A robot has reached a goal and now try to terminate the process.  <a href="namespacefcpp_1_1coordination.html#ad822fe020dcd1508c255ebb017366976">More...</a><br /></td></tr>
-<tr class="separator:ad822fe020dcd1508c255ebb017366976"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20d5a99b3965b326673706b9e62e0654"><td class="memItemLeft" align="right" valign="top">FUN <a class="el" href="namespacefcpp_1_1option_1_1data.html#aa96a8a30f9993a84a5b86eddf17bcb60">goal_tuple_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacefcpp_1_1coordination.html#a20d5a99b3965b326673706b9e62e0654">ends_processed_goal</a> (ARGS, <a class="el" href="namespacefcpp_1_1option_1_1data.html#aa96a8a30f9993a84a5b86eddf17bcb60">goal_tuple_type</a> const &amp;g, status *s)</td></tr>
+<tr class="memdesc:a20d5a99b3965b326673706b9e62e0654"><td class="mdescLeft">&#160;</td><td class="mdescRight">A robot has reached a goal and now try to terminate the process.  <a href="namespacefcpp_1_1coordination.html#a20d5a99b3965b326673706b9e62e0654">More...</a><br /></td></tr>
+<tr class="separator:a20d5a99b3965b326673706b9e62e0654"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a644784d61399509b3a1c80e3f99f8ae1"><td class="memItemLeft" align="right" valign="top">FUN void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacefcpp_1_1coordination.html#a644784d61399509b3a1c80e3f99f8ae1">battery_discharged_when_it_is_running</a> (ARGS, <a class="el" href="namespacefcpp_1_1option_1_1data.html#aa96a8a30f9993a84a5b86eddf17bcb60">goal_tuple_type</a> const &amp;g, status *s)</td></tr>
 <tr class="memdesc:a644784d61399509b3a1c80e3f99f8ae1"><td class="mdescLeft">&#160;</td><td class="mdescRight">A robot has discharged the battery, so AP send a stop command.  <a href="namespacefcpp_1_1coordination.html#a644784d61399509b3a1c80e3f99f8ae1">More...</a><br /></td></tr>
 <tr class="separator:a644784d61399509b3a1c80e3f99f8ae1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa7c31ea9f72a249fcaeb1487ca7cb000"><td class="memItemLeft" align="right" valign="top">FUN void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacefcpp_1_1coordination.html#aa7c31ea9f72a249fcaeb1487ca7cb000">update_leader_counter</a> (ARGS, float percent_charge, real_t prev_rank, device_t prev_leader, int &amp;prev_leader_for_round, <a class="el" href="common__data_8hpp.html#a6a276b85e2da28c5f9c3dbce61c55682">node_type</a> nt, <a class="el" href="namespacefcpp_1_1option_1_1data.html#aa96a8a30f9993a84a5b86eddf17bcb60">goal_tuple_type</a> const &amp;g, status *s)</td></tr>
-<tr class="memdesc:aa7c31ea9f72a249fcaeb1487ca7cb000"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the counter of how many times a robot is the leader.  <a href="namespacefcpp_1_1coordination.html#aa7c31ea9f72a249fcaeb1487ca7cb000">More...</a><br /></td></tr>
-<tr class="separator:aa7c31ea9f72a249fcaeb1487ca7cb000"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a87ef7c00d0619f2489dfdb107f2d7279"><td class="memItemLeft" align="right" valign="top">FUN void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacefcpp_1_1coordination.html#a87ef7c00d0619f2489dfdb107f2d7279">send_action_to_selected_node</a> (ARGS, device_t prev_leader, <a class="el" href="namespacefcpp_1_1option_1_1data.html#aa96a8a30f9993a84a5b86eddf17bcb60">goal_tuple_type</a> const &amp;g, status *s)</td></tr>
-<tr class="memdesc:a87ef7c00d0619f2489dfdb107f2d7279"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a GOAL action to selected node and update the AP state machine of the robot to SELECTED.  <a href="namespacefcpp_1_1coordination.html#a87ef7c00d0619f2489dfdb107f2d7279">More...</a><br /></td></tr>
-<tr class="separator:a87ef7c00d0619f2489dfdb107f2d7279"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afd1fc0d856fccccae253ca9f6d72e24e"><td class="memItemLeft" align="right" valign="top">FUN void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacefcpp_1_1coordination.html#afd1fc0d856fccccae253ca9f6d72e24e">detect_other_leaders</a> (ARGS, tuple&lt; real_t, device_t &gt; new_rank_tuple, real_t rank, float percent_charge, real_t prev_rank, device_t prev_leader, int prev_leader_for_round, <a class="el" href="common__data_8hpp.html#a6a276b85e2da28c5f9c3dbce61c55682">node_type</a> nt, <a class="el" href="namespacefcpp_1_1option_1_1data.html#aa96a8a30f9993a84a5b86eddf17bcb60">goal_tuple_type</a> const &amp;g, status *s)</td></tr>
-<tr class="memdesc:afd1fc0d856fccccae253ca9f6d72e24e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detect if there are any other leaders near the elected robot.  <a href="namespacefcpp_1_1coordination.html#afd1fc0d856fccccae253ca9f6d72e24e">More...</a><br /></td></tr>
-<tr class="separator:afd1fc0d856fccccae253ca9f6d72e24e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b09aabfb53bb6c42bc64ec61f1aa334"><td class="memItemLeft" align="right" valign="top">FUN void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacefcpp_1_1coordination.html#a7b09aabfb53bb6c42bc64ec61f1aa334">send_action_to_selected_node</a> (ARGS, <a class="el" href="namespacefcpp_1_1option_1_1data.html#aa96a8a30f9993a84a5b86eddf17bcb60">goal_tuple_type</a> const &amp;g, status *s)</td></tr>
+<tr class="memdesc:a7b09aabfb53bb6c42bc64ec61f1aa334"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a GOAL action to selected node and update the AP state machine of the robot to SELECTED.  <a href="namespacefcpp_1_1coordination.html#a7b09aabfb53bb6c42bc64ec61f1aa334">More...</a><br /></td></tr>
+<tr class="separator:a7b09aabfb53bb6c42bc64ec61f1aa334"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad2f0234701bd878633e7c49c9f1122d9"><td class="memItemLeft" align="right" valign="top">FUN void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacefcpp_1_1coordination.html#ad2f0234701bd878633e7c49c9f1122d9">manage_action_abort</a> (ARGS, <a class="el" href="namespacefcpp_1_1option_1_1data.html#aa96a8a30f9993a84a5b86eddf17bcb60">goal_tuple_type</a> const &amp;g, status *s)</td></tr>
 <tr class="memdesc:ad2f0234701bd878633e7c49c9f1122d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Manage when the user has requested an ABORT of a goal.  <a href="namespacefcpp_1_1coordination.html#ad2f0234701bd878633e7c49c9f1122d9">More...</a><br /></td></tr>
 <tr class="separator:ad2f0234701bd878633e7c49c9f1122d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -209,15 +195,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a8be923dd507b8f328fb4a03e5359a62e"><td class="memItemLeft" align="right" valign="top">FUN void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacefcpp_1_1coordination.html#a8be923dd507b8f328fb4a03e5359a62e">acquire_new_goals</a> (ARGS, <a class="el" href="common__data_8hpp.html#a6a276b85e2da28c5f9c3dbce61c55682">node_type</a> nt, std::vector&lt; <a class="el" href="namespacefcpp_1_1option_1_1data.html#aa96a8a30f9993a84a5b86eddf17bcb60">goal_tuple_type</a> &gt; &amp;NewGoalsList)</td></tr>
 <tr class="memdesc:a8be923dd507b8f328fb4a03e5359a62e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Acquire new goals from storage, in according with node_type.  <a href="namespacefcpp_1_1coordination.html#a8be923dd507b8f328fb4a03e5359a62e">More...</a><br /></td></tr>
 <tr class="separator:a8be923dd507b8f328fb4a03e5359a62e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9fc9c884cdcaaff5dcdd8f883c043897"><td class="memItemLeft" align="right" valign="top">FUN void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacefcpp_1_1coordination.html#a9fc9c884cdcaaff5dcdd8f883c043897">init_kiosk</a> (ARGS)</td></tr>
-<tr class="memdesc:a9fc9c884cdcaaff5dcdd8f883c043897"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize variables (storage, etc...) of a kiosk.  <a href="namespacefcpp_1_1coordination.html#a9fc9c884cdcaaff5dcdd8f883c043897">More...</a><br /></td></tr>
-<tr class="separator:a9fc9c884cdcaaff5dcdd8f883c043897"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a93e7550c5fb3efc7980661c9a1669529"><td class="memItemLeft" align="right" valign="top">FUN void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacefcpp_1_1coordination.html#a93e7550c5fb3efc7980661c9a1669529">init_robot</a> (ARGS)</td></tr>
-<tr class="memdesc:a93e7550c5fb3efc7980661c9a1669529"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize variables (storage, etc...) of a robot using feedback data.  <a href="namespacefcpp_1_1coordination.html#a93e7550c5fb3efc7980661c9a1669529">More...</a><br /></td></tr>
-<tr class="separator:a93e7550c5fb3efc7980661c9a1669529"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3020f70a679b47029fb4c9d399b4bdf0"><td class="memItemLeft" align="right" valign="top">FUN void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacefcpp_1_1coordination.html#a3020f70a679b47029fb4c9d399b4bdf0">init_wearable</a> (ARGS)</td></tr>
-<tr class="memdesc:a3020f70a679b47029fb4c9d399b4bdf0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize variables (storage, etc...) of a wearable using feedback data.  <a href="namespacefcpp_1_1coordination.html#a3020f70a679b47029fb4c9d399b4bdf0">More...</a><br /></td></tr>
-<tr class="separator:a3020f70a679b47029fb4c9d399b4bdf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6604b57596197d47beb9dff153840407"><td class="memItemLeft" align="right" valign="top">FUN void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacefcpp_1_1coordination.html#a6604b57596197d47beb9dff153840407">init_robot</a> (ARGS, std::string prefix)</td></tr>
+<tr class="memdesc:a6604b57596197d47beb9dff153840407"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize variables (storage, etc...) of a robot using feedback data.  <a href="namespacefcpp_1_1coordination.html#a6604b57596197d47beb9dff153840407">More...</a><br /></td></tr>
+<tr class="separator:a6604b57596197d47beb9dff153840407"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8e940e0ff6b0a3953bf2db1fbe64bbbf"><td class="memItemLeft" align="right" valign="top">FUN <a class="el" href="namespacefcpp_1_1coordination.html#a7b5ae87f57b762c5b0cae722d4b70899">spawn_result_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacefcpp_1_1coordination.html#a8e940e0ff6b0a3953bf2db1fbe64bbbf">spawn_process</a> (ARGS, <a class="el" href="common__data_8hpp.html#a6a276b85e2da28c5f9c3dbce61c55682">node_type</a> nt, ::vector&lt; <a class="el" href="namespacefcpp_1_1option_1_1data.html#aa96a8a30f9993a84a5b86eddf17bcb60">goal_tuple_type</a> &gt; &amp;NewGoalsList, int n_round)</td></tr>
 <tr class="memdesc:a8e940e0ff6b0a3953bf2db1fbe64bbbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Spawn process from goal list acquired.  <a href="namespacefcpp_1_1coordination.html#a8e940e0ff6b0a3953bf2db1fbe64bbbf">More...</a><br /></td></tr>
 <tr class="separator:a8e940e0ff6b0a3953bf2db1fbe64bbbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -230,6 +210,9 @@ Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
+<tr class="memitem:a8b27bc26608463a80dc99c754c3346e5"><td class="memItemLeft" align="right" valign="top">FUN_EXPORT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacefcpp_1_1coordination.html#a8b27bc26608463a80dc99c754c3346e5">any_connection_t</a></td></tr>
+<tr class="memdesc:a8b27bc26608463a80dc99c754c3346e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export types used by the *_connection functions.  <a href="namespacefcpp_1_1coordination.html#a8b27bc26608463a80dc99c754c3346e5">More...</a><br /></td></tr>
+<tr class="separator:a8b27bc26608463a80dc99c754c3346e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3db90b385ee931f78dcf1f400f35c12d"><td class="memItemLeft" align="right" valign="top">constexpr size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacefcpp_1_1coordination.html#a3db90b385ee931f78dcf1f400f35c12d">comm</a> = <a class="el" href="poc__config_8hpp.html#a267c1a739c9ffb37b9ddcdded321bc54">AP_COMM_RANGE</a></td></tr>
 <tr class="memdesc:a3db90b385ee931f78dcf1f400f35c12d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Communication radius.  <a href="namespacefcpp_1_1coordination.html#a3db90b385ee931f78dcf1f400f35c12d">More...</a><br /></td></tr>
 <tr class="separator:a3db90b385ee931f78dcf1f400f35c12d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -441,185 +424,17 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a313b14e48e267a5a98fcf90ade4de69b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a313b14e48e267a5a98fcf90ade4de69b">&#9670;&nbsp;</a></span>check_if_im_enabled_for_subcode()</h2>
+<a id="a20d5a99b3965b326673706b9e62e0654"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a20d5a99b3965b326673706b9e62e0654">&#9670;&nbsp;</a></span>ends_processed_goal()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">FUN bool fcpp::coordination::check_if_im_enabled_for_subcode </td>
+          <td class="memname">FUN <a class="el" href="namespacefcpp_1_1option_1_1data.html#aa96a8a30f9993a84a5b86eddf17bcb60">goal_tuple_type</a> fcpp::coordination::ends_processed_goal </td>
           <td>(</td>
           <td class="paramtype">ARGS&#160;</td>
           <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string&#160;</td>
-          <td class="paramname"><em>subcode</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Check if the robot is enabled for specific subcode. </p>
-
-</div>
-</div>
-<a id="aee9531156377cd0fc48374e547927346"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aee9531156377cd0fc48374e547927346">&#9670;&nbsp;</a></span>check_if_other_prioritised_goal_exists()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">FUN bool fcpp::coordination::check_if_other_prioritised_goal_exists </td>
-          <td>(</td>
-          <td class="paramtype">ARGS&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string&#160;</td>
-          <td class="paramname"><em>current_goal_code</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Check if exists other prioritised goals that are different from current. </p>
-
-</div>
-</div>
-<a id="afd1fc0d856fccccae253ca9f6d72e24e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afd1fc0d856fccccae253ca9f6d72e24e">&#9670;&nbsp;</a></span>detect_other_leaders()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">FUN void fcpp::coordination::detect_other_leaders </td>
-          <td>(</td>
-          <td class="paramtype">ARGS&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">tuple&lt; real_t, device_t &gt;&#160;</td>
-          <td class="paramname"><em>new_rank_tuple</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">real_t&#160;</td>
-          <td class="paramname"><em>rank</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>percent_charge</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">real_t&#160;</td>
-          <td class="paramname"><em>prev_rank</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">device_t&#160;</td>
-          <td class="paramname"><em>prev_leader</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>prev_leader_for_round</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="common__data_8hpp.html#a6a276b85e2da28c5f9c3dbce61c55682">node_type</a>&#160;</td>
-          <td class="paramname"><em>nt</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="namespacefcpp_1_1option_1_1data.html#aa96a8a30f9993a84a5b86eddf17bcb60">goal_tuple_type</a> const &amp;&#160;</td>
-          <td class="paramname"><em>g</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">status *&#160;</td>
-          <td class="paramname"><em>s</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Detect if there are any other leaders near the elected robot. </p>
-
-</div>
-</div>
-<a id="ad822fe020dcd1508c255ebb017366976"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad822fe020dcd1508c255ebb017366976">&#9670;&nbsp;</a></span>ends_processed_goal()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">FUN tuple&lt;real_t, device_t, int, tuple&lt;device_t, int&gt; &gt; fcpp::coordination::ends_processed_goal </td>
-          <td>(</td>
-          <td class="paramtype">ARGS&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">real_t&#160;</td>
-          <td class="paramname"><em>prev_rank</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>prev_leader_for_round</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">device_t&#160;</td>
-          <td class="paramname"><em>prev_lazy_detection_leader</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>prev_lazy_detection_stable_for_round</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="common__data_8hpp.html#a6a276b85e2da28c5f9c3dbce61c55682">node_type</a>&#160;</td>
-          <td class="paramname"><em>nt</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -705,26 +520,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a9fc9c884cdcaaff5dcdd8f883c043897"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9fc9c884cdcaaff5dcdd8f883c043897">&#9670;&nbsp;</a></span>init_kiosk()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">FUN void fcpp::coordination::init_kiosk </td>
-          <td>(</td>
-          <td class="paramtype">ARGS&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Initialize variables (storage, etc...) of a kiosk. </p>
-
-</div>
-</div>
 <a id="abe82613807c78d851b826268b588f055"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abe82613807c78d851b826268b588f055">&#9670;&nbsp;</a></span>init_main_fn()</h2>
 
@@ -755,8 +550,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a93e7550c5fb3efc7980661c9a1669529"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a93e7550c5fb3efc7980661c9a1669529">&#9670;&nbsp;</a></span>init_robot()</h2>
+<a id="a6604b57596197d47beb9dff153840407"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6604b57596197d47beb9dff153840407">&#9670;&nbsp;</a></span>init_robot()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -765,33 +560,23 @@ Variables</h2></td></tr>
           <td class="memname">FUN void fcpp::coordination::init_robot </td>
           <td>(</td>
           <td class="paramtype">ARGS&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>prefix</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Initialize variables (storage, etc...) of a robot using feedback data. </p>
-
-</div>
-</div>
-<a id="a3020f70a679b47029fb4c9d399b4bdf0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3020f70a679b47029fb4c9d399b4bdf0">&#9670;&nbsp;</a></span>init_wearable()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">FUN void fcpp::coordination::init_wearable </td>
-          <td>(</td>
-          <td class="paramtype">ARGS&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Initialize variables (storage, etc...) of a wearable using feedback data. </p>
 
 </div>
 </div>
@@ -1170,50 +955,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="af81a58fa3366f97a24c897843d5555f6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af81a58fa3366f97a24c897843d5555f6">&#9670;&nbsp;</a></span>run_rank_node()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">FUN real_t fcpp::coordination::run_rank_node </td>
-          <td>(</td>
-          <td class="paramtype">ARGS&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>percent_charge</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="common__data_8hpp.html#a6a276b85e2da28c5f9c3dbce61c55682">node_type</a>&#160;</td>
-          <td class="paramname"><em>nt</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="namespacefcpp_1_1option_1_1data.html#aa96a8a30f9993a84a5b86eddf17bcb60">goal_tuple_type</a> const &amp;&#160;</td>
-          <td class="paramname"><em>g</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Compute new rank for node, using battery and distance from goal. </p>
-
-</div>
-</div>
-<a id="a87ef7c00d0619f2489dfdb107f2d7279"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a87ef7c00d0619f2489dfdb107f2d7279">&#9670;&nbsp;</a></span>send_action_to_selected_node()</h2>
+<a id="a7b09aabfb53bb6c42bc64ec61f1aa334"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b09aabfb53bb6c42bc64ec61f1aa334">&#9670;&nbsp;</a></span>send_action_to_selected_node()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1223,12 +966,6 @@ Variables</h2></td></tr>
           <td>(</td>
           <td class="paramtype">ARGS&#160;</td>
           <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">device_t&#160;</td>
-          <td class="paramname"><em>prev_leader</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1400,72 +1137,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="aa7c31ea9f72a249fcaeb1487ca7cb000"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa7c31ea9f72a249fcaeb1487ca7cb000">&#9670;&nbsp;</a></span>update_leader_counter()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">FUN void fcpp::coordination::update_leader_counter </td>
-          <td>(</td>
-          <td class="paramtype">ARGS&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>percent_charge</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">real_t&#160;</td>
-          <td class="paramname"><em>prev_rank</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">device_t&#160;</td>
-          <td class="paramname"><em>prev_leader</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int &amp;&#160;</td>
-          <td class="paramname"><em>prev_leader_for_round</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="common__data_8hpp.html#a6a276b85e2da28c5f9c3dbce61c55682">node_type</a>&#160;</td>
-          <td class="paramname"><em>nt</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="namespacefcpp_1_1option_1_1data.html#aa96a8a30f9993a84a5b86eddf17bcb60">goal_tuple_type</a> const &amp;&#160;</td>
-          <td class="paramname"><em>g</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">status *&#160;</td>
-          <td class="paramname"><em>s</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Update the counter of how many times a robot is the leader. </p>
-
-</div>
-</div>
 <h2 class="groupheader">Variable Documentation</h2>
 <a id="a1053aa1faca6d3c420e1ecca3bd0b3de"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1053aa1faca6d3c420e1ecca3bd0b3de">&#9670;&nbsp;</a></span>aborted_goal_color</h2>
@@ -1518,6 +1189,31 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Min area of the rectangle. </p>
+
+</div>
+</div>
+<a id="a8b27bc26608463a80dc99c754c3346e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b27bc26608463a80dc99c754c3346e5">&#9670;&nbsp;</a></span>any_connection_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">FUN_EXPORT fcpp::coordination::any_connection_t</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= export_list&lt;</div>
+<div class="line">            <a class="code" href="namespacenav__system_1_1navigator.html#ac037539875faa6a071c1439ee77d614b">int</a>,</div>
+<div class="line">            bool,</div>
+<div class="line">            <a class="code" href="namespacefcpp_1_1option_1_1data.html#aa96a8a30f9993a84a5b86eddf17bcb60">goal_tuple_type</a>,</div>
+<div class="line">            <a class="code" href="common__data_8hpp.html#a4dcbe91684eeee29c0afe3419f5f1b78">robot_phase</a></div>
+<div class="line">        &gt;</div>
+<div class="ttc" id="acommon__data_8hpp_html_a4dcbe91684eeee29c0afe3419f5f1b78"><div class="ttname"><a href="common__data_8hpp.html#a4dcbe91684eeee29c0afe3419f5f1b78">robot_phase</a></div><div class="ttdeci">robot_phase</div><div class="ttdef"><b>Definition:</b> common_data.hpp:52</div></div>
+<div class="ttc" id="anamespacefcpp_1_1option_1_1data_html_aa96a8a30f9993a84a5b86eddf17bcb60"><div class="ttname"><a href="namespacefcpp_1_1option_1_1data.html#aa96a8a30f9993a84a5b86eddf17bcb60">fcpp::option::data::goal_tuple_type</a></div><div class="ttdeci">common::tagged_tuple_t&lt; goal_action, string, goal_code, string, goal_pos_x, float, goal_pos_y, float, goal_orient_w, float, goal_source, string, goal_priority, int, goal_subcode, string &gt; goal_tuple_type</div><div class="ttdoc">A representation of goal properties using tagged_tuple.</div><div class="ttdef"><b>Definition:</b> ap_engine_setup.hpp:221</div></div>
+<div class="ttc" id="anamespacenav__system_1_1navigator_html_ac037539875faa6a071c1439ee77d614b"><div class="ttname"><a href="namespacenav__system_1_1navigator.html#ac037539875faa6a071c1439ee77d614b">nav_system.navigator.int</a></div><div class="ttdeci">int</div><div class="ttdef"><b>Definition:</b> navigator.py:30</div></div>
+</div><!-- fragment -->
+<p>Export types used by the *_connection functions. </p>
 
 </div>
 </div>
@@ -1653,9 +1349,9 @@ Variables</h2></td></tr>
 <div class="ttc" id="anamespacefcpp_1_1coordination_html_a3db90b385ee931f78dcf1f400f35c12d"><div class="ttname"><a href="namespacefcpp_1_1coordination.html#a3db90b385ee931f78dcf1f400f35c12d">fcpp::coordination::comm</a></div><div class="ttdeci">constexpr size_t comm</div><div class="ttdoc">Communication radius.</div><div class="ttdef"><b>Definition:</b> ap_engine_setup.hpp:140</div></div>
 <div class="ttc" id="anamespacefcpp_1_1coordination_html_a99620d6c6f47970f07b4c96ba91aceba"><div class="ttname"><a href="namespacefcpp_1_1coordination.html#a99620d6c6f47970f07b4c96ba91aceba">fcpp::coordination::amax</a></div><div class="ttdeci">const vec&lt; 3 &gt; amax</div><div class="ttdoc">Max area of the rectangle.</div><div class="ttdef"><b>Definition:</b> ap_engine_setup.hpp:152</div></div>
 <div class="ttc" id="anamespacefcpp_1_1coordination_html_aaf67733c218fd82dab172cf36559a8ee"><div class="ttname"><a href="namespacefcpp_1_1coordination.html#aaf67733c218fd82dab172cf36559a8ee">fcpp::coordination::amin</a></div><div class="ttdeci">const vec&lt; 3 &gt; amin</div><div class="ttdoc">Min area of the rectangle.</div><div class="ttdef"><b>Definition:</b> ap_engine_setup.hpp:149</div></div>
-<div class="ttc" id="apoc__config_8hpp_html_a8dc5b590667de2787027e43063634980"><div class="ttname"><a href="poc__config_8hpp.html#a8dc5b590667de2787027e43063634980">ROBOTS_COUNT</a></div><div class="ttdeci">const int ROBOTS_COUNT</div><div class="ttdef"><b>Definition:</b> poc_config.hpp:64</div></div>
+<div class="ttc" id="apoc__config_8hpp_html_a8dc5b590667de2787027e43063634980"><div class="ttname"><a href="poc__config_8hpp.html#a8dc5b590667de2787027e43063634980">ROBOTS_COUNT</a></div><div class="ttdeci">const int ROBOTS_COUNT</div><div class="ttdef"><b>Definition:</b> poc_config.hpp:56</div></div>
 <div class="ttc" id="apoc__config_8hpp_html_a981c98bb56a5f845594a51d9027fc3bb"><div class="ttname"><a href="poc__config_8hpp.html#a981c98bb56a5f845594a51d9027fc3bb">NULL_INT_VALUE</a></div><div class="ttdeci">#define NULL_INT_VALUE</div><div class="ttdef"><b>Definition:</b> poc_config.hpp:20</div></div>
-<div class="ttc" id="apoc__config_8hpp_html_ad2f5081f2352125081f973374c54ee93"><div class="ttname"><a href="poc__config_8hpp.html#ad2f5081f2352125081f973374c54ee93">CUSTOM_GRAPH_DIAMETER</a></div><div class="ttdeci">const int CUSTOM_GRAPH_DIAMETER</div><div class="ttdef"><b>Definition:</b> poc_config.hpp:76</div></div>
+<div class="ttc" id="apoc__config_8hpp_html_ad2f5081f2352125081f973374c54ee93"><div class="ttname"><a href="poc__config_8hpp.html#ad2f5081f2352125081f973374c54ee93">CUSTOM_GRAPH_DIAMETER</a></div><div class="ttdeci">const int CUSTOM_GRAPH_DIAMETER</div><div class="ttdef"><b>Definition:</b> poc_config.hpp:65</div></div>
 </div><!-- fragment -->
 <p>Diameter of nodes graph. </p>
 

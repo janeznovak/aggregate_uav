@@ -19,14 +19,5 @@ var dir_1c31b5f3d3ca7a1806dac88aa3bfe621 =
     ] ],
     [ "StorageService.java", "StorageService_8java.html", [
       [ "StorageService", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1StorageService.html", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1StorageService" ]
-    ] ],
-    [ "WearableFeedbackFileHandler.java", "WearableFeedbackFileHandler_8java.html", [
-      [ "WearableFeedbackFileHandler", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1WearableFeedbackFileHandler.html", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1WearableFeedbackFileHandler" ]
-    ] ],
-    [ "WearableFeedbackService.java", "WearableFeedbackService_8java.html", [
-      [ "WearableFeedbackService", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1WearableFeedbackService.html", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1WearableFeedbackService" ]
-    ] ],
-    [ "WearableSosFileHandler.java", "WearableSosFileHandler_8java.html", [
-      [ "WearableSosFileHandler", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1WearableSosFileHandler.html", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1WearableSosFileHandler" ]
     ] ]
 ];

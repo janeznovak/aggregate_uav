@@ -1,28 +1,6 @@
 var searchData=
 [
-  ['wearable_5ffeedback_5fparser_2ecpp_1726',['wearable_feedback_parser.cpp',['../wearable__feedback__parser_8cpp.html',1,'']]],
-  ['wearable_5ffeedback_5fparser_2eh_1727',['wearable_feedback_parser.h',['../wearable__feedback__parser_8h.html',1,'']]],
-  ['wearable_5freader_2epy_1728',['wearable_reader.py',['../wearable__reader_8py.html',1,'']]],
-  ['wearableentity_2ejava_1729',['WearableEntity.java',['../WearableEntity_8java.html',1,'']]],
-  ['wearablefeedbackdto_2ejava_1730',['WearableFeedbackDTO.java',['../WearableFeedbackDTO_8java.html',1,'']]],
-  ['wearablefeedbackdtomapper_2ejava_1731',['WearableFeedbackDTOMapper.java',['../WearableFeedbackDTOMapper_8java.html',1,'']]],
-  ['wearablefeedbackentity_2ejava_1732',['WearableFeedbackEntity.java',['../WearableFeedbackEntity_8java.html',1,'']]],
-  ['wearablefeedbackfilehandler_2ejava_1733',['WearableFeedbackFileHandler.java',['../WearableFeedbackFileHandler_8java.html',1,'']]],
-  ['wearablefeedbackproperties_2ejava_1734',['WearableFeedbackProperties.java',['../WearableFeedbackProperties_8java.html',1,'']]],
-  ['wearablefeedbackreader_2ejava_1735',['WearableFeedbackReader.java',['../WearableFeedbackReader_8java.html',1,'']]],
-  ['wearablefeedbackrepository_2ejava_1736',['WearableFeedbackRepository.java',['../WearableFeedbackRepository_8java.html',1,'']]],
-  ['wearablefeedbackresource_2ejava_1737',['WearableFeedbackResource.java',['../WearableFeedbackResource_8java.html',1,'']]],
-  ['wearablefeedbackscheduler_2ejava_1738',['WearableFeedbackScheduler.java',['../WearableFeedbackScheduler_8java.html',1,'']]],
-  ['wearablefeedbackservice_2ejava_1739',['WearableFeedbackService.java',['../WearableFeedbackService_8java.html',1,'']]],
-  ['wearablefeedbacksosresource_2ejava_1740',['WearableFeedbackSOSResource.java',['../WearableFeedbackSOSResource_8java.html',1,'']]],
-  ['wearableproperties_2ejava_1741',['WearableProperties.java',['../WearableProperties_8java.html',1,'']]],
-  ['wearablerepository_2ejava_1742',['WearableRepository.java',['../WearableRepository_8java.html',1,'']]],
-  ['wearableresource_2ejava_1743',['WearableResource.java',['../WearableResource_8java.html',1,'']]],
-  ['wearablesosfilehandler_2ejava_1744',['WearableSosFileHandler.java',['../WearableSosFileHandler_8java.html',1,'']]],
-  ['wearablesosproperties_2ejava_1745',['WearableSosProperties.java',['../WearableSosProperties_8java.html',1,'']]],
-  ['wearablesosreader_2ejava_1746',['WearableSosReader.java',['../WearableSosReader_8java.html',1,'']]],
-  ['wearablesosscheduler_2ejava_1747',['WearableSosScheduler.java',['../WearableSosScheduler_8java.html',1,'']]],
-  ['webconfig_2ejava_1748',['WebConfig.java',['../WebConfig_8java.html',1,'']]],
-  ['writer_2ejava_1749',['Writer.java',['../Writer_8java.html',1,'']]],
-  ['writer_2epy_1750',['writer.py',['../writer_8py.html',1,'']]]
+  ['webconfig_2ejava_1451',['WebConfig.java',['../WebConfig_8java.html',1,'']]],
+  ['writer_2ejava_1452',['Writer.java',['../Writer_8java.html',1,'']]],
+  ['writer_2epy_1453',['writer.py',['../writer_8py.html',1,'']]]
 ];

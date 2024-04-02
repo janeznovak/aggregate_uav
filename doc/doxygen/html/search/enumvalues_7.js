@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['kiosk_2532',['KIOSK',['../common__data_8hpp.html#a6a276b85e2da28c5f9c3dbce61c55682a225d1a31d94e4c0f223f74a5eb859cbe',1,'common_data.hpp']]]
+  ['ld_5f06_2073',['LD_06',['../namespaceldlidar.html#af712d1a7890914df199cbf5fb4b74f14ac31621343e06d95af4cb0cd9c2225821',1,'ldlidar']]],
+  ['ld_5f19_2074',['LD_19',['../namespaceldlidar.html#af712d1a7890914df199cbf5fb4b74f14a955693e35b2cd8785ab9ad2df59c698f',1,'ldlidar']]]
 ];

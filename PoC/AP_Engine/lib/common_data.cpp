@@ -27,14 +27,11 @@ std::string to_string(ProcessingStatus s) {
 //! @brief String representation of a node_type.
 std::string to_string(node_type s) {
     switch (s) {
-        case node_type::ROBOT:
-            return "ROBOT";
+        case node_type::ROBOT_MASTER:
+            return "ROBOT_MASTER";
 
-        case node_type::KIOSK:
-            return "KIOSK";
-
-        case node_type::WEARABLE:
-            return "WEARABLE";    
+        case node_type::ROBOT_SLAVE:
+            return "ROBOT_SLAVE";
 
         default:
             return "";
@@ -43,9 +40,6 @@ std::string to_string(node_type s) {
 
 std::unordered_map<std::string,std::vector<RobotStatus>> RobotStatesMap{};
 std::mutex RobotStatesMutex{};
-
-std::unordered_map<std::string,std::vector<WearableStatus>> WearableStatesMap{};
-std::mutex WearableStatesMutex{};
 
 std::vector<InputGoal> InputGoalList{};
 std::mutex GoalMutex{};

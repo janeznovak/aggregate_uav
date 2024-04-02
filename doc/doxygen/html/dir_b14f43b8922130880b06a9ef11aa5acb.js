@@ -5,7 +5,7 @@ var dir_b14f43b8922130880b06a9ef11aa5acb =
     ] ],
     [ "config.py", "Robot__Reader_2src_2robot__reader_2robot__reader_2config_8py.html", "Robot__Reader_2src_2robot__reader_2robot__reader_2config_8py" ],
     [ "coords.py", "Robot__Reader_2src_2robot__reader_2robot__reader_2coords_8py.html", "Robot__Reader_2src_2robot__reader_2robot__reader_2coords_8py" ],
-    [ "feedback_writer.py", "Robot__Reader_2src_2robot__reader_2robot__reader_2feedback__writer_8py.html", "Robot__Reader_2src_2robot__reader_2robot__reader_2feedback__writer_8py" ],
+    [ "feedback_writer.py", "feedback__writer_8py.html", "feedback__writer_8py" ],
     [ "goal.py", "goal_8py.html", "goal_8py" ],
     [ "odom_reader.py", "odom__reader_8py.html", "odom__reader_8py" ],
     [ "position.py", "position_8py.html", [

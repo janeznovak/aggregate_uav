@@ -7,8 +7,5 @@ var namespaceit_1_1unito_1_1sensors_1_1server_1_1service =
     [ "FileHandlerService< DTO, R extends Reader", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1FileHandlerService_3_01DTO_00_01R_01extends_01Reader.html", null ],
     [ "GoalService", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1GoalService.html", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1GoalService" ],
     [ "MeasurementService", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1MeasurementService.html", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1MeasurementService" ],
-    [ "StorageService", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1StorageService.html", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1StorageService" ],
-    [ "WearableFeedbackFileHandler", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1WearableFeedbackFileHandler.html", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1WearableFeedbackFileHandler" ],
-    [ "WearableFeedbackService", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1WearableFeedbackService.html", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1WearableFeedbackService" ],
-    [ "WearableSosFileHandler", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1WearableSosFileHandler.html", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1WearableSosFileHandler" ]
+    [ "StorageService", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1StorageService.html", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1StorageService" ]
 ];

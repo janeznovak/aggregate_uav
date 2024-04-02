@@ -1,4 +1,6 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$interfaceit_1_1unito_1_1sensors_1_1server_1_1fs_1_1Reader.html" title=" " alt="" coords="5,5,181,47"/>
-<area shape="rect" id="node2" href="$classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1ActionReader.html" title="ActionReader transforms a csv file containing actions to DTOs." alt="" coords="229,5,400,47"/>
+<area shape="rect" id="node1" title=" " alt="" coords="27,15,160,42"/>
+<area shape="rect" id="node2" href="$classit_1_1unito_1_1sensors_1_1server_1_1service_1_1ActionFileHandler.html" title="ActionFileHandler polls and handles actions files." alt="" coords="229,5,432,47"/>
+<area shape="rect" id="node3" href="$classit_1_1unito_1_1sensors_1_1server_1_1service_1_1FeedbackFileHandler.html" title="FeedbackFileHandler polls and handles feedbacks files." alt="" coords="229,71,432,112"/>
+<area shape="rect" id="node4" href="$interfaceit_1_1unito_1_1sensors_1_1server_1_1util_1_1IWatcher.html" title="Interface used to watch a folder finding new files." alt="" coords="5,68,181,109"/>
 </map>

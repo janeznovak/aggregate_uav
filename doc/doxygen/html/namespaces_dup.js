@@ -36,7 +36,6 @@ var namespaces_dup =
     ] ],
     [ "fcpp", "namespacefcpp.html", "namespacefcpp" ],
     [ "gazebo", "namespacegazebo.html", "namespacegazebo" ],
-    [ "gazebo_plugins", "namespacegazebo__plugins.html", "namespacegazebo__plugins" ],
     [ "goal", "namespacegoal.html", "namespacegoal" ],
     [ "inbound_proxy", null, [
       [ "board_config", "namespaceinbound__proxy_1_1board__config.html", [
@@ -127,26 +126,5 @@ var namespaces_dup =
       ] ],
       [ "writer", "namespacerobot__writer_1_1writer.html", "namespacerobot__writer_1_1writer" ]
     ] ],
-    [ "std", "namespacestd.html", "namespacestd" ],
-    [ "wearable_feedback", "namespacewearable__feedback.html", "namespacewearable__feedback" ],
-    [ "wearable_reader", null, [
-      [ "config", "namespacewearable__reader_1_1config.html", [
-        [ "DEFAULT_QOS_TOPIC", "namespacewearable__reader_1_1config.html#ac204697b1c47b5b6267f0f51a176074a", null ],
-        [ "ODOM_TOPIC", "namespacewearable__reader_1_1config.html#a904ae20a55e47ae18b28c918dffd3ffe", null ],
-        [ "POLL_WRITER_SECONDS", "namespacewearable__reader_1_1config.html#adcb32772fbf9467bd5cac6ff16444a4f", null ],
-        [ "SENSOR_TOPIC", "namespacewearable__reader_1_1config.html#a6fa054e06fd9c79ed04002d5a175fa17", null ],
-        [ "TRIGGER_TOPIC", "namespacewearable__reader_1_1config.html#a6ccfce46764021742c90204cf3629eb9", null ]
-      ] ],
-      [ "feedback_writer", "namespacewearable__reader_1_1feedback__writer.html", [
-        [ "write_file_feedback", "namespacewearable__reader_1_1feedback__writer.html#a0bc7373b68214e755ea00979365032d9", null ],
-        [ "write_file_sos", "namespacewearable__reader_1_1feedback__writer.html#a9d28dcfdf3807803ddc3f046e74c2bc4", null ],
-        [ "DELIMITER", "namespacewearable__reader_1_1feedback__writer.html#a2d4172e6a0e2464bd14697f0fcf33c97", null ],
-        [ "STORAGE_BASE_PATH", "namespacewearable__reader_1_1feedback__writer.html#ad47759024174b32904ee05cc3a518221", null ],
-        [ "WEARABLE_OUTPUT_PATH_TO_AP", "namespacewearable__reader_1_1feedback__writer.html#a088a2cb07b39e370b1541582b3470965", null ],
-        [ "WEARABLE_OUTPUT_PATH_TO_WEB_FEEDBACK", "namespacewearable__reader_1_1feedback__writer.html#a70429602912eaae21136aec83a0c7b08", null ],
-        [ "WEARABLE_OUTPUT_PATH_TO_WEB_SOS", "namespacewearable__reader_1_1feedback__writer.html#a0589e516054ee571238014989cab065e", null ],
-        [ "WEARABLE_PLACEHOLDER", "namespacewearable__reader_1_1feedback__writer.html#a2d51e6d2a18fad34c22172aafdff0286", null ]
-      ] ],
-      [ "wearable_reader", "namespacewearable__reader_1_1wearable__reader.html", "namespacewearable__reader_1_1wearable__reader" ]
-    ] ]
+    [ "std", "namespacestd.html", "namespacestd" ]
 ];
