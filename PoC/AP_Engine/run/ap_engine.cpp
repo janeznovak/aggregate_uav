@@ -25,11 +25,7 @@ int main() {
     int speed = 0;
     int robots = ROBOTS_COUNT;  
     std::string background_image = BG_IMAGE;
-    std::unordered_map<std::string, std::vector<device_t>> nodes_by_goal_subcode = 
-        {
-            {"HEART", {1, 2}}, 
-            {"ACCIDENTAL_FALL", {3, 4}}
-        };
+    std::unordered_map<std::string, std::vector<device_t>> nodes_by_goal_subcode = {};
 
     // The network object type (interactive simulator with given options).
     using net_t = component::interactive_simulator<option::list>::net;

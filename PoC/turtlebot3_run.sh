@@ -38,7 +38,6 @@ if [[ -f $(dirname "$0")/Navigation_System/install/local_setup.bash ]] &&
         find "$(dirname "$0")/../Storage/from_ap" -depth -type f \( -name '*.txt' -o -name '*.lock' \) -delete -o -path "$(dirname "$0")/Storage/from_ap" -prune -type f \( -name '*.txt' -o -name '*.lock' \) -delete
         find "$(dirname "$0")/../Storage/from_robot" -depth -type f \( -name '*.txt' -o -name '*.lock' \) -delete -o -path "$(dirname "$0")/Storage/from_robot" -prune -type f \( -name '*.txt' -o -name '*.lock' \) -delete
         find "$(dirname "$0")/../Storage/from_user" -depth -type f \( -name '*.txt' -o -name '*.lock' \) -delete -o -path "$(dirname "$0")/Storage/from_user" -prune -type f \( -name '*.txt' -o -name '*.lock' \) -delete
-        find "$(dirname "$0")/../Storage/from_wearable" -depth -type f \( -name '*.txt' -o -name '*.lock' \) -delete -o -path "$(dirname "$0")/Storage/from_wearable" -prune -type f \( -name '*.txt' -o -name '*.lock' \) -delete
         echo "Cleaned Storage folder"
         TURTLEBOT3_MODEL=burger ROBOTS_YAML=use_case_resources/library/robots.yaml \
           ros2 launch turtlebot3_gazebo turtlebot3_library.launch.py use_proxies:=false decrease_battery:=True

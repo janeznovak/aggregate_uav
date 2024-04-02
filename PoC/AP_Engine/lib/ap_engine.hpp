@@ -289,6 +289,9 @@ namespace fcpp
                     battery_discharged_when_it_is_running(CALL, p, g, s);
                 }
 
+                // TODO: add code from thesis
+                
+
                 // TODO: at the moment, AP sends command only to master
                 if (nt == node_type::ROBOT_MASTER) {
                     send_action_to_selected_node(CALL, p, g, s);

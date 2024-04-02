@@ -28,7 +28,7 @@ To run:
 ```bash
 cd /home/robot/Documenti/projects/NODES/PoC/AP_Engine      
 cd bin
-AP_ROUND_PERIOD=0.2 AP_WEARABLE_COUNT=0 AP_ROBOT_COUNT=5 AP_SIMULATOR_OFFSET_X=0.4 ./run/ap_engine
+AP_ROUND_PERIOD=0.5 AP_ROBOT_COUNT=5 AP_SIMULATOR_OFFSET_X=0.4 ./run/ap_engine
 ```
 
 To run:

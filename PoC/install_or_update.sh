@@ -73,11 +73,6 @@ install_component_custom() {
             npm install --legacy-peer-deps
             ng build
             ;;
-        *"gazebo_create3"*)
-            log "Updating GAZEBO_Create3..."
-            source ../Navigation_System/install/local_setup.bash
-            install_ros2_component
-            ;;
         *"gazebo_turtlebot3"*)
             log "Updating Gazebo_Turtlebot3..."
             cd src || exit
