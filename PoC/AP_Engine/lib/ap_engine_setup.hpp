@@ -219,6 +219,12 @@ namespace data {
         goal_priority, int, 
         goal_subcode, string 
     >; 
+
+    //! @brief A representation of process properties using tagged_tuple
+    using process_tuple_type = common::tagged_tuple_t<
+        // TODO
+        goal_code, string
+    >; 
 }
 
 //! @brief The general simulation options.

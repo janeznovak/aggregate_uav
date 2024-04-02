@@ -205,24 +205,24 @@ namespace fcpp
         // AP PROCESS
 
         //! @brief A robot has reached a goal and now try to terminate the process
-        FUN goal_tuple_type ends_processed_goal(ARGS, goal_tuple_type const& g, status* s) { CODE
+        FUN process_tuple_type ends_processed_goal(ARGS, process_tuple_type &p, goal_tuple_type const& g, status* s) { CODE
                 
-                std::cout << "Robot "   << node.uid  << " is trying to terminate goal " << common::get<goal_code>(g) << endl;
-                std::cout << endl;
-                
-                *s = status::terminated_output; // stop propagation
-                return g;
+            std::cout << "Robot "   << node.uid  << " is trying to terminate goal " << common::get<goal_code>(g) << endl;
+            std::cout << endl;
+            
+            *s = status::terminated_output; // stop propagation
+            return p;
         }
 
         //! @brief A robot has discharged the battery, so AP send a stop command
-        FUN void battery_discharged_when_it_is_running(ARGS, goal_tuple_type const& g, status* s) { CODE
+        FUN void battery_discharged_when_it_is_running(ARGS, process_tuple_type &p, goal_tuple_type const& g, status* s) { CODE
             send_stop_command_to_robot(CALL, "ABORT", node.uid, g, ProcessingStatus::IDLE);
 
             *s = status::border; // listen neighbours, but not send messages
         }
 
         //! @brief Send a GOAL action to selected node and update the AP state machine of the robot to SELECTED
-        FUN void send_action_to_selected_node(ARGS, goal_tuple_type const& g, status* s) { CODE
+        FUN void send_action_to_selected_node(ARGS, process_tuple_type &p, goal_tuple_type const& g, status* s) { CODE
             std::string robot_chosen = get_real_robot_name(CALL, node.uid); 
             std::cout << "Robot "   << robot_chosen  << " is chosen for goal " << common::get<goal_code>(g) << endl;
             std::cout << endl;
@@ -271,29 +271,27 @@ namespace fcpp
 
             add_goal_to_computing_map(CALL, g);
             
-            old(CALL, g, [&] (goal_tuple_type g) {
+            old(CALL, common::make_tagged_tuple<goal_code>(common::get<goal_code>(g)), [&] (process_tuple_type p) {
 
                 // compute charge of battery in percent
                 float percent_charge = node.storage(node_battery_charge{})/100.0;
                 
-                if (nt == node_type::ROBOT_MASTER) {//i'm robot master
-                    // if i'm terminating the current goal, i have to terminate goal for all nodes
-                    if (common::get<goal_code>(g) == node.storage(node_process_goal{}) && //i was running current goal in the process
-                        common::get<goal_code>(g) == node.storage(node_external_goal{}) && //the robot was running current goal
-                        ProcessingStatus::TERMINATING == node.storage(node_process_status{})) { //but now i'm terminating
-                        return ends_processed_goal(CALL, g, s);
-                    } 
+                // if i'm terminating the current goal, i have to terminate goal for all nodes
+                if (common::get<goal_code>(g) == node.storage(node_process_goal{}) && //i was running current goal in the process
+                    common::get<goal_code>(g) == node.storage(node_external_goal{}) && //the robot was running current goal
+                    ProcessingStatus::TERMINATING == node.storage(node_process_status{})) { //but now i'm terminating
+                    return ends_processed_goal(CALL, p, g, s);
+                } 
 
-                    // if battery is empty, then stop at current position
-                    if (node.storage(node_external_status{}) == feedback::GoalStatus::RUNNING && //i'm reaching the goal
-                        percent_charge <= 0.0) { //the battery is full discharged
-                        battery_discharged_when_it_is_running(CALL, g, s);
-                    }
+                // if battery is empty, then stop at current position
+                if (node.storage(node_external_status{}) == feedback::GoalStatus::RUNNING && //i'm reaching the goal
+                    percent_charge <= 0.0) { //the battery is full discharged
+                    battery_discharged_when_it_is_running(CALL, p, g, s);
                 }
 
                 // TODO: at the moment, AP sends command only to master
                 if (nt == node_type::ROBOT_MASTER) {
-                    send_action_to_selected_node(CALL, g, s);
+                    send_action_to_selected_node(CALL, p, g, s);
                 }
 
                 // blinking colors if not running
@@ -302,8 +300,8 @@ namespace fcpp
                     blink_computing_color(CALL, n_round);
                 }
                 
-                // TODO: change data structure
-                return g;
+                // TODO
+                return p;
             });
         }
 
@@ -606,7 +604,8 @@ namespace fcpp
             int,
             bool,
             goal_tuple_type,
-            robot_phase
+            robot_phase,
+            process_tuple_type
         >;
 
         //! @brief Export types used by the main function (update it when expanding the program).
