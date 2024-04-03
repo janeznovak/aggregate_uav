@@ -1,5 +1,6 @@
 /**/build/**
 /**/install/**
+/log/**
 /GAZEBO_Create3/log/
 /GAZEBO_Create3/**/log/**
 /GAZEBO_Create3/aws-robomaker-small-house-world/
@@ -28,4 +29,11 @@
 /GAZEBO_Turtlebot3/src/nav2/
 /GAZEBO_Turtlebot3/src/utils/
 /GAZEBO_Turtlebot3/log/
+Crazyflie/log/
+Crazyflie/install/
+Crazyflie/build/
+
+Crazyflie/ros2_ws/log/**
+Crazyflie/ros2_ws/install/**
+Crazyflie/ros2_ws/build/**
 **tags
