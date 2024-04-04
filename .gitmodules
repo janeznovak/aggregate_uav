@@ -25,4 +25,4 @@
 	branch = main
 [submodule "Crazyflie/ros2_ws/src/motion_capture_tracking"]
 	path = Crazyflie/ros2_ws/src/motion_capture_tracking
-	url = https://github.com/IMRCLab/crazyswarm2.git
+	url = https://github.com/IMRCLab/motion_capture_tracking.git
