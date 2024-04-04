@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 import os
 from glob import glob
 
-package_name = 'crazyfly_controller'
+package_name = 'crazyflie_controller'
 
 setup(
     name=package_name,
@@ -22,7 +22,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            "run_many = crazyfly_controller.crazyfly_controller:main"
+            "run_many = crazyflie_controller.crazyflie_controller:main"
         ],
     },
 )

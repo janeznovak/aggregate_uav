@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 import sys
-
-from crazyflie_py.crazyflie import TimeHelper
-from .trajectory_manager import TrajectoryManager
 import rclpy
 from rclpy.node import Node 
 import numpy as np
@@ -25,8 +22,6 @@ class CrazyflyController(Node):
         self.prefix = prefix
         self.master_position = PoseStamped()
         self.cf_position = PoseStamped()
-        self.traj_manager = TrajectoryManager(self.cfname)
-        self.timeHelper = TimeHelper(self)
 
         self.takeoffService = self.create_client(Takeoff, prefix + '/takeoff')
         self.takeoffService.wait_for_service()
@@ -165,7 +160,6 @@ class CrazyflyController(Node):
 
 def main(args=None):
     rclpy.init()
-    print("NAME: " + str(sys.argv))
     cfname = sys.argv[1]
     node = CrazyflyController(cfname)
     rclpy.spin(node)
