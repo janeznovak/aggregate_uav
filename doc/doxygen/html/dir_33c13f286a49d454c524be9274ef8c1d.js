@@ -20,11 +20,5 @@ var dir_33c13f286a49d454c524be9274ef8c1d =
     ] ],
     [ "NodeRepository.java", "NodeRepository_8java.html", [
       [ "NodeRepository", "interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1NodeRepository.html", "interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1NodeRepository" ]
-    ] ],
-    [ "WearableFeedbackRepository.java", "WearableFeedbackRepository_8java.html", [
-      [ "WearableFeedbackRepository", "interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1WearableFeedbackRepository.html", "interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1WearableFeedbackRepository" ]
-    ] ],
-    [ "WearableRepository.java", "WearableRepository_8java.html", [
-      [ "WearableRepository", "interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1WearableRepository.html", "interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1WearableRepository" ]
     ] ]
 ];

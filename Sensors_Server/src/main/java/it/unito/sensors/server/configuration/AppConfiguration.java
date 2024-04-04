@@ -26,28 +26,15 @@ public class AppConfiguration {
     ScriptsProperties scripts;
     PlaceholderProperties placeholder;
     RobotProperties robot;
-    WearableProperties wearable;
     FeedbackProperties feedback;
-    WearableFeedbackProperties wearableFeedback;
-    WearableSosProperties wearableSos;
     GoalStateMachineProperties goalStateMachine;
 
     public List<String> getRobotNames() {
         if (robot.getNames() != null  && !robot.getNames().isEmpty()) {
             return robot.getNames();
         } else {
-            return IntStream.range(1, robot.getCount()+1)
+            return IntStream.range(1, robot.getCount())
                     .mapToObj(i -> robot.getExample().replaceAll(placeholder.getRobot(), Integer.toString(i)))
-                    .collect(Collectors.toList());
-        }
-    }
-
-    public List<String> getWearableCodes() {
-        if (wearable.getCodes() != null  && !wearable.getCodes().isEmpty()) {
-            return wearable.getCodes();
-        } else {
-            return IntStream.range(1, wearable.getCount()+1)
-                    .mapToObj(i -> wearable.getExample().replaceAll(placeholder.getWearable(), Integer.toString(i)))
                     .collect(Collectors.toList());
         }
     }

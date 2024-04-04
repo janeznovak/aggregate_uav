@@ -10,6 +10,16 @@
 [submodule "Navigation_System/src/create3_examples"]
 	path = Navigation_System/src/create3_examples
 	url = git@github.com:Gior26/create3_examples.git
+	branch = humble
 [submodule "Navigation_System/src/ldlidar_stl_ros2"]
 	path = Navigation_System/src/ldlidar_stl_ros2
 	url = https://github.com/Gior26/ldlidar_stl_ros2
+
+[submodule "Crazyflie/crazyflie-firmware"]
+	path = Crazyflie/crazyflie-firmware
+	url = https://github.com/llanesc/crazyflie-firmware.git
+    branch = sitl-release
+[submodule "Crazyflie/ros2_ws/src/crazyswarm2"]
+	path = Crazyflie/ros2_ws/src/crazyswarm2
+	url = https://github.com/IMRCLab/crazyswarm2.git
+	branch = main

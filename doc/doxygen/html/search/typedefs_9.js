@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['schedule_5ftype_2488',['schedule_type',['../namespacefcpp_1_1option.html#a2317aa853c6b8233a970a069761ec4aa',1,'fcpp::option']]],
-  ['spawn_5fresult_5ftype_2489',['spawn_result_type',['../namespacefcpp_1_1coordination.html#a7b5ae87f57b762c5b0cae722d4b70899',1,'fcpp::coordination']]],
-  ['subcode_5fmap_5fdistr_2490',['subcode_map_distr',['../namespacefcpp_1_1option.html#a18937fde2c177d4d1a5c03f3435708ae',1,'fcpp::option']]]
+  ['twistmsg_2038',['TwistMsg',['../classcreate3__coverage_1_1DriveStraightBehavior.html#aad150d1f755a3bd4e5710fa966ececa8',1,'create3_coverage::DriveStraightBehavior::TwistMsg()'],['../classcreate3__coverage_1_1ReflexBehavior.html#a47a1818f2eec06cbd932e88ba6733358',1,'create3_coverage::ReflexBehavior::TwistMsg()'],['../classcreate3__coverage_1_1RotateBehavior.html#a570f5bed286b1742455bd113de50b708',1,'create3_coverage::RotateBehavior::TwistMsg()'],['../classcreate3__coverage_1_1SpiralBehavior.html#a8bf9dd8a8581c08de292b4fbfd1556f9',1,'create3_coverage::SpiralBehavior::TwistMsg()'],['../classcreate3__coverage_1_1CoverageStateMachine.html#ac2012fff25509496cd84a2822379e178',1,'create3_coverage::CoverageStateMachine::TwistMsg()']]]
 ];

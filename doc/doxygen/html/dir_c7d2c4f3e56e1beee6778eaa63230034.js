@@ -14,14 +14,5 @@ var dir_c7d2c4f3e56e1beee6778eaa63230034 =
     ] ],
     [ "StatsResource.java", "StatsResource_8java.html", [
       [ "StatsResource", "classit_1_1unito_1_1sensors_1_1server_1_1controller_1_1StatsResource.html", "classit_1_1unito_1_1sensors_1_1server_1_1controller_1_1StatsResource" ]
-    ] ],
-    [ "WearableFeedbackResource.java", "WearableFeedbackResource_8java.html", [
-      [ "WearableFeedbackResource", "classit_1_1unito_1_1sensors_1_1server_1_1controller_1_1WearableFeedbackResource.html", "classit_1_1unito_1_1sensors_1_1server_1_1controller_1_1WearableFeedbackResource" ]
-    ] ],
-    [ "WearableFeedbackSOSResource.java", "WearableFeedbackSOSResource_8java.html", [
-      [ "WearableFeedbackSOSResource", "classit_1_1unito_1_1sensors_1_1server_1_1controller_1_1WearableFeedbackSOSResource.html", "classit_1_1unito_1_1sensors_1_1server_1_1controller_1_1WearableFeedbackSOSResource" ]
-    ] ],
-    [ "WearableResource.java", "WearableResource_8java.html", [
-      [ "WearableResource", "classit_1_1unito_1_1sensors_1_1server_1_1controller_1_1WearableResource.html", "classit_1_1unito_1_1sensors_1_1server_1_1controller_1_1WearableResource" ]
     ] ]
 ];

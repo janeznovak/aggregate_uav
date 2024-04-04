@@ -92,10 +92,6 @@ var annotated_dup =
       [ "GazeboRosBattery", "classgazebo_1_1GazeboRosBattery.html", "classgazebo_1_1GazeboRosBattery" ],
       [ "GazeboRosBatteryPrivate", "classgazebo_1_1GazeboRosBatteryPrivate.html", "classgazebo_1_1GazeboRosBatteryPrivate" ]
     ] ],
-    [ "gazebo_plugins", "namespacegazebo__plugins.html", [
-      [ "GazeboActorRosPlanarMove", "classgazebo__plugins_1_1GazeboActorRosPlanarMove.html", "classgazebo__plugins_1_1GazeboActorRosPlanarMove" ],
-      [ "GazeboActorRosPlanarMovePrivate", "classgazebo__plugins_1_1GazeboActorRosPlanarMovePrivate.html", "classgazebo__plugins_1_1GazeboActorRosPlanarMovePrivate" ]
-    ] ],
     [ "goal", "namespacegoal.html", [
       [ "manager", "namespacegoal_1_1manager.html", [
         [ "GoalManager", "classgoal_1_1manager_1_1GoalManager.html", null ]
@@ -127,10 +123,7 @@ var annotated_dup =
                 [ "PlaceholderProperties", "classit_1_1unito_1_1sensors_1_1server_1_1configuration_1_1dto_1_1PlaceholderProperties.html", null ],
                 [ "RobotProperties", "classit_1_1unito_1_1sensors_1_1server_1_1configuration_1_1dto_1_1RobotProperties.html", null ],
                 [ "ScriptsProperties", "classit_1_1unito_1_1sensors_1_1server_1_1configuration_1_1dto_1_1ScriptsProperties.html", null ],
-                [ "StorageProperties", "classit_1_1unito_1_1sensors_1_1server_1_1configuration_1_1dto_1_1StorageProperties.html", null ],
-                [ "WearableFeedbackProperties", "classit_1_1unito_1_1sensors_1_1server_1_1configuration_1_1dto_1_1WearableFeedbackProperties.html", null ],
-                [ "WearableProperties", "classit_1_1unito_1_1sensors_1_1server_1_1configuration_1_1dto_1_1WearableProperties.html", null ],
-                [ "WearableSosProperties", "classit_1_1unito_1_1sensors_1_1server_1_1configuration_1_1dto_1_1WearableSosProperties.html", null ]
+                [ "StorageProperties", "classit_1_1unito_1_1sensors_1_1server_1_1configuration_1_1dto_1_1StorageProperties.html", null ]
               ] ],
               [ "AppConfiguration", "classit_1_1unito_1_1sensors_1_1server_1_1configuration_1_1AppConfiguration.html", "classit_1_1unito_1_1sensors_1_1server_1_1configuration_1_1AppConfiguration" ],
               [ "SwaggerConfig", "classit_1_1unito_1_1sensors_1_1server_1_1configuration_1_1SwaggerConfig.html", "classit_1_1unito_1_1sensors_1_1server_1_1configuration_1_1SwaggerConfig" ],
@@ -141,18 +134,14 @@ var annotated_dup =
               [ "GoalResource", "classit_1_1unito_1_1sensors_1_1server_1_1controller_1_1GoalResource.html", "classit_1_1unito_1_1sensors_1_1server_1_1controller_1_1GoalResource" ],
               [ "MeasurementResource", "classit_1_1unito_1_1sensors_1_1server_1_1controller_1_1MeasurementResource.html", "classit_1_1unito_1_1sensors_1_1server_1_1controller_1_1MeasurementResource" ],
               [ "NodeResource", "classit_1_1unito_1_1sensors_1_1server_1_1controller_1_1NodeResource.html", "classit_1_1unito_1_1sensors_1_1server_1_1controller_1_1NodeResource" ],
-              [ "StatsResource", "classit_1_1unito_1_1sensors_1_1server_1_1controller_1_1StatsResource.html", "classit_1_1unito_1_1sensors_1_1server_1_1controller_1_1StatsResource" ],
-              [ "WearableFeedbackResource", "classit_1_1unito_1_1sensors_1_1server_1_1controller_1_1WearableFeedbackResource.html", "classit_1_1unito_1_1sensors_1_1server_1_1controller_1_1WearableFeedbackResource" ],
-              [ "WearableFeedbackSOSResource", "classit_1_1unito_1_1sensors_1_1server_1_1controller_1_1WearableFeedbackSOSResource.html", "classit_1_1unito_1_1sensors_1_1server_1_1controller_1_1WearableFeedbackSOSResource" ],
-              [ "WearableResource", "classit_1_1unito_1_1sensors_1_1server_1_1controller_1_1WearableResource.html", "classit_1_1unito_1_1sensors_1_1server_1_1controller_1_1WearableResource" ]
+              [ "StatsResource", "classit_1_1unito_1_1sensors_1_1server_1_1controller_1_1StatsResource.html", "classit_1_1unito_1_1sensors_1_1server_1_1controller_1_1StatsResource" ]
             ] ],
             [ "dto", "namespaceit_1_1unito_1_1sensors_1_1server_1_1dto.html", [
               [ "mapper", "namespaceit_1_1unito_1_1sensors_1_1server_1_1dto_1_1mapper.html", [
                 [ "DTOMapper", "interfaceit_1_1unito_1_1sensors_1_1server_1_1dto_1_1mapper_1_1DTOMapper.html", "interfaceit_1_1unito_1_1sensors_1_1server_1_1dto_1_1mapper_1_1DTOMapper" ],
                 [ "FeedbackDTOMapper", "classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1mapper_1_1FeedbackDTOMapper.html", "classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1mapper_1_1FeedbackDTOMapper" ],
                 [ "GoalDTOMapper", "classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1mapper_1_1GoalDTOMapper.html", "classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1mapper_1_1GoalDTOMapper" ],
-                [ "MeasurementDTOMapper", "classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1mapper_1_1MeasurementDTOMapper.html", "classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1mapper_1_1MeasurementDTOMapper" ],
-                [ "WearableFeedbackDTOMapper", "classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1mapper_1_1WearableFeedbackDTOMapper.html", "classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1mapper_1_1WearableFeedbackDTOMapper" ]
+                [ "MeasurementDTOMapper", "classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1mapper_1_1MeasurementDTOMapper.html", "classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1mapper_1_1MeasurementDTOMapper" ]
               ] ],
               [ "CustomWearableSOSDTO", "classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1CustomWearableSOSDTO.html", null ],
               [ "DTO", "interfaceit_1_1unito_1_1sensors_1_1server_1_1dto_1_1DTO.html", null ],
@@ -160,8 +149,7 @@ var annotated_dup =
               [ "GoalDTO", "classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1GoalDTO.html", null ],
               [ "MeasurementDTO", "classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1MeasurementDTO.html", null ],
               [ "NodeReportDTO", "classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1NodeReportDTO.html", null ],
-              [ "StatusReportDTO", "classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1StatusReportDTO.html", "classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1StatusReportDTO" ],
-              [ "WearableFeedbackDTO", "classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1WearableFeedbackDTO.html", null ]
+              [ "StatusReportDTO", "classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1StatusReportDTO.html", "classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1StatusReportDTO" ]
             ] ],
             [ "entity", "namespaceit_1_1unito_1_1sensors_1_1server_1_1entity.html", [
               [ "ActionStateEnum", "enumit_1_1unito_1_1sensors_1_1server_1_1entity_1_1ActionStateEnum.html", "enumit_1_1unito_1_1sensors_1_1server_1_1entity_1_1ActionStateEnum" ],
@@ -175,16 +163,12 @@ var annotated_dup =
               [ "MeasurementData", "classit_1_1unito_1_1sensors_1_1server_1_1entity_1_1MeasurementData.html", null ],
               [ "MeasurementEntity", "classit_1_1unito_1_1sensors_1_1server_1_1entity_1_1MeasurementEntity.html", null ],
               [ "NeighbourEntity", "classit_1_1unito_1_1sensors_1_1server_1_1entity_1_1NeighbourEntity.html", null ],
-              [ "NodeEntity", "classit_1_1unito_1_1sensors_1_1server_1_1entity_1_1NodeEntity.html", "classit_1_1unito_1_1sensors_1_1server_1_1entity_1_1NodeEntity" ],
-              [ "WearableEntity", "classit_1_1unito_1_1sensors_1_1server_1_1entity_1_1WearableEntity.html", "classit_1_1unito_1_1sensors_1_1server_1_1entity_1_1WearableEntity" ],
-              [ "WearableFeedbackEntity", "classit_1_1unito_1_1sensors_1_1server_1_1entity_1_1WearableFeedbackEntity.html", null ]
+              [ "NodeEntity", "classit_1_1unito_1_1sensors_1_1server_1_1entity_1_1NodeEntity.html", "classit_1_1unito_1_1sensors_1_1server_1_1entity_1_1NodeEntity" ]
             ] ],
             [ "fs", "namespaceit_1_1unito_1_1sensors_1_1server_1_1fs.html", [
               [ "dto", "namespaceit_1_1unito_1_1sensors_1_1server_1_1fs_1_1dto.html", [
                 [ "CSVActionDTO", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1dto_1_1CSVActionDTO.html", null ],
                 [ "CSVFeedbackDTO", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1dto_1_1CSVFeedbackDTO.html", null ],
-                [ "CSVWearableFeedbackDTO", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1dto_1_1CSVWearableFeedbackDTO.html", null ],
-                [ "CSVWearableSosDTO", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1dto_1_1CSVWearableSosDTO.html", null ],
                 [ "FilePersistedDTO", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1dto_1_1FilePersistedDTO.html", null ]
               ] ],
               [ "util", "namespaceit_1_1unito_1_1sensors_1_1server_1_1fs_1_1util.html", [
@@ -196,8 +180,6 @@ var annotated_dup =
               [ "FeedbackReader", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1FeedbackReader.html", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1FeedbackReader" ],
               [ "GoalWriter", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1GoalWriter.html", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1GoalWriter" ],
               [ "Reader", "interfaceit_1_1unito_1_1sensors_1_1server_1_1fs_1_1Reader.html", "interfaceit_1_1unito_1_1sensors_1_1server_1_1fs_1_1Reader" ],
-              [ "WearableFeedbackReader", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1WearableFeedbackReader.html", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1WearableFeedbackReader" ],
-              [ "WearableSosReader", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1WearableSosReader.html", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1WearableSosReader" ],
               [ "Writer", "interfaceit_1_1unito_1_1sensors_1_1server_1_1fs_1_1Writer.html", "interfaceit_1_1unito_1_1sensors_1_1server_1_1fs_1_1Writer" ]
             ] ],
             [ "repository", "namespaceit_1_1unito_1_1sensors_1_1server_1_1repository.html", [
@@ -207,15 +189,11 @@ var annotated_dup =
               [ "ItemRepository", "interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1ItemRepository.html", "interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1ItemRepository" ],
               [ "MeasurementRepository", "interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1MeasurementRepository.html", "interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1MeasurementRepository" ],
               [ "NeighbourRepository", "interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1NeighbourRepository.html", null ],
-              [ "NodeRepository", "interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1NodeRepository.html", "interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1NodeRepository" ],
-              [ "WearableFeedbackRepository", "interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1WearableFeedbackRepository.html", "interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1WearableFeedbackRepository" ],
-              [ "WearableRepository", "interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1WearableRepository.html", "interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1WearableRepository" ]
+              [ "NodeRepository", "interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1NodeRepository.html", "interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1NodeRepository" ]
             ] ],
             [ "runner", "namespaceit_1_1unito_1_1sensors_1_1server_1_1runner.html", [
               [ "ActionScheduler", "classit_1_1unito_1_1sensors_1_1server_1_1runner_1_1ActionScheduler.html", "classit_1_1unito_1_1sensors_1_1server_1_1runner_1_1ActionScheduler" ],
-              [ "FeedbackScheduler", "classit_1_1unito_1_1sensors_1_1server_1_1runner_1_1FeedbackScheduler.html", "classit_1_1unito_1_1sensors_1_1server_1_1runner_1_1FeedbackScheduler" ],
-              [ "WearableFeedbackScheduler", "classit_1_1unito_1_1sensors_1_1server_1_1runner_1_1WearableFeedbackScheduler.html", "classit_1_1unito_1_1sensors_1_1server_1_1runner_1_1WearableFeedbackScheduler" ],
-              [ "WearableSosScheduler", "classit_1_1unito_1_1sensors_1_1server_1_1runner_1_1WearableSosScheduler.html", "classit_1_1unito_1_1sensors_1_1server_1_1runner_1_1WearableSosScheduler" ]
+              [ "FeedbackScheduler", "classit_1_1unito_1_1sensors_1_1server_1_1runner_1_1FeedbackScheduler.html", "classit_1_1unito_1_1sensors_1_1server_1_1runner_1_1FeedbackScheduler" ]
             ] ],
             [ "service", "namespaceit_1_1unito_1_1sensors_1_1server_1_1service.html", [
               [ "ActionFileHandler", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1ActionFileHandler.html", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1ActionFileHandler" ],
@@ -224,10 +202,7 @@ var annotated_dup =
               [ "FileHandlerService< DTO, R extends Reader", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1FileHandlerService_3_01DTO_00_01R_01extends_01Reader.html", null ],
               [ "GoalService", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1GoalService.html", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1GoalService" ],
               [ "MeasurementService", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1MeasurementService.html", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1MeasurementService" ],
-              [ "StorageService", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1StorageService.html", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1StorageService" ],
-              [ "WearableFeedbackFileHandler", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1WearableFeedbackFileHandler.html", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1WearableFeedbackFileHandler" ],
-              [ "WearableFeedbackService", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1WearableFeedbackService.html", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1WearableFeedbackService" ],
-              [ "WearableSosFileHandler", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1WearableSosFileHandler.html", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1WearableSosFileHandler" ]
+              [ "StorageService", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1StorageService.html", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1StorageService" ]
             ] ],
             [ "util", "namespaceit_1_1unito_1_1sensors_1_1server_1_1util.html", [
               [ "BashScriptRunner", "classit_1_1unito_1_1sensors_1_1server_1_1util_1_1BashScriptRunner.html", "classit_1_1unito_1_1sensors_1_1server_1_1util_1_1BashScriptRunner" ],
@@ -296,21 +271,6 @@ var annotated_dup =
     [ "std", "namespacestd.html", [
       [ "hash< InputGoal >", "structstd_1_1hash_3_01InputGoal_01_4.html", "structstd_1_1hash_3_01InputGoal_01_4" ]
     ] ],
-    [ "wearable_feedback", "namespacewearable__feedback.html", [
-      [ "manager", "namespacewearable__feedback_1_1manager.html", [
-        [ "FeedbackManager", "classwearable__feedback_1_1manager_1_1FeedbackManager.html", null ]
-      ] ],
-      [ "parser", "namespacewearable__feedback_1_1parser.html", [
-        [ "FeedbackParser", "classwearable__feedback_1_1parser_1_1FeedbackParser.html", null ]
-      ] ],
-      [ "WearableFeedbackData", "structwearable__feedback_1_1WearableFeedbackData.html", "structwearable__feedback_1_1WearableFeedbackData" ]
-    ] ],
-    [ "wearable_reader", null, [
-      [ "wearable_reader", "namespacewearable__reader_1_1wearable__reader.html", [
-        [ "WearableInformationReader", "classwearable__reader_1_1wearable__reader_1_1WearableInformationReader.html", "classwearable__reader_1_1wearable__reader_1_1WearableInformationReader" ]
-      ] ]
-    ] ],
-    [ "ElectionAlgorithmMapper", "classElectionAlgorithmMapper.html", "classElectionAlgorithmMapper" ],
     [ "FileWatcher", "classFileWatcher.html", "classFileWatcher" ],
     [ "ILogRealization", "classILogRealization.html", "classILogRealization" ],
     [ "InputGoal", "structInputGoal.html", "structInputGoal" ],
@@ -318,8 +278,6 @@ var annotated_dup =
     [ "LogModule", "classLogModule.html", "classLogModule" ],
     [ "LogPrint", "classLogPrint.html", "classLogPrint" ],
     [ "LogVersion", "structLogVersion.html", "structLogVersion" ],
-    [ "MinimalNavigator", "classMinimalNavigator.html", "classMinimalNavigator" ],
     [ "poc_file_watcher", "classpoc__file__watcher.html", "classpoc__file__watcher" ],
-    [ "RobotStatus", "structRobotStatus.html", "structRobotStatus" ],
-    [ "WearableStatus", "structWearableStatus.html", "structWearableStatus" ]
+    [ "RobotStatus", "structRobotStatus.html", "structRobotStatus" ]
 ];

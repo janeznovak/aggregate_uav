@@ -28,8 +28,6 @@ var hierarchy =
     [ "it.unito.sensors.server.fs.dto.CSVActionDTO", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1dto_1_1CSVActionDTO.html", null ],
     [ "it.unito.sensors.server.fs.dto.CSVFeedbackDTO", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1dto_1_1CSVFeedbackDTO.html", null ],
     [ "it.unito.sensors.server.fs.util.CSVReaderUtil", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1util_1_1CSVReaderUtil.html", null ],
-    [ "it.unito.sensors.server.fs.dto.CSVWearableFeedbackDTO", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1dto_1_1CSVWearableFeedbackDTO.html", null ],
-    [ "it.unito.sensors.server.fs.dto.CSVWearableSosDTO", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1dto_1_1CSVWearableSosDTO.html", null ],
     [ "it.unito.sensors.server.fs.util.CSVWriterUtil", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1util_1_1CSVWriterUtil.html", null ],
     [ "create3_examples_py.dance.dance_choreograph.DanceChoreographer", "classcreate3__examples__py_1_1dance_1_1dance__choreograph_1_1DanceChoreographer.html", null ],
     [ "create3_coverage::Behavior::Data", "structcreate3__coverage_1_1Behavior_1_1Data.html", null ],
@@ -47,10 +45,6 @@ var hierarchy =
     [ "it.unito.sensors.server.dto.mapper.DTOMapper< MeasurementEntity, MeasurementDTO >", "interfaceit_1_1unito_1_1sensors_1_1server_1_1dto_1_1mapper_1_1DTOMapper.html", [
       [ "it.unito.sensors.server.dto.mapper.MeasurementDTOMapper", "classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1mapper_1_1MeasurementDTOMapper.html", null ]
     ] ],
-    [ "it.unito.sensors.server.dto.mapper.DTOMapper< WearableFeedbackEntity, WearableFeedbackDTO >", "interfaceit_1_1unito_1_1sensors_1_1server_1_1dto_1_1mapper_1_1DTOMapper.html", [
-      [ "it.unito.sensors.server.dto.mapper.WearableFeedbackDTOMapper", "classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1mapper_1_1WearableFeedbackDTOMapper.html", null ]
-    ] ],
-    [ "ElectionAlgorithmMapper", "classElectionAlgorithmMapper.html", null ],
     [ "it.unito.sensors.server.entity.EnumCode", "interfaceit_1_1unito_1_1sensors_1_1server_1_1entity_1_1EnumCode.html", [
       [ "it.unito.sensors.server.entity.GoalStatusEnum", "enumit_1_1unito_1_1sensors_1_1server_1_1entity_1_1GoalStatusEnum.html", null ],
       [ "it.unito.sensors.server.entity.GoalSubCodeEnum", "enumit_1_1unito_1_1sensors_1_1server_1_1entity_1_1GoalSubCodeEnum.html", null ]
@@ -62,8 +56,6 @@ var hierarchy =
       [ "fcpp::coordination::main_t", "structfcpp_1_1coordination_1_1main__t.html", null ]
     ] ],
     [ "it.unito.sensors.server.entity.FeedbackEntity", "classit_1_1unito_1_1sensors_1_1server_1_1entity_1_1FeedbackEntity.html", null ],
-    [ "wearable_feedback::manager::FeedbackManager", "classwearable__feedback_1_1manager_1_1FeedbackManager.html", null ],
-    [ "wearable_feedback::parser::FeedbackParser", "classwearable__feedback_1_1parser_1_1FeedbackParser.html", null ],
     [ "it.unito.sensors.server.configuration.dto.FeedbackProperties", "classit_1_1unito_1_1sensors_1_1server_1_1configuration_1_1dto_1_1FeedbackProperties.html", null ],
     [ "it.unito.sensors.server.controller.FeedbackResource", "classit_1_1unito_1_1sensors_1_1server_1_1controller_1_1FeedbackResource.html", null ],
     [ "it.unito.sensors.server.runner.FeedbackScheduler", "classit_1_1unito_1_1sensors_1_1server_1_1runner_1_1FeedbackScheduler.html", null ],
@@ -71,15 +63,12 @@ var hierarchy =
     [ "robot_reader.feedback_writer.FeedbackWriter", "classrobot__reader_1_1feedback__writer_1_1FeedbackWriter.html", null ],
     [ "FileHandlerService", null, [
       [ "it.unito.sensors.server.service.ActionFileHandler", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1ActionFileHandler.html", null ],
-      [ "it.unito.sensors.server.service.FeedbackFileHandler", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1FeedbackFileHandler.html", null ],
-      [ "it.unito.sensors.server.service.WearableFeedbackFileHandler", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1WearableFeedbackFileHandler.html", null ],
-      [ "it.unito.sensors.server.service.WearableSosFileHandler", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1WearableSosFileHandler.html", null ]
+      [ "it.unito.sensors.server.service.FeedbackFileHandler", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1FeedbackFileHandler.html", null ]
     ] ],
     [ "it.unito.sensors.server.service.FileHandlerService< DTO, R extends Reader", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1FileHandlerService_3_01DTO_00_01R_01extends_01Reader.html", null ],
     [ "it.unito.sensors.server.fs.dto.FilePersistedDTO", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1dto_1_1FilePersistedDTO.html", null ],
     [ "FileWatcher", "classFileWatcher.html", null ],
     [ "it.unito.sensors.server.fs.util.FsUtil", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1util_1_1FsUtil.html", null ],
-    [ "gazebo_plugins::GazeboActorRosPlanarMovePrivate", "classgazebo__plugins_1_1GazeboActorRosPlanarMovePrivate.html", null ],
     [ "gazebo::GazeboRosBatteryPrivate", "classgazebo_1_1GazeboRosBatteryPrivate.html", null ],
     [ "fcpp::coordination::tags::global_clock", "structfcpp_1_1coordination_1_1tags_1_1global__clock.html", null ],
     [ "fcpp::coordination::tags::goal_action", "structfcpp_1_1coordination_1_1tags_1_1goal__action.html", null ],
@@ -108,9 +97,7 @@ var hierarchy =
     [ "it.unito.sensors.server.entity.ItemEntity", "classit_1_1unito_1_1sensors_1_1server_1_1entity_1_1ItemEntity.html", null ],
     [ "it.unito.sensors.server.util.IWatcher", "interfaceit_1_1unito_1_1sensors_1_1server_1_1util_1_1IWatcher.html", [
       [ "it.unito.sensors.server.service.ActionFileHandler", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1ActionFileHandler.html", null ],
-      [ "it.unito.sensors.server.service.FeedbackFileHandler", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1FeedbackFileHandler.html", null ],
-      [ "it.unito.sensors.server.service.WearableFeedbackFileHandler", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1WearableFeedbackFileHandler.html", null ],
-      [ "it.unito.sensors.server.service.WearableSosFileHandler", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1WearableSosFileHandler.html", null ]
+      [ "it.unito.sensors.server.service.FeedbackFileHandler", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1FeedbackFileHandler.html", null ]
     ] ],
     [ "it.unito.sensors.server.JavaSpringRestDbApplication", "classit_1_1unito_1_1sensors_1_1server_1_1JavaSpringRestDbApplication.html", null ],
     [ "it.unito.sensors.server.JavaSpringRestDbApplicationTests", "classit_1_1unito_1_1sensors_1_1server_1_1JavaSpringRestDbApplicationTests.html", null ],
@@ -131,9 +118,6 @@ var hierarchy =
     [ "it.unito.sensors.server.controller.MeasurementResource", "classit_1_1unito_1_1sensors_1_1server_1_1controller_1_1MeasurementResource.html", null ],
     [ "it.unito.sensors.server.service.MeasurementService", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1MeasurementService.html", null ],
     [ "fcpp::coordination::tags::min_uid", "structfcpp_1_1coordination_1_1tags_1_1min__uid.html", null ],
-    [ "gazebo::ModelPlugin", null, [
-      [ "gazebo_plugins::GazeboActorRosPlanarMove", "classgazebo__plugins_1_1GazeboActorRosPlanarMove.html", null ]
-    ] ],
     [ "ModelPlugin", null, [
       [ "gazebo::GazeboRosBattery", "classgazebo_1_1GazeboRosBattery.html", null ]
     ] ],
@@ -141,7 +125,6 @@ var hierarchy =
     [ "fcpp::coordination::tags::nbr_list", "structfcpp_1_1coordination_1_1tags_1_1nbr__list.html", null ],
     [ "it.unito.sensors.server.entity.NeighbourEntity", "classit_1_1unito_1_1sensors_1_1server_1_1entity_1_1NeighbourEntity.html", null ],
     [ "rclcpp::Node", null, [
-      [ "MinimalNavigator", "classMinimalNavigator.html", null ],
       [ "create3_coverage::Create3CoverageNode", "classcreate3__coverage_1_1Create3CoverageNode.html", null ]
     ] ],
     [ "fcpp::coordination::tags::node_battery_charge", "structfcpp_1_1coordination_1_1tags_1_1node__battery__charge.html", null ],
@@ -178,12 +161,6 @@ var hierarchy =
     [ "it.unito.sensors.server.fs.Reader< CSVFeedbackDTO >", "interfaceit_1_1unito_1_1sensors_1_1server_1_1fs_1_1Reader.html", [
       [ "it.unito.sensors.server.fs.FeedbackReader", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1FeedbackReader.html", null ]
     ] ],
-    [ "it.unito.sensors.server.fs.Reader< CSVWearableFeedbackDTO >", "interfaceit_1_1unito_1_1sensors_1_1server_1_1fs_1_1Reader.html", [
-      [ "it.unito.sensors.server.fs.WearableFeedbackReader", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1WearableFeedbackReader.html", null ]
-    ] ],
-    [ "it.unito.sensors.server.fs.Reader< CSVWearableSosDTO >", "interfaceit_1_1unito_1_1sensors_1_1server_1_1fs_1_1Reader.html", [
-      [ "it.unito.sensors.server.fs.WearableSosReader", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1WearableSosReader.html", null ]
-    ] ],
     [ "fcpp::coordination::tags::right_color", "structfcpp_1_1coordination_1_1tags_1_1right__color.html", null ],
     [ "it.unito.sensors.server.configuration.dto.RobotProperties", "classit_1_1unito_1_1sensors_1_1server_1_1configuration_1_1dto_1_1RobotProperties.html", null ],
     [ "RobotStatus", "structRobotStatus.html", null ],
@@ -206,19 +183,6 @@ var hierarchy =
     [ "fcpp::os::transceiver", "structfcpp_1_1os_1_1transceiver.html", null ],
     [ "fcpp::coordination::tags::tvar", "structfcpp_1_1coordination_1_1tags_1_1tvar.html", null ],
     [ "ldlidar::UDPSocketInterfaceLinux", "classldlidar_1_1UDPSocketInterfaceLinux.html", null ],
-    [ "it.unito.sensors.server.entity.WearableEntity", "classit_1_1unito_1_1sensors_1_1server_1_1entity_1_1WearableEntity.html", null ],
-    [ "wearable_feedback::WearableFeedbackData", "structwearable__feedback_1_1WearableFeedbackData.html", null ],
-    [ "it.unito.sensors.server.entity.WearableFeedbackEntity", "classit_1_1unito_1_1sensors_1_1server_1_1entity_1_1WearableFeedbackEntity.html", null ],
-    [ "it.unito.sensors.server.configuration.dto.WearableFeedbackProperties", "classit_1_1unito_1_1sensors_1_1server_1_1configuration_1_1dto_1_1WearableFeedbackProperties.html", null ],
-    [ "it.unito.sensors.server.controller.WearableFeedbackResource", "classit_1_1unito_1_1sensors_1_1server_1_1controller_1_1WearableFeedbackResource.html", null ],
-    [ "it.unito.sensors.server.runner.WearableFeedbackScheduler", "classit_1_1unito_1_1sensors_1_1server_1_1runner_1_1WearableFeedbackScheduler.html", null ],
-    [ "it.unito.sensors.server.service.WearableFeedbackService", "classit_1_1unito_1_1sensors_1_1server_1_1service_1_1WearableFeedbackService.html", null ],
-    [ "it.unito.sensors.server.controller.WearableFeedbackSOSResource", "classit_1_1unito_1_1sensors_1_1server_1_1controller_1_1WearableFeedbackSOSResource.html", null ],
-    [ "it.unito.sensors.server.configuration.dto.WearableProperties", "classit_1_1unito_1_1sensors_1_1server_1_1configuration_1_1dto_1_1WearableProperties.html", null ],
-    [ "it.unito.sensors.server.controller.WearableResource", "classit_1_1unito_1_1sensors_1_1server_1_1controller_1_1WearableResource.html", null ],
-    [ "it.unito.sensors.server.configuration.dto.WearableSosProperties", "classit_1_1unito_1_1sensors_1_1server_1_1configuration_1_1dto_1_1WearableSosProperties.html", null ],
-    [ "it.unito.sensors.server.runner.WearableSosScheduler", "classit_1_1unito_1_1sensors_1_1server_1_1runner_1_1WearableSosScheduler.html", null ],
-    [ "WearableStatus", "structWearableStatus.html", null ],
     [ "it.unito.sensors.server.fs.Writer< DTO >", "interfaceit_1_1unito_1_1sensors_1_1server_1_1fs_1_1Writer.html", null ],
     [ "it.unito.sensors.server.fs.Writer< GoalDTO >", "interfaceit_1_1unito_1_1sensors_1_1server_1_1fs_1_1Writer.html", [
       [ "it.unito.sensors.server.fs.GoalWriter", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1GoalWriter.html", null ]
@@ -230,9 +194,7 @@ var hierarchy =
       [ "it.unito.sensors.server.repository.ItemRepository", "interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1ItemRepository.html", null ],
       [ "it.unito.sensors.server.repository.MeasurementRepository", "interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1MeasurementRepository.html", null ],
       [ "it.unito.sensors.server.repository.NeighbourRepository", "interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1NeighbourRepository.html", null ],
-      [ "it.unito.sensors.server.repository.NodeRepository", "interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1NodeRepository.html", null ],
-      [ "it.unito.sensors.server.repository.WearableFeedbackRepository", "interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1WearableFeedbackRepository.html", null ],
-      [ "it.unito.sensors.server.repository.WearableRepository", "interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1WearableRepository.html", null ]
+      [ "it.unito.sensors.server.repository.NodeRepository", "interfaceit_1_1unito_1_1sensors_1_1server_1_1repository_1_1NodeRepository.html", null ]
     ] ],
     [ "Node", null, [
       [ "create3_examples_py.dance.dance_choreograph.DanceCommandPublisher", "classcreate3__examples__py_1_1dance_1_1dance__choreograph_1_1DanceCommandPublisher.html", null ],
@@ -247,16 +209,14 @@ var hierarchy =
       [ "robot_reader.reader.RobotInformationReader", "classrobot__reader_1_1reader_1_1RobotInformationReader.html", [
         [ "robot_reader.odom_reader.OdomRobotInformationReader", "classrobot__reader_1_1odom__reader_1_1OdomRobotInformationReader.html", null ]
       ] ],
-      [ "robot_writer.writer.GoalPublisher", "classrobot__writer_1_1writer_1_1GoalPublisher.html", null ],
-      [ "wearable_reader.wearable_reader.WearableInformationReader", "classwearable__reader_1_1wearable__reader_1_1WearableInformationReader.html", null ]
+      [ "robot_writer.writer.GoalPublisher", "classrobot__writer_1_1writer_1_1GoalPublisher.html", null ]
     ] ],
     [ "Serializable", null, [
       [ "it.unito.sensors.server.dto.DTO", "interfaceit_1_1unito_1_1sensors_1_1server_1_1dto_1_1DTO.html", [
         [ "it.unito.sensors.server.dto.CustomWearableSOSDTO", "classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1CustomWearableSOSDTO.html", null ],
         [ "it.unito.sensors.server.dto.FeedbackDTO", "classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1FeedbackDTO.html", null ],
         [ "it.unito.sensors.server.dto.GoalDTO", "classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1GoalDTO.html", null ],
-        [ "it.unito.sensors.server.dto.MeasurementDTO", "classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1MeasurementDTO.html", null ],
-        [ "it.unito.sensors.server.dto.WearableFeedbackDTO", "classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1WearableFeedbackDTO.html", null ]
+        [ "it.unito.sensors.server.dto.MeasurementDTO", "classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1MeasurementDTO.html", null ]
       ] ]
     ] ],
     [ "WebMvcConfigurer", null, [

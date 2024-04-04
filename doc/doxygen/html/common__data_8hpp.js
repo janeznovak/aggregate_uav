@@ -1,13 +1,11 @@
 var common__data_8hpp =
 [
     [ "RobotStatus", "structRobotStatus.html", "structRobotStatus" ],
-    [ "WearableStatus", "structWearableStatus.html", "structWearableStatus" ],
     [ "InputGoal", "structInputGoal.html", "structInputGoal" ],
     [ "hash< InputGoal >", "structstd_1_1hash_3_01InputGoal_01_4.html", "structstd_1_1hash_3_01InputGoal_01_4" ],
     [ "node_type", "common__data_8hpp.html#a6a276b85e2da28c5f9c3dbce61c55682", [
-      [ "KIOSK", "common__data_8hpp.html#a6a276b85e2da28c5f9c3dbce61c55682a225d1a31d94e4c0f223f74a5eb859cbe", null ],
-      [ "ROBOT", "common__data_8hpp.html#a6a276b85e2da28c5f9c3dbce61c55682a9c3a09b4e8dfc7b3eaa6ae184f94b815", null ],
-      [ "WEARABLE", "common__data_8hpp.html#a6a276b85e2da28c5f9c3dbce61c55682ac3125fd6ff0151da68fce94ad0a203bd", null ]
+      [ "ROBOT_MASTER", "common__data_8hpp.html#a6a276b85e2da28c5f9c3dbce61c55682a7b90fb233f8e7b8bf33e75053a324b6c", null ],
+      [ "ROBOT_SLAVE", "common__data_8hpp.html#a6a276b85e2da28c5f9c3dbce61c55682a51b669af828b840b0aa4f9ed9648bc3c", null ]
     ] ],
     [ "ProcessingStatus", "common__data_8hpp.html#ad382be1a0583b9c675deee416c52b4a8", [
       [ "IDLE", "common__data_8hpp.html#ad382be1a0583b9c675deee416c52b4a8aa5daf7f2ebbba4975d61dab1c40188c7", null ],
@@ -25,7 +23,5 @@ var common__data_8hpp =
     [ "GoalMutex", "common__data_8hpp.html#a5735e219d04ede03d040d202f8204f0c", null ],
     [ "InputGoalList", "common__data_8hpp.html#a2de69c1f7660fc8a206f2808fcdcf890", null ],
     [ "RobotStatesMap", "common__data_8hpp.html#a02071f5bea7835dcc8d4019192b97426", null ],
-    [ "RobotStatesMutex", "common__data_8hpp.html#a2f81efa1c0c784ce5ee3e3eebf807b4d", null ],
-    [ "WearableStatesMap", "common__data_8hpp.html#aeb13167e7a3fa726bfba86a96f2a7975", null ],
-    [ "WearableStatesMutex", "common__data_8hpp.html#a47d58a3f517fc507564cca1692a003ab", null ]
+    [ "RobotStatesMutex", "common__data_8hpp.html#a2f81efa1c0c784ce5ee3e3eebf807b4d", null ]
 ];

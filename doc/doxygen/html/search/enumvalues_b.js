@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['pkg_5fheader_2544',['PKG_HEADER',['../namespaceldlidar.html#a8c9fbc64c102c7680c3d0242db7d5877a6fde75446aecdb9ba2aff1346fd9abae',1,'ldlidar']]],
-  ['pkg_5fver_5flen_2545',['PKG_VER_LEN',['../namespaceldlidar.html#a8c9fbc64c102c7680c3d0242db7d5877a9711d3f2bdaa160cf50b03e7760fb289',1,'ldlidar']]],
-  ['point_5fper_5fpack_2546',['POINT_PER_PACK',['../namespaceldlidar.html#a8c9fbc64c102c7680c3d0242db7d5877a7e4eb71ae9585d42c5896c1f703c87cf',1,'ldlidar']]]
+  ['robot_5fmaster_2085',['ROBOT_MASTER',['../common__data_8hpp.html#a6a276b85e2da28c5f9c3dbce61c55682a7b90fb233f8e7b8bf33e75053a324b6c',1,'common_data.hpp']]],
+  ['robot_5fslave_2086',['ROBOT_SLAVE',['../common__data_8hpp.html#a6a276b85e2da28c5f9c3dbce61c55682a51b669af828b840b0aa4f9ed9648bc3c',1,'common_data.hpp']]],
+  ['running_2087',['RUNNING',['../namespacecreate3__coverage.html#abc08f83fabbaa9208a05686255f1a36ba43491564ebcfd38568918efbd6e840fd',1,'create3_coverage']]]
 ];

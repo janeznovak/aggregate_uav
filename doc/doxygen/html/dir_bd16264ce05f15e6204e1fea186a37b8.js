@@ -21,7 +21,5 @@ var dir_bd16264ce05f15e6204e1fea186a37b8 =
       [ "poc_file_watcher", "classpoc__file__watcher.html", "classpoc__file__watcher" ]
     ] ],
     [ "poc_utils.cpp", "poc__utils_8cpp.html", "poc__utils_8cpp" ],
-    [ "poc_utils.hpp", "poc__utils_8hpp.html", "poc__utils_8hpp" ],
-    [ "wearable_feedback_parser.cpp", "wearable__feedback__parser_8cpp.html", "wearable__feedback__parser_8cpp" ],
-    [ "wearable_feedback_parser.h", "wearable__feedback__parser_8h.html", "wearable__feedback__parser_8h" ]
+    [ "poc_utils.hpp", "poc__utils_8hpp.html", "poc__utils_8hpp" ]
 ];

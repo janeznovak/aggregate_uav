@@ -51,7 +51,6 @@ endfunction()
 set(
     sources
     lib/common_data.cpp
-    lib/wearable_feedback_parser.cpp
     lib/feedback_parser.cpp
     lib/goal_parser.cpp
     lib/action_writer.cpp

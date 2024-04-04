@@ -6,7 +6,5 @@ var namespaceit_1_1unito_1_1sensors_1_1server_1_1fs =
     [ "FeedbackReader", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1FeedbackReader.html", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1FeedbackReader" ],
     [ "GoalWriter", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1GoalWriter.html", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1GoalWriter" ],
     [ "Reader", "interfaceit_1_1unito_1_1sensors_1_1server_1_1fs_1_1Reader.html", "interfaceit_1_1unito_1_1sensors_1_1server_1_1fs_1_1Reader" ],
-    [ "WearableFeedbackReader", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1WearableFeedbackReader.html", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1WearableFeedbackReader" ],
-    [ "WearableSosReader", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1WearableSosReader.html", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1WearableSosReader" ],
     [ "Writer", "interfaceit_1_1unito_1_1sensors_1_1server_1_1fs_1_1Writer.html", "interfaceit_1_1unito_1_1sensors_1_1server_1_1fs_1_1Writer" ]
 ];

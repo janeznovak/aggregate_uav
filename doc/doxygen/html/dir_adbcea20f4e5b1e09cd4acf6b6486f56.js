@@ -14,12 +14,6 @@ var dir_adbcea20f4e5b1e09cd4acf6b6486f56 =
     [ "Reader.java", "Reader_8java.html", [
       [ "Reader", "interfaceit_1_1unito_1_1sensors_1_1server_1_1fs_1_1Reader.html", "interfaceit_1_1unito_1_1sensors_1_1server_1_1fs_1_1Reader" ]
     ] ],
-    [ "WearableFeedbackReader.java", "WearableFeedbackReader_8java.html", [
-      [ "WearableFeedbackReader", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1WearableFeedbackReader.html", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1WearableFeedbackReader" ]
-    ] ],
-    [ "WearableSosReader.java", "WearableSosReader_8java.html", [
-      [ "WearableSosReader", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1WearableSosReader.html", "classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1WearableSosReader" ]
-    ] ],
     [ "Writer.java", "Writer_8java.html", [
       [ "Writer", "interfaceit_1_1unito_1_1sensors_1_1server_1_1fs_1_1Writer.html", "interfaceit_1_1unito_1_1sensors_1_1server_1_1fs_1_1Writer" ]
     ] ]

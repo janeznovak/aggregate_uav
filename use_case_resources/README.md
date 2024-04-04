@@ -13,12 +13,6 @@ cd /home/robot/Documenti/projects/NODES/PoC/Sensors_Web_App
 ng serve --configuration library
 ```
 
-### Hospital
-```bash
-cd /home/robot/Documenti/projects/NODES/PoC/Sensors_Web_App
-ng serve --configuration hospital
-```
-
 Open http://localhost:4200/ to view the Web Application
 
 ## AP
@@ -34,14 +28,7 @@ To run:
 ```bash
 cd /home/robot/Documenti/projects/NODES/PoC/AP_Engine      
 cd bin
-AP_ALG_USED=GREEDY AP_ROUND_PERIOD=0.2 AP_WEARABLE_COUNT=0 AP_ROBOT_COUNT=5 AP_SIMULATOR_OFFSET_X=0.4 ./run/ap_engine
-```
-### Hospital
-To build:
-```bash
-cd /home/robot/Documenti/projects/NODES/PoC/AP_Engine
-
-./make.sh gui build -O -DAP_COMM_RANGE=10 ap_engine
+AP_ROUND_PERIOD=0.5 AP_ROBOT_COUNT=5 AP_SIMULATOR_OFFSET_X=0.4 ./run/ap_engine
 ```
 
 To run:
@@ -56,12 +43,6 @@ AP_ROBOT_PAUSE_SEC=20 AP_SIDE_X=8.0 AP_SIDE_Y=24.0 AP_WEARABLE_COUNT=3 AP_ROBOT_
 ```bash
 cd /home/robot/Documenti/projects/NODES/PoC
 ./turtlebot3_run.sh
-```
-
-### Hospital
-```bash
-cd /home/robot/Documenti/projects/NODES/PoC
-./commonwears_demo_run.sh
 ```
 
 ### Out of order robot

@@ -35,11 +35,5 @@ var dir_0156c5183fbe9e27294346a67185feec =
     ] ],
     [ "NodeEntity.java", "NodeEntity_8java.html", [
       [ "NodeEntity", "classit_1_1unito_1_1sensors_1_1server_1_1entity_1_1NodeEntity.html", "classit_1_1unito_1_1sensors_1_1server_1_1entity_1_1NodeEntity" ]
-    ] ],
-    [ "WearableEntity.java", "WearableEntity_8java.html", [
-      [ "WearableEntity", "classit_1_1unito_1_1sensors_1_1server_1_1entity_1_1WearableEntity.html", "classit_1_1unito_1_1sensors_1_1server_1_1entity_1_1WearableEntity" ]
-    ] ],
-    [ "WearableFeedbackEntity.java", "WearableFeedbackEntity_8java.html", [
-      [ "WearableFeedbackEntity", "classit_1_1unito_1_1sensors_1_1server_1_1entity_1_1WearableFeedbackEntity.html", null ]
     ] ]
 ];

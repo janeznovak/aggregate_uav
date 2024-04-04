@@ -60,7 +60,7 @@ app:
     # - wb_2
     # - wb_3
     example: "${APP_WEARABLE_EXAMPLE:wb_#WEARABLE}"
-    count: ${APP_WEARABLE_COUNT:10}
+    count: ${APP_WEARABLE_COUNT:0}
   goal_state_machine:
     callback:
       REACHED:
@@ -80,7 +80,3 @@ app:
     path_to_read: "${APP_ACTION_PATH_TO_READ:${app.storage.path}/from_ap/to_web/actions/#ROBOT/}"
   feedback:
     path_to_read: "${APP_FEEDBACK_PATH_TO_READ:${app.storage.path}/from_robot/#ROBOT/to_web/feedback/}"
-  wearable_feedback:
-    path_to_read: "${APP_WEARABLE_FEEDBACK_PATH_TO_READ:${app.storage.path}/from_wearable/#WEARABLE/to_web/feedback/}"
-  wearable_sos:
-    path_to_read: "${APP_WEARABLE_SOS_PATH_TO_READ:${app.storage.path}/from_wearable/#WEARABLE/to_web/sos/}"
