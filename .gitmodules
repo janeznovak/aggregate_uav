@@ -26,4 +26,3 @@
 [submodule "Crazyflie/ros2_ws/src/motion_capture_tracking"]
 	path = Crazyflie/ros2_ws/src/motion_capture_tracking
 	url = https://github.com/IMRCLab/motion_capture_tracking.git
-	branch = ros2
