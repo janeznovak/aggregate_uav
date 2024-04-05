@@ -3,16 +3,11 @@
 import sys
 import rclpy
 from rclpy.node import Node
-from rclpy.executors import MultiThreadedExecutor
 
-from std_msgs.msg import String
-from nav_msgs.msg import Odometry
 from nav_system_interfaces.msg import GoalFeedback
 from sensor_msgs.msg import BatteryState
-from geometry_msgs.msg import PoseWithCovarianceStamped
+from geometry_msgs.msg import PoseStamped
 from rclpy.qos import *
-
-import time, threading, string
 
 from . import store
 from . import config
@@ -28,7 +23,7 @@ class RobotInformationReader(Node):
     write it onto files to be used by other programs.
     """
 
-    def __init__(self, namespace, robot_name, origin_x=0.0, origin_y=0.0, rotation=0.0):
+    def __init__(self, namespace, robot_name, origin_x=0.0, origin_y=0.0,  origin_z = 0.0, rotation=0.0):
         """!
         Class' constructor requiring a namespace and optionally the robot
         coordinates relative to the origin.
@@ -37,10 +32,11 @@ class RobotInformationReader(Node):
         self.robot_name = robot_name
         self.origin_x = float(origin_x)
         self.origin_y = float(origin_y)
+        self.origin_z = float(origin_z)
         self.rotation = float(rotation)
+        self.get_logger().info(f'Robot reader initialized: {self.origin_x}  {self.origin_y} {self.origin_z}' )
         self.timer = self.create_timer(config.POLL_WRITER_SECONDS, self.write_file)
         self.feedbackWriter = FeedbackWriter()
-        self.get_logger().info('Robot reader initialized')
         self.subscription_position = self.position_subscribe(namespace)
 
         # subscribe battery
@@ -58,19 +54,22 @@ class RobotInformationReader(Node):
             config.GOAL_TOPIC,
             self.listener_goal_callback,
             config.DEFAULT_QOS_TOPIC)
+        
         self.subscription_position
         self.subscription_battery
         self.subscription_goal
 
     def position_subscribe(self, namespace):
-        # subscribe amcl
-        self.get_logger().info('Subscribing to: "%s/%s"' % (namespace, config.AMCL_TOPIC))
-        # durability = 1 == TRANSIENT_LOCAL
+        """
+        Subscribe to Position callback topic
+        """
+        self.get_logger().info('Subscribing to: "%s/%s"' % (namespace, config.POSE_TOPIC))
         return self.create_subscription(
-                PoseWithCovarianceStamped,
-                config.AMCL_TOPIC,
+                PoseStamped,
+                config.POSE_TOPIC,
                 self.listener_position_callback,
-                QoSProfile(durability=1, depth=5)
+                10
+                # QoSProfile(durability=1, depth=5)
                 )
 
     def listener_position_callback(self, msg):
@@ -79,10 +78,17 @@ class RobotInformationReader(Node):
         changing the origin point from the robot origin point to the global
         origin point. Callback for the position topic.
         """
-        x, y, angle = coords.rel2abs(msg.pose.pose.position.x, msg.pose.pose.position.y,
-                msg.pose.pose.orientation.z, msg.pose.pose.orientation.w,
-                self.origin_x, self.origin_y, self.rotation)
-        position            = PositionDTO(self.robot_name, x, y, angle)
+        x, y, z, angle = coords.rel2abs(msg.pose.position.x, 
+                                     msg.pose.position.y,
+                                     msg.pose.position.z,
+                                     msg.pose.orientation.z, 
+                                     msg.pose.orientation.w, 
+                                     self.origin_x, 
+                                     self.origin_y,
+                                     self.origin_z,
+                                     self.rotation)
+        
+        position = PositionDTO(self.robot_name, x, y, z, angle)
         store.content._dictionary[self.robot_name]["position"]     = position
         self.get_logger().debug('I heard position from %s: "%s"' % (self.robot_name, str(position)))
 
@@ -116,6 +122,7 @@ class RobotInformationReader(Node):
         Writes the values stored in the content dictionary, to a feedback file.
         Called every config.POLL_WRITER_SECONDS seconds.
         """
+
         if store.content._dictionary[self.robot_name]["position"].pos_x != None or \
             store.content._dictionary[self.robot_name]["battery"].percentage_charge != None or \
             store.content._dictionary[self.robot_name]["goal"].goal_status != -1    :
@@ -124,6 +131,7 @@ class RobotInformationReader(Node):
                     store.content._dictionary[self.robot_name]["battery"],
                     store.content._dictionary[self.robot_name]["goal"],
                     "-best_effort")
+            
             self.get_logger().debug(
                     "filename: %s "
                     "store._position: %s "
@@ -141,8 +149,8 @@ def main(args=sys.argv):
     rclpy.init(args=args)
     if(len(args) > 4):
         robot_information_reader = RobotInformationReader(namespace=args[1],
-                robot_name=args[2], origin_x=args[3], origin_y=args[4],
-                rotation=args[5])
+                robot_name=args[2], origin_x=args[3], origin_y=args[4], origin_z=args[5],
+                rotation=args[6])
     else:
         robot_information_reader = RobotInformationReader(namespace=args[1],
                 robot_name=args[2])

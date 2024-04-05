@@ -6,7 +6,7 @@ class BatteryDTO:
     """!
     Class used to store battery sensor data.
     """
-    def __init__(self, robot: string, percentage_charge: float = None, temperature: float = None, capacity: float = None, power_supply_status: int = None):
+    def __init__(self, robot: string, percentage_charge: float = 100.0, temperature: float = None, capacity: float = None, power_supply_status: int = None):
         self.robot                  = robot
         self.percentage_charge      = percentage_charge
         self.temperature            = temperature

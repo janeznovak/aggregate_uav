@@ -15,7 +15,7 @@ class GoalDTO:
     Class storing the current goal state of the robot,
     all the possible value of goal_status are in goal_status_code.
     """
-    def __init__(self, robot:string, goal_id:string = "", goal_status: int = -1):
+    def __init__(self, robot:string, goal_id:string = "", goal_status: int = 1):
         self.goal_id        = goal_id
         self.goal_status    = goal_status
         self.robot          = robot

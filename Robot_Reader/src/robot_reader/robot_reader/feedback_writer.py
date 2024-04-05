@@ -39,6 +39,7 @@ class FeedbackWriter:
         data = [robot,
                 position.pos_x,
                 position.pos_y,
+                position.pos_z,
                 position.angle,
                 battery.percentage_charge,
                 goal.goal_status,
@@ -49,7 +50,7 @@ class FeedbackWriter:
         path_ap_abs = Path(__file__).parent / path_ap
         path_web_abs.parent.mkdir(exist_ok=True, parents=True)
         path_ap_abs.parent.mkdir(exist_ok=True, parents=True)
-
+        # print("writing to: " + str(path_ap_abs))
         with path_web_abs.with_suffix('.lock').open(mode="w") as file_to_web:
             writer = csv.writer(file_to_web, delimiter=DELIMITER, quoting=csv.QUOTE_NONE)
             writer.writerow(data)

@@ -3,20 +3,20 @@ Module with configuration constant used in the robot_reader package.
 """
 # Copyright © 2023 University of Turin, Daniele Bortoluzzi & Giordano Scarso. All Rights Reserved.
 
-from rclpy.qos import qos_profile_sensor_data
+from rclpy.qos import qos_profile_services_default
 
 ODOM_TOPIC              = "odom"
-AMCL_TOPIC              = "amcl_pose"
+POSE_TOPIC              = "pose"
 BATTERY_TOPIC           = "battery_state"
 GOAL_TOPIC              = "goal_state" 
 
-DEFAULT_QOS_TOPIC       = qos_profile_sensor_data
-BATTERY_QOS_TOPIC       = qos_profile_sensor_data
+DEFAULT_QOS_TOPIC       = qos_profile_services_default
+BATTERY_QOS_TOPIC       = qos_profile_services_default
 
 POLL_WRITER_SECONDS     = 0.5
 
-ROBOTS_PREFIX           = "tb3_"
-ROBOTS_LENGTH           = 10
+ROBOTS_PREFIX           = "cf_"
+ROBOTS_LENGTH           = 2
 ROBOTS = [dict( name=ROBOTS_PREFIX+str(i), base=dict(x=0,y=0,w=0) ) for i in range(0, ROBOTS_LENGTH)]
 
 # EXAMPLE:
