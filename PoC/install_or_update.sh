@@ -65,42 +65,58 @@ install_component_custom() {
             ./make.sh gui build -DAP_ENGINE_DEBUG=true ap_engine
             ;;
         *"sensors_server"*)
-            log "Updating Sensors_Server..."
-            mvn clean install
+            # log "Updating Sensors_Server..."
+            # mvn clean install
             ;;
         *"sensors_web_app"*)
-            log "Updating Sensors_Web_App..."
-            npm install --legacy-peer-deps
-            ng build
+            # log "Updating Sensors_Web_App..."
+            # npm install --legacy-peer-deps
+            # ng build
             ;;
         *"gazebo_turtlebot3"*)
-            log "Updating Gazebo_Turtlebot3..."
-            cd src || exit
-            vcs import . < multi_turtlebot3/turtlebot3.repos
-            cd ..
-            source ../Navigation_System/install/local_setup.bash
-            rosdep install --from-paths src --ignore-src -r -y -i --os="$OS"
-            colcon build --symlink-install
+            # log "Updating Gazebo_Turtlebot3..."
+            # cd src || exit
+            # vcs import . < multi_turtlebot3/turtlebot3.repos
+            # cd ..
+            # source ../Navigation_System/install/local_setup.bash
+            # rosdep install --from-paths src --ignore-src -r -y -i --os="$OS"
+            # colcon build --symlink-install
             ;;
         *"gazebo_custom_plugin"*)
-            log "Updating Gazebo_Custom_Plugins..."
-            cd wearable_interfaces
-            log "Installing/updating component Gazebo_Custom_Plugins/wearable_interfaces"
-            colcon build --symlink-install
-            source install/local_setup.bash
+            # log "Updating Gazebo_Custom_Plugins..."
+            # cd wearable_interfaces
+            # log "Installing/updating component Gazebo_Custom_Plugins/wearable_interfaces"
+            # colcon build --symlink-install
+            # source install/local_setup.bash
+            # cd ..
+            # install_ros2_component
+            ;;
+        
+        # All Ros2 Components
+        *"crazyflie"*)
+            log "Updating crazyflie-lib-python..."
+            cd crazyflie-lib-python
+            pip install -e .
             cd ..
-            install_ros2_component
-            ;;
-        *"wearable_reader"*)
-            log "Updating Wearable_Reader..."
-            source ../Robot_Reader/install/local_setup.bash
-            source ../Gazebo_Custom_Plugins/wearable_interfaces/install/local_setup.bash
-            install_ros2_component
-            ;;
+            log "Updating Crazyflie Firmware..."
+            cd crazyflie-firmware
+            rm -r sitl_make/build
+            mkdir -p sitl_make/build && cd $_
+            cmake ..
+            make all
+
+            log "Updating CrazySwarm components..."
+            cd ../../../ros2_ws/src
+            colcon build
+            . install/local_setup.bash
+        ;;
+
+
         *)
             # Update with standard logic
             log "Updating ROS2 component: $component_dir"
             install_ros2_component
+            source install/local_setup.bash
             ;;
     esac
 
@@ -115,20 +131,20 @@ install_all_components() {
     local navigation_system_installed=false
 
     # Check if Navigation_System is present and install it first if it is
-    if [ -d "Navigation_System" ]; then
-        log "Installing/updating Navigation_System"
-        install_component_custom "Navigation_System"
-        navigation_system_installed=true
-    fi
+    # if [ -d "Navigation_System" ]; then
+    #     log "Installing/updating Navigation_System"
+    #     install_component_custom "Navigation_System"
+    #     navigation_system_installed=true
+    # fi
 
     local wearable_reader_installed=false
 
     # Check if Wearable_Reader is present and install it first if it is
-    if [ -d "Wearable_Reader" ]; then
-        log "Installing/updating Wearable_Reader"
-        install_component_custom "Wearable_Reader"
-        navigation_system_installed=true
-    fi
+    # if [ -d "Wearable_Reader" ]; then
+    #     log "Installing/updating Wearable_Reader"
+    #     install_component_custom "Wearable_Reader"
+    #     navigation_system_installed=true
+    # fi
 
     # Install/update other components
     for component_dir in */; do
