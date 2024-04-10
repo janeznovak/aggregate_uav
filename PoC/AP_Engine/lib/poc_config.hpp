@@ -27,9 +27,9 @@ extern const std::vector<std::string> ROBOTS; // TODO: transform to map
 
 /* CONSTANTS */
 const string AP_ROBOT_PREFIX_KEY            = "AP_ROBOT_PREFIX";
-const string DEFAULT_ROBOT_PREFIX           = "tb3_";
+const string DEFAULT_ROBOT_PREFIX           = "cf_";
 const string AP_ROBOT_COUNT_KEY             = "AP_ROBOT_COUNT";
-const int DEFAULT_ROBOT_COUNT               = 5;
+const int DEFAULT_ROBOT_COUNT               = 2;
 const string AP_NODE_UID_KEY                = "AP_NODE_UID";
 const int DEFAULT_NODE_UID                  = 1;
 const string AP_ROUND_PERIOD_KEY            = "AP_ROUND_PERIOD";

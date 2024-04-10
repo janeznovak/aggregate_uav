@@ -87,18 +87,15 @@ def generate_launch_description():
                 output="screen",
                 arguments=[robot_name, robot_name, str(x), str(y), str(z), str(yaw)],
             )
-            # writer = Node(
-            #     package="robot_writer",
-            #     executable="robot_writer",
-            #     output='screen',
-            # #     parameters=[
-            # #         {'backup_storage': backup_storage}
-            # #         ],
-            #     arguments=[robot_name, robot_name, str(x), str(y), str(z), str(yaw)]
-            # )
+            writer = Node(
+                package="robot_writer",
+                executable="robot_writer",
+                output='screen',
+                arguments=[robot_name, robot_name, str(x), str(y), str(z), str(yaw)]
+            )
             robots_node.append(controller)
             robots_node.append(reader)
-            # robots_node.append(writer)
+            robots_node.append(writer)
 
     return LaunchDescription(server_node + robots_node)
 

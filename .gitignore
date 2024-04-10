@@ -28,6 +28,11 @@
 /GAZEBO_Turtlebot3/src/gazebo_ros_batteries/
 /GAZEBO_Turtlebot3/src/nav2/
 /GAZEBO_Turtlebot3/src/utils/
+Sensors_Server/log/**
+Sensors_Web_App/log/**
+
+
+
 /GAZEBO_Turtlebot3/log/
 Crazyflie/log/
 Crazyflie/install/
@@ -36,4 +41,9 @@ Crazyflie/build/
 Crazyflie/ros2_ws/log/**
 Crazyflie/ros2_ws/install/**
 Crazyflie/ros2_ws/build/**
+Crazyflie/ros2_ws/src/log/**
+Crazyflie/ros2_ws/src/build/**
+Crazyflie/ros2_ws/src/install/**
+Crazyflie/ros2_ws/src/cache/**
+Crazyflie/ros2_ws/cache/**
 **tags
