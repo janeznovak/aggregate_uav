@@ -8,6 +8,7 @@
 /GAZEBO_Turtlebot3/**/log/**
 /PoC/AP_Engine/bin/**
 /PoC/AP_Engine/output/**
+/PoC/cache/**
 /Sensors_Server/target
 /**/.idea/**
 /**/.vscode/**
