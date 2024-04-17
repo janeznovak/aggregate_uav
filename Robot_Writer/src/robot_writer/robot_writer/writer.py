@@ -56,8 +56,7 @@ class GoalPublisher(Node):
             msg.z = act["pos_z"]
             msg.yaw = act["orientation_z"]
             self.goal_publisher_.publish(msg)
-            self.get_logger().info('Publishing GOAL: "%s"' % act["goal"])
-           
+            # self.get_logger().info('Publishing GOAL: "%s"' % act["goal"])
 
             # if act["action"] in ["GOAL", "DOCK", "UNDOCK"]:
             #     self.goal_publisher_.publish(msg)

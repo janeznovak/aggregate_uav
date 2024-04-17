@@ -43,6 +43,7 @@ namespace action
     string robot;
     float pos_x;
     float pos_y;
+    float pos_z;
     float orient_w;
     std::chrono::milliseconds milliseconds;
   };

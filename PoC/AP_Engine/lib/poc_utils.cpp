@@ -19,7 +19,7 @@ std::string get_env_var(const char* env_key, const std::string& default_value) {
 std::vector<std::string> generate_robot_names(const std::string& robot_prefix, const int start, const int robots_count) {
     std::vector<std::string> prefixes;
 
-    for (int i = start; i < start+robots_count; ++i) {
+    for (int i = start; i < start + robots_count; ++i) {
         prefixes.push_back(robot_prefix + std::to_string(i));
     }
 
@@ -33,13 +33,13 @@ std::string read_string_env(const std::string& env_key, const std::string& defau
 int read_int_env(const std::string& env_key, const int default_int) {
     std::string env_str = get_env_var(env_key.c_str(), std::to_string(default_int));
     int env_int = stoi(env_str);
-    return env_int; 
+    return env_int;
 }
 
 double read_double_env(const std::string& env_key, const double default_double) {
     std::string env_str = get_env_var(env_key.c_str(), std::to_string(default_double));
     double env_double = stod(env_str);
-    return env_double; 
+    return env_double;
 }
 
 // TODO: use a map instead of a vector

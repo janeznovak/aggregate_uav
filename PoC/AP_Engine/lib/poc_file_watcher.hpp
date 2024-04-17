@@ -9,10 +9,10 @@
 #define POC_FILE_WATCHER_HPP_
 
 class poc_file_watcher {
-  private:
+private:
 
-  public:
-    void run_watch_files();
+public:
+  void run_watch_files();
 };
 
 #endif

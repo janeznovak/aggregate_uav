@@ -48,7 +48,7 @@ class CrazyflyController(Node):
         )
 
         # TODO: Testing Section. Add Trajectory
-        # self.takeoff(1.0,1.0)
+        self.takeoff(1.0, 1.0)
 
         # self.cfPoseTopic = self.create_subscription(
         #     PoseStamped, f"{prefix}/pose", self.cf_pose_callback, 1
@@ -64,47 +64,25 @@ class CrazyflyController(Node):
         #         PoseStamped, f"/{MASTER_PREFIX}/pose", self.master_pose_callback, 1
         #     )
 
-    def ap_goal_callback(self, msg: Position):
-        pass
-
-    def goal_vel(self, cf_pos, master_pos):
-        currentDistance = master_pos - cf_pos
-        distanceDifference = self.distance + currentDistance
-        return distanceDifference
-
-    def execute_trajectory(
-        self, initial_pos, end_pos, max_acceleration=1.0, max_speed=1.0
-    ):
-        goal_velocity = self.goal_vel(initial_pos, end_pos)
-        final_pos = initial_pos + goal_velocity
+    def execute_trajectory(self, goal_vel, max_acceleration=1.0, max_speed=1.0):
+        goal_velocity = goal_vel
 
         # Calcolo dell'accelerazione
         time_to_reach_final_velocity = np.linalg.norm(goal_velocity) / max_acceleration
         acceleration = goal_velocity / time_to_reach_final_velocity
 
         # Angolo di beccheggio e accelerazione angolare (presumibilmente zero in questo caso)
-        yaw_angle = 0.78
-        angular_velocity = np.array([yaw_angle / 1, 0, 0])
-        self.get_logger().info(
-            f"yaw_angle: {str(yaw_angle)} angular_velocity: {angular_velocity}"
-        )
+        yaw_angle = 0.0
+        angular_velocity = np.array([0.0, 0.0, 0.0])
 
         self.cmdFullState(
-            final_pos, goal_velocity, acceleration, yaw_angle, angular_velocity
+            goal_velocity, goal_velocity, acceleration, yaw_angle, angular_velocity
         )
 
-    def master_pose_callback(self, msg: PoseStamped):
-        self.master_position = msg
-        slave_pos = self.cf_position.pose.position
-        master_pos = self.master_position.pose.position
-
-        s_p = np.array([slave_pos.x, slave_pos.y, slave_pos.z])
-        e_p = np.array([master_pos.x, master_pos.y, master_pos.z])
-
-        self.execute_trajectory(s_p, e_p)
-
-    def cf_pose_callback(self, msg: PoseStamped):
-        self.cf_position = msg
+    def ap_goal_callback(self, msg: Position):
+        e_p = np.array([msg.x, msg.y, msg.z])
+        self.execute_trajectory(e_p)
+        # self.get_logger().info(f"Received Goal Msg: {msg.x} | {msg.y} | {msg.z}")
 
     def takeoff(self, targetHeight, duration, groupMask=0):
         req = Takeoff.Request()

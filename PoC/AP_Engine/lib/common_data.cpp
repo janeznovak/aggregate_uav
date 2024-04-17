@@ -38,7 +38,7 @@ std::string to_string(node_type s) {
     }
 }
 
-std::unordered_map<std::string,std::vector<RobotStatus>> RobotStatesMap{};
+std::unordered_map<std::string, std::vector<RobotStatus>> RobotStatesMap{};
 std::mutex RobotStatesMutex{};
 
 std::vector<InputGoal> InputGoalList{};

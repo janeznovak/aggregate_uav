@@ -14,8 +14,7 @@
 #include <mutex>
 #include "feedback_parser.h"
 
-enum class ProcessingStatus
-{
+enum class ProcessingStatus {
     IDLE, // not used at the moment
     TERMINATING,
     SELECTED
@@ -31,8 +30,7 @@ O& operator<<(O& o, ProcessingStatus s) {
     return o;
 }
 
-enum class node_type
-{
+enum class node_type {
     ROBOT_MASTER,
     ROBOT_SLAVE
 };
@@ -54,26 +52,28 @@ enum class robot_phase
     GOAL_EXECUTION
 };
 
-struct RobotStatus {       
+struct RobotStatus {
     float pos_x;
     float pos_y;
+    float pos_z;
     float orient_w;
     float battery_percent_charge; //TODO: add other battery fields;
     feedback::GoalStatus goal_status;
     string goal_code;
 };
 
-struct InputGoal {       
-    std::string action;        
-    std::string goal_code;  
+struct InputGoal {
+    std::string action;
+    std::string goal_code;
     float pos_x;
     float pos_y;
+    float pos_z;
     float orient_w;
     string source;
     int priority;
     string subcode;
 
-        //! @brief Equality operator.
+    //! @brief Equality operator.
     bool operator==(InputGoal const& m) const {
         return goal_code == m.goal_code;
     }
@@ -89,7 +89,7 @@ namespace std {
     };
 }
 
-extern std::unordered_map<std::string,std::vector<RobotStatus>> RobotStatesMap;
+extern std::unordered_map<std::string, std::vector<RobotStatus>> RobotStatesMap;
 extern std::mutex RobotStatesMutex;
 extern std::vector<InputGoal> InputGoalList;
 extern std::mutex GoalMutex;
