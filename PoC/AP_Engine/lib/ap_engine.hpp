@@ -323,9 +323,10 @@ namespace fcpp
 
                 // TODO: at the moment, AP sends command only to master
                 if (nt == node_type::ROBOT_MASTER) {
-                    int r = counter(CALL);
-                    std::cout << "Conunter: " << r;
-                    send_action_to_selected_node(CALL, p, g, s);
+                    // int r = counter(CALL);
+                    // std::cout << "Conunter: " << r;
+                    if (node.storage(node_external_status{}) != feedback::GoalStatus::RUNNING)
+                        send_action_to_selected_node(CALL, p, g, s);
                 }
 
                 // blinking colors if not running
@@ -421,7 +422,7 @@ namespace fcpp
                 read_new_goals(CALL, NewGoalsList);
             }
 #endif
-        }
+            }
 
         //! @brief Initialize variables (storage, etc...) of a robot using feedback data.
         FUN void init_robot(ARGS, std::string prefix) {
@@ -534,9 +535,7 @@ namespace fcpp
 
                 // ACTION: REACH GOAL
                 else if (GOAL_ACTION == common::get<goal_action>(g)) {
-                    // If no others goals running
-                    if (node.storage(node_external_status{}) != feedback::GoalStatus::RUNNING)
-                        manage_action_goal(CALL, nt, g, &s, n_round);
+                    manage_action_goal(CALL, nt, g, &s, n_round);
                 }
 
                 termination_logic(CALL, s, g);
@@ -624,7 +623,7 @@ namespace fcpp
             diameter_election_t<tuple<real_t, device_t>>
         > {};
 
+        }
     }
-}
 
 #endif // NODES_AP_ENGINE_H_
