@@ -9,8 +9,19 @@ from pathlib import Path
 from crazyflie_interfaces.msg import FullState, Position
 from crazyflie_interfaces.srv import Land, NotifySetpointsStop, Takeoff
 from geometry_msgs.msg import PoseStamped
+from nav_system_interfaces.msg import Goal
+from nav_system_interfaces.msg import GoalFeedback
+from crazyflie_py.uav_trajectory import Trajectory
+from crazyflie_py import crazyflie
+from rclpy.qos import qos_profile_services_default
 
 MASTER_PREFIX = "cf_0"
+GOAL_REACHED: int = 0
+GOAL_ABORTED: int = 1
+GOAL_FAILED: int = 2
+GOAL_RUNNING: int = 3
+GOAL_UNKNOWN: int = 4
+GOAL_NONE: int = -1
 
 
 class CrazyflyController(Node):
@@ -44,11 +55,21 @@ class CrazyflyController(Node):
         self.isMaster = cfname == MASTER_PREFIX
 
         self.goalTopic = self.create_subscription(
-            Position, f"{prefix}/ap_goal", self.ap_goal_callback, 10
+            Goal, f"{prefix}/ap_goal", self.ap_goal_callback, 10
         )
 
+        self.goalTopic = self.create_subscription(
+            Goal, f"{prefix}/ap_abort", self.ap_abort_callback, 10
+        )
+
+        # Master Branch
+        if self.isMaster:
+            self.goalStatePublisher = self.create_publisher(
+                GoalFeedback, prefix + "/goal_state", qos_profile_services_default
+            )
+
         # TODO: Testing Section. Add Trajectory
-        self.takeoff(1.0, 1.0)
+        # self.takeoff(1.0, 1.0)
 
         # self.cfPoseTopic = self.create_subscription(
         #     PoseStamped, f"{prefix}/pose", self.cf_pose_callback, 1
@@ -79,10 +100,57 @@ class CrazyflyController(Node):
             goal_velocity, goal_velocity, acceleration, yaw_angle, angular_velocity
         )
 
-    def ap_goal_callback(self, msg: Position):
-        e_p = np.array([msg.x, msg.y, msg.z])
-        self.execute_trajectory(e_p)
-        # self.get_logger().info(f"Received Goal Msg: {msg.x} | {msg.y} | {msg.z}")
+    def execute_master_trajectory(self, trajpath, rate=100, offset=np.zeros(3)):
+        traj = Trajectory()
+        timeHelper = crazyflie.TimeHelper(self)
+        share_folder = Path(__file__).parent
+        traj.loadcsv(
+            f"{share_folder}/../../../../share/crazyflie_controller/crazyflie_controller/trajectory_data/{trajpath}.csv"
+        )
+
+        start_time = timeHelper.time()
+        while not timeHelper.isShutdown():
+            t = timeHelper.time() - start_time
+            if t > traj.duration:
+                break
+
+            e = traj.eval(t)
+
+            self.cmdFullState(
+                e.pos + offset,
+                e.vel,
+                e.acc,
+                e.yaw,
+                e.omega,
+            )
+
+        timeHelper.sleepForRate(rate)
+
+    def ap_goal_callback(self, msg: Goal):
+        self.get_logger().info(f"Received GOAL Msg")
+        gf = GoalFeedback()
+        gf.goal_state = GOAL_RUNNING
+        gf.goal_id = msg.goal_id
+        self.goalStatePublisher.publish(gf)
+
+        if self.isMaster:
+            self.execute_master_trajectory(msg.goal_id)
+            gf = GoalFeedback()
+            self.get_logger().info(f"Master GOAL ended")
+            gf.goal_state = GOAL_REACHED
+            gf.goal_id = msg.goal_id
+            self.goalStatePublisher.publish(gf)
+        else:
+            e_p = np.array([msg.x, msg.y, msg.qz])
+            self.execute_trajectory(e_p)
+
+    def ap_abort_callback(self, msg: Goal):
+        self.get_logger().info(f"Received ABORT Msg")
+        gf = GoalFeedback()
+        gf.goal_state = GOAL_ABORTED
+        gf.goal_id = msg.goal_id
+        self.goalStatePublisher.publish(gf)
+        self.land(0.0, 1.0)
 
     def takeoff(self, targetHeight, duration, groupMask=0):
         req = Takeoff.Request()

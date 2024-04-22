@@ -1,12 +1,12 @@
 import os
 import sys
 import csv
-from datetime import datetime, time
+from datetime import datetime
 
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
-from crazyflie_interfaces.msg import Position
+from nav_system_interfaces.msg import Goal
 
 from pathlib import Path
 from . import coords
@@ -34,8 +34,8 @@ class GoalPublisher(Node):
         file into a backup folder.
         """
         super().__init__("goal_publisher", namespace=namespace)
-        self.goal_publisher_ = self.create_publisher(Position, "ap_goal", 10)
-        self.abort_publisher_ = self.create_publisher(Position, "ap_abort", 10)
+        self.goal_publisher_ = self.create_publisher(Goal, "ap_goal", 10)
+        self.abort_publisher_ = self.create_publisher(Goal, "ap_abort", 10)
         self.declare_parameter("backup_storage", False)
         self.timer = self.create_timer(TIMER_PERIOD, self.publish_goal)
         self.robot_name = robot_name
@@ -50,11 +50,14 @@ class GoalPublisher(Node):
         """
         actions = self.read_file(self.robot_name)
         for act in actions:
-            msg = Position()
+            msg = Goal()
+            msg.type = act["action"]
+            msg.goal_id = act["goal"]
             msg.x = act["pos_x"]
             msg.y = act["pos_y"]
-            msg.z = act["pos_z"]
-            msg.yaw = act["orientation_z"]
+            msg.qz = act["pos_z"]  # N.B. qz per semplicitá diventa la coordinata z
+            msg.qw = act["orientation_w"]
+
             self.goal_publisher_.publish(msg)
             # self.get_logger().info('Publishing GOAL: "%s"' % act["goal"])
 
@@ -64,9 +67,9 @@ class GoalPublisher(Node):
             # if act["action"] in ["SOS"]:
             #     self.goal_publisher_.publish(msg)
             #     self.get_logger().info('Publishing SOS: "%s"' % act["goal"])
-            # if act["action"] == "ABORT":
-            #     self.abort_publisher_.publish(msg)
-            #     self.get_logger().info('Publishing ABORT: "%s"' % act["goal"])
+            if act["action"] == "ABORT":
+                self.abort_publisher_.publish(msg)
+                self.get_logger().info('Publishing ABORT: "%s"' % act["goal"])
 
     def read_file(self, robot):
         """!
@@ -85,56 +88,62 @@ class GoalPublisher(Node):
         path_actions_backup.mkdir(exist_ok=True, parents=True)
 
         path = path_actions.absolute()
-        for f in os.listdir(path):
-            if f.endswith("txt"):
-                with open(os.path.join(path, f), "r") as action_file:
-                    reader = csv.reader(action_file, delimiter=DELIMITER)
-                    for row in reader:
-                        x, y, z, qz, qw = coords.abs2rel(
-                            float(row[3]),
-                            float(row[4]),
-                            float(row[5]),
-                            float(row[6]),
-                            self.origin_x,
-                            self.origin_y,
-                            self.origin_z,
-                            self.rotation,
-                        )
 
-                        self.get_logger().debug(
-                            '"computed coordinates %s"' % str([x, y, z, qz, qw])
-                        )
-                        actions.append(
-                            {
-                                "action": row[0],
-                                "goal": row[1],
-                                "robot": row[2],
-                                "pos_x": x,
-                                "pos_y": y,
-                                "pos_z": z,
-                                "orientation_z": qz,
-                                "orientation_w": qw,
-                            }
-                        )
-                if (
-                    os.path.isdir(os.path.join(path, "backup"))
-                    and self.get_parameter("backup_storage")
-                    .get_parameter_value()
-                    .bool_value
-                ):
-                    os.replace(
-                        os.path.join(path, f),
-                        os.path.join(
-                            path,
-                            "backup",
-                            datetime.now().isoformat(timespec="microseconds") + "-" + f,
-                        ),
+        files = [f for f in os.listdir(path) if f.endswith(".txt")]
+        # sort files by (creation_time, file_name)
+        files_sorted = sorted(
+            files, key=lambda f: (os.path.getctime(os.path.join(path, f)), f)
+        )
+
+        for f in files_sorted:
+            with open(os.path.join(path, f), "r") as action_file:
+                reader = csv.reader(action_file, delimiter=DELIMITER)
+                for row in reader:
+                    x, y, z, qz, qw = coords.abs2rel(
+                        float(row[3]),
+                        float(row[4]),
+                        float(row[5]),
+                        float(row[6]),
+                        self.origin_x,
+                        self.origin_y,
+                        self.origin_z,
+                        self.rotation,
                     )
-                else:
-                    try:
-                        os.remove(os.path.join(path, f))
-                    except FileNotFoundError:
-                        self.get_logger().warn("Trying to delete nonexisting goal file")
+
+                    self.get_logger().debug(
+                        '"computed coordinates %s"' % str([x, y, z, qz, qw])
+                    )
+                    actions.append(
+                        {
+                            "action": row[0],
+                            "goal": row[1],
+                            "robot": row[2],
+                            "pos_x": x,
+                            "pos_y": y,
+                            "pos_z": z,
+                            "orientation_z": qz,
+                            "orientation_w": qw,
+                        }
+                    )
+            if (
+                os.path.isdir(os.path.join(path, "backup"))
+                and self.get_parameter("backup_storage")
+                .get_parameter_value()
+                .bool_value
+            ):
+                os.replace(
+                    os.path.join(path, f),
+                    os.path.join(
+                        path,
+                        "backup",
+                        datetime.now().isoformat(timespec="microseconds") + "-" + f,
+                    ),
+                )
+            else:
+                try:
+                    os.remove(os.path.join(path, f))
+                except FileNotFoundError:
+                    self.get_logger().warn("Trying to delete nonexisting goal file")
 
         return actions
 

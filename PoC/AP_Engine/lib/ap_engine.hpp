@@ -323,6 +323,8 @@ namespace fcpp
 
                 // TODO: at the moment, AP sends command only to master
                 if (nt == node_type::ROBOT_MASTER) {
+                    int r = counter(CALL);
+                    std::cout << "Conunter: " << r;
                     send_action_to_selected_node(CALL, p, g, s);
                 }
 
@@ -348,38 +350,6 @@ namespace fcpp
             else if (terminatingMyself) s = status::internal_output;
         }
 
-        //! @brief Read new goals from shared variable and insert them in NewGoalsList
-        // TODO: check performance of using std::transform 
-        FUN void read_new_goals(ARGS, std::vector<goal_tuple_type>& NewGoalsList, string source) {
-            std::vector<InputGoal> InputGoalsBySource;
-            std::copy_if(InputGoalList.begin(), InputGoalList.end(), std::back_inserter(InputGoalsBySource), [&](InputGoal ig) {
-                return ig.source == source;
-                });
-
-            std::lock_guard lgg(GoalMutex);
-            auto map_op = [](InputGoal ig) {
-                return common::make_tagged_tuple<goal_action, goal_code, goal_pos_x, goal_pos_y, goal_pos_z, goal_orient_w, goal_source, goal_priority, goal_subcode>(
-                    ig.action,
-                    ig.goal_code,
-                    ig.pos_x,
-                    ig.pos_y,
-                    ig.pos_z,
-                    ig.orient_w,
-                    ig.source,
-                    ig.priority,
-                    ig.subcode
-                );
-                };
-            std::transform(InputGoalsBySource.begin(), InputGoalsBySource.end(), std::back_inserter(NewGoalsList), map_op);
-
-            // delete only goals with source = node_external_name
-            InputGoalList.erase(
-                std::remove_if(InputGoalList.begin(), InputGoalList.end(), [&](InputGoal ig) {
-                    return ig.source == source;
-                    }),
-                InputGoalList.end()
-            );
-        }
 
         //! @brief Read new goals from shared variable and insert them in NewGoalsList
         // TODO: check performance of using std::transform 
@@ -443,6 +413,7 @@ namespace fcpp
         FUN void acquire_new_goals(ARGS, node_type nt, std::vector<goal_tuple_type>& NewGoalsList) {
 #if FCPP_SYSTEM == FCPP_SYSTEM_GENERAL
             if (nt == node_type::ROBOT_MASTER) {
+                // Guardare stato (running/selected) per decidere se prendere in carico goal 
                 read_new_goals(CALL, NewGoalsList);
             }
 #else
@@ -563,7 +534,9 @@ namespace fcpp
 
                 // ACTION: REACH GOAL
                 else if (GOAL_ACTION == common::get<goal_action>(g)) {
-                    manage_action_goal(CALL, nt, g, &s, n_round);
+                    // If no others goals running
+                    if (node.storage(node_external_status{}) != feedback::GoalStatus::RUNNING)
+                        manage_action_goal(CALL, nt, g, &s, n_round);
                 }
 
                 termination_logic(CALL, s, g);
