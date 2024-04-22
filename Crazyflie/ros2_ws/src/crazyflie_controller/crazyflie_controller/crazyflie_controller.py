@@ -140,6 +140,7 @@ class CrazyflyController(Node):
             gf.goal_state = GOAL_REACHED
             gf.goal_id = msg.goal_id
             self.goalStatePublisher.publish(gf)
+            self.land(0.0, 1.0)
         else:
             e_p = np.array([msg.x, msg.y, msg.qz])
             self.execute_trajectory(e_p)
