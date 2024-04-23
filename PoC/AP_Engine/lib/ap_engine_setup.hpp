@@ -17,6 +17,13 @@
   */
 namespace fcpp {
 
+    //! @brief Dummy ordering between positions (allows positions to be used as secondary keys in ordered tuples).
+    // TODO: spostarla in namespace fcpp
+    template <size_t n>
+    bool operator<(vec<n> const&, vec<n> const&) {
+        return false;
+    }
+
     //! @cond INTERNAL
     namespace coordination {
         struct main;   // forward declaration of main function
@@ -137,6 +144,25 @@ namespace fcpp {
 
             //! @brief Subcode of the goal
             struct goal_subcode {};
+
+            // Start Flocking
+            struct node_posMaster {};
+            struct node_numberOfSlave {};
+            struct node_indexSlave {};
+            struct node_myRadiant {};
+            struct node_vecMyRadiant {};
+            struct node_vecMyVersor {};
+            struct node_checkIndex {};
+            struct node_maxNumberOfSlave {};
+            struct node_secondReturn {};
+            struct node_flagDistance {};
+            struct node_collisionAvoidanceSlaves {};
+            struct node_collisionAvoidanceMaster {};
+            struct node_exactExpectedPosition {};
+
+            struct node_startPosition {};
+            // END
+
         } // tags
 
             //! @brief Communication radius.
@@ -159,6 +185,49 @@ namespace fcpp {
             ? CUSTOM_GRAPH_DIAMETER
             // 2 * min(n_robots, 2 * (round of max_distance / communication range))
             : 2 * static_cast<int>(std::min(ROBOTS_COUNT * 1.0, 2.0 * ceil(norm(amax - amin) / comm)));
+
+
+        // Start Flocking
+        //! @brief Constant minimum number of nodes to form a circle
+        constexpr int minNodesToFormCircle = 5;
+        //! @brief Number of people in the area.
+        constexpr int node_num = minNodesToFormCircle + 5;
+        //! @brief Distance CircularCrown-slave, equivale al raggio della corona circolare della circonferenza, "sosta di ricalcolo".
+        //! con un numero di slave molto basso non ne vale la pena usarla (anche se mi pare che usandola aumenta le prestazioni, gli slave che si
+        //! ricalcolano si sistemano prima) TODO: refactor
+        constexpr double distanceCircularCrown = comm - ((comm / 100) * 0);
+        //! @brief Distance master-slave, equivale al raggio della circonferenza della formazione.
+        constexpr double distanceMasterSlave = distanceCircularCrown - ((distanceCircularCrown / 100) * 50);
+        //! @brief Constant pi-greco, usata per i calcoli trigonometrici.
+        constexpr double pi = 3.14159265358979323846;
+        //! @brief Minimum distance between devices to avoid colliding.
+        constexpr double minDistance = ((2 * distanceMasterSlave * pi) / (node_num - 1)) * 0.5;
+        //! @brief Id master.TODO: delete
+        constexpr int masterUid = 0;
+
+        //! @brief Hardness constant for elastic force Master-Slave.
+        constexpr double hardnessMasterSlave = (distanceMasterSlave / 10000) * 2;
+        //! @brief Hardness constant for elastic force CircularCrown-Slave.
+        constexpr double hardnessCircularCrown = (distanceCircularCrown / 10000) * 2;
+        //! @brief Hardness constant for elastic force Slave-Slave.
+        constexpr double hardnessSlaveSlave = 0.01;
+        //! @brief Max value period for master moviment in rectangle
+        constexpr double maxPeriod = 0.1;
+        //! @brief Percentage reductor of velocity for devices
+        constexpr double reductor = 0.025;
+        //! @brief Percentage reductor of velocity for master
+        constexpr double reductorMaster = 0.5;
+        //! @brief Max master velocity
+        constexpr int masterVelocity = 5;
+        //! @brief Percentage increment force if distance devices is < minimum distance, high collision risk
+        constexpr double incrementForce = 50;
+        //! @brief Max slaves velocity
+        constexpr int maxVelocitySlaves = 6;
+        //! @brief Increment slaves angular acceleration
+        constexpr double incrementAcceleration = 0.0;
+        // END Flocking
+
+
 
         // simulator vars
         constexpr vec<2> computing_colors = make_vec(0xADAD00FF, fcpp::YELLOW);
@@ -271,8 +340,30 @@ namespace fcpp {
             node_offset_pos_y, real_t,
             tavg, real_t,
             tvar, real_t,
-            nodes_by_goal_subcode, std::unordered_map<std::string, std::vector<device_t>>
-            > ,
+            nodes_by_goal_subcode, std::unordered_map<std::string, std::vector<device_t>>,
+
+            // START Flocking
+            node_posMaster, tuple<bool, vec<3>>,
+            node_numberOfSlave, int,
+            node_indexSlave, tuple<int, int>,
+            node_myRadiant, double,
+            node_vecMyRadiant, vec<3>,
+            node_vecMyVersor, vec<3>,
+            node_checkIndex, bool,
+            node_maxNumberOfSlave, int,
+            node_secondReturn, bool,
+            node_flagDistance, bool,
+            node_collisionAvoidanceSlaves, vec<3>,
+            node_collisionAvoidanceMaster, vec<3>,
+            node_exactExpectedPosition, vec<3>,
+
+            node_startPosition, vec<3> //! Initialized only for the nominal test
+
+
+            // END Flocking
+
+
+            >,
             // data initialisation
             init<
             x, rectangle_d,

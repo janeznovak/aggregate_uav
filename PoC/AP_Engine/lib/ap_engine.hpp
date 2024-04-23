@@ -113,6 +113,15 @@ namespace fcpp
             node.storage(node_process_status{}) = ps;
         }
 
+        // Flocking Utils
+
+
+
+        bool compare(double a, double b) {
+            return a < b;
+        }
+
+
         // STATE MACHINE
 
         //! @brief Manage state machine when battery is discharged
@@ -224,6 +233,261 @@ namespace fcpp
             change_color(CALL, new_color);
         }
 
+        // FLOCKING
+
+        //! @brief controllo l'indice e nel caso non fosse valido lo riassegno...
+        FUN void checkIndex(ARGS, node_type nt) {
+            using namespace tags;
+            if (nt == node_type::ROBOT_SLAVE) {
+                if ((get<1>(node.storage(node_indexSlave{}))) > 0) {
+                    field <tuple<int, int>> f = nbr(CALL, node.storage(node_indexSlave{}));
+                    tuple<int, int> check = max_hood(CALL, f);
+                    if (get<1>(node.storage(node_indexSlave{})) == get<1>(check) && get<0>(node.storage(node_indexSlave{})) != get<0>(check)) {
+                        node.storage(node_checkIndex{}) = true;
+                        if (!(node.storage(node_secondReturn{}))) {
+                            get<1>(node.storage(node_indexSlave{})) += 1;
+                        }
+                        else {
+                            get<1>(node.storage(node_indexSlave{})) -= 1;
+                        }
+                    }
+                }
+            }
+        }
+
+
+        FUN void calculateMyCorner(ARGS) {
+            using namespace tags;
+            if (get<0>(node.storage(node_posMaster{}))) {
+                double myRadiant = (get<1>(node.storage(node_indexSlave{}))) * ((2 * pi) / node.storage(node_numberOfSlave{}));
+                node.storage(node_myRadiant{}) = myRadiant;
+                double sine_value = std::sin(myRadiant);
+                double cosine_value = std::cos(myRadiant);
+                double x = sine_value * distanceMasterSlave;
+                double y = cosine_value * distanceMasterSlave;
+                if (node.storage(node_checkIndex{})) {
+                    x = sine_value * distanceCircularCrown;
+                    y = cosine_value * distanceCircularCrown;
+                }
+                vec<3> vecMyRadiant = make_vec(x, y, 0); // TODO: aggiungere z
+                node.storage(node_vecMyRadiant{}) = vecMyRadiant;
+
+                /**traslazione del cerchio attorno al master*/
+                vec<3> dist = get<1>(node.storage(node_posMaster{})) - node.position();
+                vec<3> versore = vecMyRadiant + dist;
+                node.storage(node_vecMyVersor{}) = versore;
+                if (!(isnan(versore[0]) && isnan(versore[1]))) {
+                    node.propulsion() = versore / norm(versore);
+                }
+                node.propulsion() += node.propulsion() * incrementAcceleration;
+            }
+        }
+
+        //! @brief se dei nodi slave escono dalla circonferenza "resetto" gli indici degli slave all'interno della circonferenza che superano il massimo indice...
+        FUN bool decrementIndex(ARGS) {
+            using namespace tags;
+            int difference = node.storage(node_maxNumberOfSlave{}) - node.storage(node_numberOfSlave{});
+            if (difference > 0 && get<1>(node.storage(node_indexSlave{})) > node.storage(node_numberOfSlave{})) {
+                get<1>(node.storage(node_indexSlave{})) = 1;
+                return false;
+            }
+            return true;
+        }
+
+        FUN void errorCalculator(ARGS) {
+            using namespace tags;
+            if (get<0>(node.storage(node_posMaster{}))) {
+                double myRadiant = (get<1>(node.storage(node_indexSlave{}))) * ((2 * pi) / node.storage(node_numberOfSlave{}));
+                double x = std::sin(myRadiant) * distanceMasterSlave;
+                double y = std::cos(myRadiant) * distanceMasterSlave;
+                vec<3> vecMyRadiant = make_vec(x, y, 0); // TODO: aggiungere z
+                vec<3> exactPosition = vecMyRadiant + get<1>(node.storage(node_posMaster{}));
+                double error = distance(exactPosition, node.position());
+                node.storage(node_exactExpectedPosition{}) = exactPosition;
+            }
+        }
+
+        FUN void collisionAvoidance(ARGS, node_type nt) {
+            using namespace tags;
+            if (nt == node_type::ROBOT_SLAVE) {
+                if (get<0>(node.storage(node_posMaster{}))) {
+                    bool flag = compare(distance(get<1>(node.storage(node_posMaster{})), node.position()), minDistance);
+                    vec<3> elasticMaster = make_vec(0, 0, 0);
+                    vec<3> v = get<1>(node.storage(node_posMaster{})) - node.position();
+                    if (!node.storage(node_checkIndex{})) {
+                        elasticMaster = v * (1 - distanceMasterSlave / (norm(v))) * hardnessMasterSlave;
+                    }
+                    else {
+                        elasticMaster = v * ((1 - distanceCircularCrown / (norm(v)))) * hardnessCircularCrown;
+                    }
+                    if (flag) {
+                        //! Viene considerata come limite critico di livello 2 la distanza minima consentita
+                        elasticMaster += elasticMaster * incrementForce;
+                    }
+                    node.storage(node_collisionAvoidanceMaster{}) = elasticMaster;
+
+                    //! Viene considerata come limite critico di livello 1 il 90% della suddivisione in parti uguali per permettere
+                    //! un margine d'errore del 10%
+                    double distanceSlaveSlave = (2 * distanceMasterSlave * pi) / node.storage(node_numberOfSlave{});
+
+                    tuple<bool, vec<3>> elasticSlave = sum_hood(CALL, map_hood([](vec<3> v, double d, double l, double constAvoid) {
+                        tuple<bool, vec<3>> t = make_tuple(false, make_vec(0, 0, 0));
+                        double criticalLimit = l * 0.9;
+                        if (d < criticalLimit) {
+                            get<1>(t) = v * ((1 - l / (norm(v))) * hardnessSlaveSlave);
+                            //! Viene considerata come limite critico di livello 2 la distanza minima consentita
+                            if (d < constAvoid) {
+                                get<1>(t) += get<1>(t) * incrementForce;
+                            }
+                        }
+                        return t;
+                        }, node.nbr_vec(), node.nbr_dist(), distanceSlaveSlave, minDistance), tuple<bool, vec<3>>{});
+                    node.storage(node_collisionAvoidanceSlaves{}) = get<1>(elasticSlave);
+                    if (node.storage(node_collisionAvoidanceSlaves{}) != make_vec(0, 0, 0)) {
+                        node.storage(node_flagDistance{}) = true;
+                    }
+                    else {
+                        node.storage(node_flagDistance{}) = false;
+                    }
+
+                    //! Viene semplicemente controllato che i valori calcolati siano assegnabili, ovvero !NaN || !inf
+                    if ((!(isnan(node.storage(node_collisionAvoidanceMaster{})[0])) && !(std::isinf(node.storage(node_collisionAvoidanceMaster{})[0]))) ||
+                        (!(isnan(node.storage(node_collisionAvoidanceMaster{})[1])) && !(std::isinf(node.storage(node_collisionAvoidanceMaster{})[1])))) {
+
+                        node.propulsion() += node.storage(node_collisionAvoidanceMaster{});
+                        if ((!(isnan(node.storage(node_collisionAvoidanceSlaves{})[0])) && !(std::isinf(node.storage(node_collisionAvoidanceSlaves{})[0]))) ||
+                            (!(isnan(node.storage(node_collisionAvoidanceSlaves{})[1])) && !(std::isinf(node.storage(node_collisionAvoidanceSlaves{})[1])))) {
+
+                            node.propulsion() += node.storage(node_collisionAvoidanceSlaves{});
+                        }
+                    }
+                }
+            }
+        }
+
+        //! @brief reset delle variabili nello storage inerenti alla formazione...
+        FUN void reset(ARGS) {
+            using namespace tags;
+            if (get<1>(node.storage(node_indexSlave{})) != 0) {
+                get<1>(node.storage(node_indexSlave{})) = 0;
+            }
+            if (get<0>(node.storage(node_posMaster{}))) {
+                get<0>(node.storage(node_posMaster{})) = false;
+            }
+            if (node.storage(node_numberOfSlave{}) != 0) {
+                node.storage(node_numberOfSlave{}) = 0;
+            }
+            if (node.storage(node_maxNumberOfSlave{}) != 0) {
+                node.storage(node_maxNumberOfSlave{}) = 0;
+            }
+            if (node.storage(node_myRadiant{}) != 0) {
+                node.storage(node_myRadiant{}) = 0;
+            }
+            if (node.storage(node_vecMyVersor{}) != make_vec(0, 0, 0)) {
+                node.storage(node_vecMyVersor{}) = make_vec(0, 0, 0);
+            }
+            if (node.storage(node_flagDistance{})) {
+                node.storage(node_flagDistance{}) = false;
+            }
+            node.propulsion() = make_vec(0, 0, 0);
+        }
+
+
+        FUN void initialization(ARGS, node_type nt) {
+            using namespace tags;
+            tuple<bool, vec<3>> t = make_tuple(false, make_vec(0, 0, 0));
+            if (nt == node_type::ROBOT_MASTER) {
+                t = make_tuple(true, node.position());
+            }
+
+            int slaves = (int)count_hood(CALL) - 1;
+            if (nt == node_type::ROBOT_SLAVE) {
+                slaves = 0;
+            }
+            field<int> identifierNumSlaves = nbr(CALL, 0, slaves);
+            node.storage(node_numberOfSlave{}) = max_hood(CALL, identifierNumSlaves);
+
+            field < tuple < bool, vec <3>>> identifierMaster = nbr(CALL, t);
+            tuple<bool, vec<3>> identified = max_hood(CALL, identifierMaster);
+            if (get<0>(identified)) {
+                node.storage(node_posMaster{}) = identified;
+                /**Quando un nodo identifica la posizione del master gli viene assegnato un indice che equivale
+                 * all'ordine di arrivo all'interno del cerchio...(servirà nella funzione myCorner)*/
+                if (!(node.storage(node_secondReturn{}))) {
+                    int maxIndex = nbr(CALL, 0, [&](field<int> indexes) {
+                        int maxIndex = max_hood(CALL, indexes);
+                        if (get<1>(node.storage(node_indexSlave{})) == 0 && nt == node_type::ROBOT_SLAVE) {
+                            return maxIndex + 1;
+                        }
+                        else {
+                            return maxIndex;
+                        }
+                        });
+
+                    if ((get<1>(node.storage(node_indexSlave{}))) == 0 && nt == node_type::ROBOT_SLAVE) {
+                        node.storage(node_indexSlave{}) = make_tuple(node.uid, maxIndex);
+                    }
+                }
+                else {
+                    if ((get<1>(node.storage(node_indexSlave{}))) == 0 && nt == node_type::ROBOT_SLAVE) {
+                        get<1>(node.storage(node_indexSlave{})) = node.storage(node_numberOfSlave{});
+                    }
+                }
+            }
+
+            node.storage(node_maxNumberOfSlave{}) = old(CALL, 0, [&](int b) {
+                return max(b, (node.storage(node_numberOfSlave{})));
+                });
+        }
+
+
+        FUN void run_flocking(ARGS, node_type nt) {
+            CODE
+                /**controllo nel caso degli indici si sovrapponessero*/
+                field <tuple<int, int>> identifierWrongIndex = nbr(CALL, node.storage(node_indexSlave{}));
+
+            bool flagIndex = all_hood(CALL, map_hood([](tuple<int, int> t, tuple<int, int> myValue) {
+                if (get<1>(myValue) == get<1>(t) && get<0>(myValue) != get<0>(t)) {
+                    return false;
+                }
+                else {
+                    return true;
+                }
+                }, identifierWrongIndex, node.storage(node_indexSlave{})));
+
+            if (!(flagIndex && decrementIndex(CALL))) {
+                checkIndex(CALL, nt);
+            }
+            else {
+                node.storage(node_checkIndex{}) = false;
+            }
+
+            if (nt == node_type::ROBOT_SLAVE) {
+                calculateMyCorner(CALL);
+                //!Sistema di collision avoidance
+                collisionAvoidance(CALL, nt);
+                if (norm(node.velocity()) > maxVelocitySlaves) {
+                    node.velocity() *= maxVelocitySlaves / norm(node.velocity());
+                }
+                errorCalculator(CALL);
+            }
+
+
+            //  TODO: mandare action slaves
+            if (node.velocity() > 0) {
+                node.velocity() -= node.velocity() * reductor;
+            }
+
+            if (nt == node_type::ROBOT_SLAVE) {
+                if (!(get<0>(node.storage(node_posMaster{})))) {
+                    node.storage(node_startPosition{}) = node.position();
+                }
+                else {
+                    node.storage(node_startPosition{}) = node.position();
+                }
+            }
+        }
+
         // AP PROCESS
 
         //! @brief A robot has reached a goal and now try to terminate the process
@@ -294,9 +558,8 @@ namespace fcpp
         //! @brief Manage when the user has requested a new GOAL
         FUN void manage_action_goal(ARGS, node_type nt, goal_tuple_type const& g, status* s, int n_round) {
             CODE
-                if (AP_ENGINE_DEBUG) {
-                }
-            std::cout << "Process GOAL " << common::get<goal_code>(g) << ", action " << common::get<goal_action>(g) << " in node " << node.uid << endl;
+
+                std::cout << "Process GOAL " << common::get<goal_code>(g) << ", action " << common::get<goal_action>(g) << " in node " << node.uid << endl;
 
             add_goal_to_computing_map(CALL, g);
 
@@ -319,13 +582,13 @@ namespace fcpp
                 }
 
                 // TODO: add code from thesis
-
+                run_flocking(CALL, nt);
 
                 // TODO: at the moment, AP sends command only to master
                 if (nt == node_type::ROBOT_MASTER) {
-                    // int r = counter(CALL);
+                    int r = counter(CALL);
                     // std::cout << "Conunter: " << r;
-                    if (node.storage(node_external_status{}) != feedback::GoalStatus::RUNNING)
+                    if (r == 1 && node.storage(node_external_status{}) != feedback::GoalStatus::RUNNING)
                         send_action_to_selected_node(CALL, p, g, s);
                 }
 
@@ -449,7 +712,7 @@ namespace fcpp
                         // add offset to match with background
                         real_t pos_x_offset = node.storage(node_offset_pos_x{});
                         real_t pos_y_offset = node.storage(node_offset_pos_y{});
-                        node.position() = make_vec(rs.pos_x + pos_x_offset, rs.pos_y + pos_y_offset, 0);
+                        node.position() = make_vec(rs.pos_x + pos_x_offset, rs.pos_y + pos_y_offset, rs.pos_z);
 
                         // truncate percentage to simply the output: 98 -> 90; 92 -> 90; 85 -> 80
                         float battery_percent_charge_trunc = std::trunc(rs.battery_percent_charge / 10) * 10;
@@ -504,14 +767,14 @@ namespace fcpp
                         if (battery_percent_charge_trunc <= 0) {
                             manage_battery_discharged_node(CALL);
                         }
-                    }
+                }
                     // delete element from map
                     RobotStatesMap.erase(rname);
-                }
+        }
 
                 return ph;
-                });
-        }
+        });
+    }
 
         // PROCESS MANAGEMENT
 
@@ -578,6 +841,9 @@ namespace fcpp
             }
         }
 
+
+
+
         //! @brief Main case study function.
         MAIN()
         {
@@ -600,6 +866,11 @@ namespace fcpp
                 init_robot(CALL, "RS.");
             }
 
+
+            // Init Flocking
+            initialization(CALL, nt);
+
+
             // PROCESS MANAGEMENT
             spawn_result_type r = spawn_process(CALL, nt, NewGoalsList, n_round);
 
@@ -616,14 +887,18 @@ namespace fcpp
             process_tuple_type
         >;
 
+        // TODO: refactor (cancellare le funzioni da togliere)
+        FUN_EXPORT flocking_t = export_list<double, int, tuple<int, vec<3>>, vec<3>, tuple<bool, vec<3>>, tuple<int, int>, tuple <bool, double>, bool, tuple <bool, bool>>;
+
         //! @brief Export types used by the main function (update it when expanding the program).
         struct main_t : public export_list<
             any_connection_t,
+            flocking_t,
             spawn_t<goal_tuple_type, status>,
             diameter_election_t<tuple<real_t, device_t>>
         > {};
 
-        }
-    }
+}
+}
 
 #endif // NODES_AP_ENGINE_H_
