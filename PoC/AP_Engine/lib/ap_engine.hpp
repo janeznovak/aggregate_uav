@@ -276,10 +276,10 @@ namespace fcpp
                 vec<3> dist = get<1>(node.storage(node_posMaster{})) - node.position();
                 vec<3> versore = vecMyRadiant + dist;
                 node.storage(node_vecMyVersor{}) = versore;
-                if (!(isnan(versore[0]) && isnan(versore[1]))) {
-                    node.propulsion() = versore / norm(versore);
-                }
-                node.propulsion() += node.propulsion() * incrementAcceleration;
+                // if (!(isnan(versore[0]) && isnan(versore[1]))) {
+                    // node.propulsion() = versore / norm(versore);
+                // }
+                // node.propulsion() += node.propulsion() * incrementAcceleration;
             }
         }
 
@@ -354,11 +354,14 @@ namespace fcpp
                     if ((!(isnan(node.storage(node_collisionAvoidanceMaster{})[0])) && !(std::isinf(node.storage(node_collisionAvoidanceMaster{})[0]))) ||
                         (!(isnan(node.storage(node_collisionAvoidanceMaster{})[1])) && !(std::isinf(node.storage(node_collisionAvoidanceMaster{})[1])))) {
 
-                        node.propulsion() += node.storage(node_collisionAvoidanceMaster{});
+                        // node.propulsion() += node.storage(node_collisionAvoidanceMaster{});
+                        node.storage(node_vecMyVersor{}) += node.storage(node_collisionAvoidanceMaster{});
                         if ((!(isnan(node.storage(node_collisionAvoidanceSlaves{})[0])) && !(std::isinf(node.storage(node_collisionAvoidanceSlaves{})[0]))) ||
                             (!(isnan(node.storage(node_collisionAvoidanceSlaves{})[1])) && !(std::isinf(node.storage(node_collisionAvoidanceSlaves{})[1])))) {
 
-                            node.propulsion() += node.storage(node_collisionAvoidanceSlaves{});
+                            // node.propulsion() += node.storage(node_collisionAvoidanceSlaves{});
+                            node.storage(node_vecMyVersor{}) += node.storage(node_collisionAvoidanceSlaves{});
+
                         }
                     }
                 }
@@ -465,18 +468,18 @@ namespace fcpp
             if (nt == node_type::ROBOT_SLAVE) {
                 calculateMyCorner(CALL);
                 //!Sistema di collision avoidance
-                collisionAvoidance(CALL, nt);
-                if (norm(node.velocity()) > maxVelocitySlaves) {
-                    node.velocity() *= maxVelocitySlaves / norm(node.velocity());
-                }
-                errorCalculator(CALL);
+                // collisionAvoidance(CALL, nt);
+                // if (norm(node.velocity()) > maxVelocitySlaves) {
+                //     node.velocity() *= maxVelocitySlaves / norm(node.velocity());
+                // }
+                // errorCalculator(CALL);
             }
 
 
             //  TODO: mandare action slaves
-            if (node.velocity() > 0) {
-                node.velocity() -= node.velocity() * reductor;
-            }
+            // if (node.velocity() > 0) {
+            //     node.velocity() -= node.velocity() * reductor;
+            // }
 
             if (nt == node_type::ROBOT_SLAVE) {
                 if (!(get<0>(node.storage(node_posMaster{})))) {
@@ -510,29 +513,44 @@ namespace fcpp
         }
 
         //! @brief Send a GOAL action to selected node and update the AP state machine of the robot to SELECTED
-        FUN void send_action_to_selected_node(ARGS, process_tuple_type& p, goal_tuple_type const& g, status* s) {
+        FUN void send_action_to_selected_node(ARGS, node_type nt, process_tuple_type& p, goal_tuple_type const& g, status* s) {
             CODE
                 std::string robot_chosen = get_real_robot_name(CALL, node.uid);
-            std::cout << "Robot " << robot_chosen << " is chosen for goal " << common::get<goal_code>(g) << endl;
-            std::cout << endl;
 
-            // set processing status to SELECTED
-            node.storage(node_process_status{}) = ProcessingStatus::SELECTED;
+            if (nt == node_type::ROBOT_MASTER) {
+                std::cout << "Robot " << robot_chosen << " is chosen for goal " << common::get<goal_code>(g) << endl;
+                std::cout << endl;
 
-            // save goal
-            node.storage(node_process_goal{}) = common::get<goal_code>(g);
+                // set processing status to SELECTED
+                node.storage(node_process_status{}) = ProcessingStatus::SELECTED;
 
-            // send action to file
-            action::ActionData action_data = {
-                .action = common::get<goal_action>(g),
-                .goal_code = common::get<goal_code>(g),
-                .robot = robot_chosen,
-                .pos_x = common::get<goal_pos_x>(g),
-                .pos_y = common::get<goal_pos_y>(g),
-                .pos_z = common::get<goal_pos_z>(g),
-                .orient_w = common::get<goal_orient_w>(g)
-            };
-            action::manager::ActionManager::new_action(action_data);
+                // save goal
+                node.storage(node_process_goal{}) = common::get<goal_code>(g);
+
+                // send action to file
+                action::ActionData action_data = {
+                    .action = common::get<goal_action>(g),
+                    .goal_code = common::get<goal_code>(g),
+                    .robot = robot_chosen,
+                    .pos_x = common::get<goal_pos_x>(g),
+                    .pos_y = common::get<goal_pos_y>(g),
+                    .pos_z = common::get<goal_pos_z>(g),
+                    .orient_w = common::get<goal_orient_w>(g)
+                };
+                action::manager::ActionManager::new_action(action_data);
+            }
+            else{
+                action::ActionData action_data = {
+                    .action = common::get<goal_action>(g),
+                    .goal_code = common::get<goal_code>(g),
+                    .robot = robot_chosen,
+                    .pos_x = (float)node.storage(node_vecMyVersor{})[0],
+                    .pos_y = (float)node.storage(node_vecMyVersor{})[1],
+                    .pos_z = (float)node.storage(node_vecMyVersor{})[2],
+                    .orient_w = node.storage(node_orient_w{})
+                };
+                action::manager::ActionManager::new_action(action_data);
+            }
         }
 
         // ACTION
@@ -581,15 +599,17 @@ namespace fcpp
                     battery_discharged_when_it_is_running(CALL, p, g, s);
                 }
 
-                // TODO: add code from thesis
-                run_flocking(CALL, nt);
-
-                // TODO: at the moment, AP sends command only to master
                 if (nt == node_type::ROBOT_MASTER) {
                     int r = counter(CALL);
                     // std::cout << "Conunter: " << r;
                     if (r == 1 && node.storage(node_external_status{}) != feedback::GoalStatus::RUNNING)
-                        send_action_to_selected_node(CALL, p, g, s);
+                        send_action_to_selected_node(CALL, nt, p, g, s);
+                }
+
+                if (nt == node_type::ROBOT_SLAVE) {
+                    // TODO: add code from thesis
+                    run_flocking(CALL, nt);
+                    send_action_to_selected_node(CALL, nt, p, g, s);
                 }
 
                 // blinking colors if not running
@@ -685,7 +705,7 @@ namespace fcpp
                 read_new_goals(CALL, NewGoalsList);
             }
 #endif
-            }
+        }
 
         //! @brief Initialize variables (storage, etc...) of a robot using feedback data.
         FUN void init_robot(ARGS, std::string prefix) {
@@ -767,14 +787,14 @@ namespace fcpp
                         if (battery_percent_charge_trunc <= 0) {
                             manage_battery_discharged_node(CALL);
                         }
-                }
+                    }
                     // delete element from map
                     RobotStatesMap.erase(rname);
-        }
+                }
 
                 return ph;
-        });
-    }
+                });
+        }
 
         // PROCESS MANAGEMENT
 
@@ -888,7 +908,17 @@ namespace fcpp
         >;
 
         // TODO: refactor (cancellare le funzioni da togliere)
-        FUN_EXPORT flocking_t = export_list<double, int, tuple<int, vec<3>>, vec<3>, tuple<bool, vec<3>>, tuple<int, int>, tuple <bool, double>, bool, tuple <bool, bool>>;
+        FUN_EXPORT flocking_t = export_list<
+            double,
+            int,
+            tuple<int, vec<3>>,
+            vec<3>,
+            tuple<bool, vec<3>>,
+            tuple<int, int>,
+            tuple <bool, double>,
+            bool,
+            tuple <bool, bool>
+        >;
 
         //! @brief Export types used by the main function (update it when expanding the program).
         struct main_t : public export_list<
@@ -898,7 +928,7 @@ namespace fcpp
             diameter_election_t<tuple<real_t, device_t>>
         > {};
 
-}
+    }
 }
 
 #endif // NODES_AP_ENGINE_H_

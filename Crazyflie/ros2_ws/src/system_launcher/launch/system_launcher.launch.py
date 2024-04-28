@@ -69,9 +69,6 @@ def generate_launch_description():
     robots_node = []
     for robot_name, robot_info in crazyflies['robots'].items():
         if str(robot_info['enabled']) == "True":
-            initial_position = robot_info['initial_position']
-            x, y, z = initial_position[0], initial_position[1], initial_position[2]
-            yaw = 0.0
 
             controller = Node(
                 package="crazyflie_controller",
@@ -85,13 +82,14 @@ def generate_launch_description():
                 package="robot_reader",
                 executable="robot_reader",
                 output="screen",
-                arguments=[robot_name, robot_name, str(x), str(y), str(z), str(yaw)],
+                arguments=[robot_name, robot_name],
             )
+
             writer = Node(
                 package="robot_writer",
                 executable="robot_writer",
                 output='screen',
-                arguments=[robot_name, robot_name, str(x), str(y), str(z), str(yaw)]
+                arguments=[robot_name, robot_name]
             )
             robots_node.append(controller)
             robots_node.append(reader)

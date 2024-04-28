@@ -9,8 +9,8 @@ from datetime import datetime
 from pathlib import Path
 import os
 
-STORAGE_BASE_PATH           = "../../../../Storage/"
-ROBOT_PLACEHOLDER           = "#ROBOT"
+STORAGE_BASE_PATH = "../../../../../../../Storage/"
+ROBOT_PLACEHOLDER = "#ROBOT"
 ROBOT_OUTPUT_PATH_TO_WEB    = "from_robot/#ROBOT/to_web/feedback/"
 ROBOT_OUTPUT_PATH_TO_AP     = "from_robot/#ROBOT/to_ap/feedback/"
 DELIMITER                   = ";"

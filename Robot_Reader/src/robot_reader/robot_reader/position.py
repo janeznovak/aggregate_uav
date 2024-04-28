@@ -16,5 +16,5 @@ class PositionDTO:
         self.angle      = angle
 
     def __str__ (self):
-        return """PositionDTO(robot={0}, pos_x={1}, pos_y={2},pos_z={2}, angle={3})""".format(
+        return """PositionDTO(robot={0}, pos_x={1}, pos_y={2},pos_z={3}, angle={4})""".format(
                 self.robot, str(self.pos_x), str(self.pos_y),str(self.pos_z), str(self.angle))

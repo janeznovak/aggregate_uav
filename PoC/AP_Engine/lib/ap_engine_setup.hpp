@@ -159,8 +159,12 @@ namespace fcpp {
             struct node_collisionAvoidanceSlaves {};
             struct node_collisionAvoidanceMaster {};
             struct node_exactExpectedPosition {};
-
             struct node_startPosition {};
+
+            struct node_vel_x {};
+            struct node_vel_y {};
+            struct node_vel_z {};
+            struct node_orient_w {};
             // END
 
         } // tags
@@ -218,11 +222,11 @@ namespace fcpp {
         //! @brief Percentage reductor of velocity for master
         constexpr double reductorMaster = 0.5;
         //! @brief Max master velocity
-        constexpr int masterVelocity = 5;
+        constexpr int masterVelocity = 1;
         //! @brief Percentage increment force if distance devices is < minimum distance, high collision risk
         constexpr double incrementForce = 50;
         //! @brief Max slaves velocity
-        constexpr int maxVelocitySlaves = 6;
+        constexpr int maxVelocitySlaves = 1.5;
         //! @brief Increment slaves angular acceleration
         constexpr double incrementAcceleration = 0.0;
         // END Flocking
@@ -357,8 +361,11 @@ namespace fcpp {
             node_collisionAvoidanceMaster, vec<3>,
             node_exactExpectedPosition, vec<3>,
 
-            node_startPosition, vec<3> //! Initialized only for the nominal test
-
+            node_startPosition, vec<3>, //! Initialized only for the nominal test
+            node_vel_x, float,
+            node_vel_y, float,
+            node_vel_z, float,
+            node_orient_w, float
 
             // END Flocking
 

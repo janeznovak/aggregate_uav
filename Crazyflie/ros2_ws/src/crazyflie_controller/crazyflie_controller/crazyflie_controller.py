@@ -5,6 +5,7 @@ from rclpy.node import Node
 import numpy as np
 import rowan
 from pathlib import Path
+import numpy as np
 
 from crazyflie_interfaces.msg import FullState, Position
 from crazyflie_interfaces.srv import Land, NotifySetpointsStop, Takeoff
@@ -33,7 +34,7 @@ class CrazyflyController(Node):
         self.cfname = cfname
         self.prefix = prefix
         self.master_position = PoseStamped()
-        self.cf_position = PoseStamped()
+        self.cf_position = np.array([0.0, 0.0, 0.0])
 
         self.takeoffService = self.create_client(Takeoff, prefix + "/takeoff")
         self.takeoffService.wait_for_service()
@@ -68,25 +69,21 @@ class CrazyflyController(Node):
                 GoalFeedback, prefix + "/goal_state", qos_profile_services_default
             )
 
-        # TODO: Testing Section. Add Trajectory
-        # self.takeoff(1.0, 1.0)
+        self.cfPoseTopic = self.create_subscription(
+            PoseStamped, f"{prefix}/pose", self.cf_pose_callback, 1
+        )
 
-        # self.cfPoseTopic = self.create_subscription(
-        #     PoseStamped, f"{prefix}/pose", self.cf_pose_callback, 1
-        # )
+        self.takeoff(1.0, 1.0)
 
-        # # Distance/angle
-        # self.distance = np.array([2.0, 0.0, 0.0])  # Distanza desiderata
-        # self.angle = np.pi / 2
 
-        # # Slave code
-        # if not self.isMaster:
-        #     self.masterPoseTopic = self.create_subscription(
-        #         PoseStamped, f"/{MASTER_PREFIX}/pose", self.master_pose_callback, 1
-        #     )
+    def cf_pose_callback(self, msg:PoseStamped):
+        pose = msg.pose.position
+        self.cf_position = np.array([pose.x, pose.y, pose.z])
+
 
     def execute_trajectory(self, goal_vel, max_acceleration=1.0, max_speed=1.0):
         goal_velocity = goal_vel
+        final_pos = self.cf_position + goal_velocity
 
         # Calcolo dell'accelerazione
         time_to_reach_final_velocity = np.linalg.norm(goal_velocity) / max_acceleration
@@ -97,7 +94,7 @@ class CrazyflyController(Node):
         angular_velocity = np.array([0.0, 0.0, 0.0])
 
         self.cmdFullState(
-            goal_velocity, goal_velocity, acceleration, yaw_angle, angular_velocity
+            final_pos, goal_velocity, acceleration, yaw_angle, angular_velocity
         )
 
     def execute_master_trajectory(self, trajpath, rate=100, offset=np.zeros(3)):
@@ -127,23 +124,23 @@ class CrazyflyController(Node):
         timeHelper.sleepForRate(rate)
 
     def ap_goal_callback(self, msg: Goal):
-        self.get_logger().info(f"Received GOAL Msg")
-        gf = GoalFeedback()
-        gf.goal_state = GOAL_RUNNING
-        gf.goal_id = msg.goal_id
-        self.goalStatePublisher.publish(gf)
-
         if self.isMaster:
-            self.execute_master_trajectory(msg.goal_id)
+            self.get_logger().info(f"Received GOAL Msg")
             gf = GoalFeedback()
+            gf.goal_state = GOAL_RUNNING
+            gf.goal_id = msg.goal_id
+            self.goalStatePublisher.publish(gf)
+            self.execute_master_trajectory(msg.goal_id)
             self.get_logger().info(f"Master GOAL ended")
             gf.goal_state = GOAL_REACHED
             gf.goal_id = msg.goal_id
             self.goalStatePublisher.publish(gf)
             self.land(0.0, 1.0)
         else:
+            self.get_logger().info(f"Received Action Msg")
             e_p = np.array([msg.x, msg.y, msg.qz])
-            self.execute_trajectory(e_p)
+            if not np.isnan(e_p).any():
+                self.execute_trajectory(e_p)
 
     def ap_abort_callback(self, msg: Goal):
         self.get_logger().info(f"Received ABORT Msg")

@@ -29,13 +29,13 @@ extern const std::vector<std::string> ROBOTS; // TODO: transform to map
 const string AP_ROBOT_PREFIX_KEY = "AP_ROBOT_PREFIX";
 const string DEFAULT_ROBOT_PREFIX = "cf_";
 const string AP_ROBOT_COUNT_KEY = "AP_ROBOT_COUNT";
-const int DEFAULT_ROBOT_COUNT = 1;
+const int DEFAULT_ROBOT_COUNT = 4;
 const string AP_NODE_UID_KEY = "AP_NODE_UID";
 const int DEFAULT_NODE_UID = 1;
 const string AP_ROUND_PERIOD_KEY = "AP_ROUND_PERIOD";
-const double DEFAULT_SIDE_X = 5.3;
+const double DEFAULT_SIDE_X = 10.0;
 const string AP_SIDE_X_KEY = "AP_SIDE_X";
-const double DEFAULT_SIDE_Y = 8.0;
+const double DEFAULT_SIDE_Y = 10.0;
 const string AP_SIDE_Y_KEY = "AP_SIDE_Y";
 const double DEFAULT_ROUND_PERIOD = 0.2;
 const string AP_EMBEDDED_NODE_KIOSK_KEY = "AP_EMBEDDED_NODE_KIOSK";
@@ -113,7 +113,7 @@ const float LABEL_SIZE = 0.008;
 #define INPUT_FOLDER_BASE_PATH  "../../../Storage/" 
 #define OUTPUT_FOLDER_BASE_PATH "../../../Storage/" 
 #define COLUMN_DELIMITER        ';'
-#define POLLING_MS              10
+#define POLLING_MS              5
 
 const string ROBOTS_PLACEHOLDER = "#ROBOT";
 const string INPUT_FOLDER_FROM_ROBOTS_FEEDBACK = string("from_robot/") + ROBOTS_PLACEHOLDER + string("/to_ap/feedback");
