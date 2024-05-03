@@ -15,7 +15,7 @@ STORAGE_BASE_PATH = "../../../../../../../Storage/"
 ROBOT_PLACEHOLDER = "#ROBOT"
 ROBOT_INPUT_PATH_FROM_AP = "from_ap/to_robot/actions/#ROBOT/"
 DELIMITER = ";"
-TIMER_PERIOD = 0.5
+TIMER_PERIOD = 0.2
 
 
 class GoalPublisher(Node):

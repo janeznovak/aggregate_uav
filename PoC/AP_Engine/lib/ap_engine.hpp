@@ -269,7 +269,7 @@ namespace fcpp
                     x = sine_value * distanceCircularCrown;
                     y = cosine_value * distanceCircularCrown;
                 }
-                vec<3> vecMyRadiant = make_vec(x, y, 0); // TODO: aggiungere z
+                vec<3> vecMyRadiant = make_vec(x, y, 0); 
                 node.storage(node_vecMyRadiant{}) = vecMyRadiant;
 
                 /**traslazione del cerchio attorno al master*/
@@ -468,17 +468,15 @@ namespace fcpp
             if (nt == node_type::ROBOT_SLAVE) {
                 calculateMyCorner(CALL);
                 //!Sistema di collision avoidance
-                // collisionAvoidance(CALL, nt);
+                collisionAvoidance(CALL, nt);
                 // if (norm(node.velocity()) > maxVelocitySlaves) {
                 //     node.velocity() *= maxVelocitySlaves / norm(node.velocity());
                 // }
                 // errorCalculator(CALL);
             }
 
-
-            //  TODO: mandare action slaves
-            // if (node.velocity() > 0) {
-            //     node.velocity() -= node.velocity() * reductor;
+            // if (node.storage(node_vecMyVersor{}) > 0) {
+            //     node.storage(node_vecMyVersor{}) -= node.storage(node_vecMyVersor{}) * reductor;
             // }
 
             if (nt == node_type::ROBOT_SLAVE) {

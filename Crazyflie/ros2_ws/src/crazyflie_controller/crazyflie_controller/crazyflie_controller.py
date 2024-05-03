@@ -75,11 +75,9 @@ class CrazyflyController(Node):
 
         self.takeoff(1.0, 1.0)
 
-
     def cf_pose_callback(self, msg:PoseStamped):
         pose = msg.pose.position
         self.cf_position = np.array([pose.x, pose.y, pose.z])
-
 
     def execute_trajectory(self, goal_vel, max_acceleration=1.0, max_speed=1.0):
         goal_velocity = goal_vel
@@ -137,7 +135,6 @@ class CrazyflyController(Node):
             self.goalStatePublisher.publish(gf)
             self.land(0.0, 1.0)
         else:
-            self.get_logger().info(f"Received Action Msg")
             e_p = np.array([msg.x, msg.y, msg.qz])
             if not np.isnan(e_p).any():
                 self.execute_trajectory(e_p)

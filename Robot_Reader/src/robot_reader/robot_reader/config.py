@@ -14,7 +14,7 @@ GOAL_TOPIC = "goal_state"
 DEFAULT_QOS_TOPIC = qos_profile_services_default
 BATTERY_QOS_TOPIC = qos_profile_services_default
 
-POLL_WRITER_SECONDS = 0.5
+POLL_WRITER_SECONDS = 0.2
 
 ROBOTS_PREFIX = "cf_"
 ROBOTS_LENGTH = 4
