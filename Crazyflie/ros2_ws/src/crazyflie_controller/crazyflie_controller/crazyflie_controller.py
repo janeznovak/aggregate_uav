@@ -6,6 +6,7 @@ import numpy as np
 import rowan
 from pathlib import Path
 import numpy as np
+import threading
 
 from crazyflie_interfaces.msg import FullState, Position
 from crazyflie_interfaces.srv import Land, NotifySetpointsStop, Takeoff
@@ -41,17 +42,15 @@ class CrazyflyController(Node):
         self.landService = self.create_client(Land, prefix + "/land")
         self.landService.wait_for_service()
 
+        self.notifySetpointsStopService = self.create_client(
+            NotifySetpointsStop, prefix + '/notify_setpoints_stop')
+        self.notifySetpointsStopService.wait_for_service()
+
         self.cmdFullStatePublisher = self.create_publisher(
             FullState, prefix + "/cmd_full_state", 1
         )
         self.cmdFullStateMsg = FullState()
         self.cmdFullStateMsg.header.frame_id = "/world"
-
-        self.cmdPositionPublisher = self.create_publisher(
-            Position, prefix + "/cmd_position", 1
-        )
-        self.cmdPositionMsg = Position()
-        self.cmdPositionMsg.header.frame_id = "/world"
 
         self.isMaster = cfname == MASTER_PREFIX
 
@@ -59,7 +58,7 @@ class CrazyflyController(Node):
             Goal, f"{prefix}/ap_goal", self.ap_goal_callback, 10
         )
 
-        self.goalTopic = self.create_subscription(
+        self.abortTopic = self.create_subscription(
             Goal, f"{prefix}/ap_abort", self.ap_abort_callback, 10
         )
 
@@ -73,34 +72,39 @@ class CrazyflyController(Node):
             PoseStamped, f"{prefix}/pose", self.cf_pose_callback, 1
         )
 
-        self.takeoff(1.0, 1.0)
+        # self.takeoff(1.0, 1.0)
 
     def cf_pose_callback(self, msg:PoseStamped):
         pose = msg.pose.position
         self.cf_position = np.array([pose.x, pose.y, pose.z])
 
     def execute_trajectory(self, goal_vel, max_acceleration=1.0, max_speed=1.0):
-        goal_velocity = goal_vel
-        final_pos = self.cf_position + goal_velocity
+        final_pos = self.cf_position + goal_vel
 
         # Calcolo dell'accelerazione
-        time_to_reach_final_velocity = np.linalg.norm(goal_velocity) / max_acceleration
-        acceleration = goal_velocity / time_to_reach_final_velocity
+        # time_to_reach_final_velocity = np.linalg.norm(goal_vel) / max_acceleration
+        # acceleration = goal_vel / time_to_reach_final_velocity
+        acceleration = np.array([0.0, 0.0, 0.0])
 
         # Angolo di beccheggio e accelerazione angolare (presumibilmente zero in questo caso)
         yaw_angle = 0.0
         angular_velocity = np.array([0.0, 0.0, 0.0])
 
         self.cmdFullState(
-            final_pos, goal_velocity, acceleration, yaw_angle, angular_velocity
+            final_pos, goal_vel, acceleration, yaw_angle, angular_velocity
         )
 
-    def execute_master_trajectory(self, trajpath, rate=100, offset=np.zeros(3)):
+    def execute_master_trajectory(self, msg: Goal):
+        gf = GoalFeedback()
+        gf.goal_state = GOAL_RUNNING
+        gf.goal_id = msg.goal_id
+        self.goalStatePublisher.publish(gf)
+
         traj = Trajectory()
         timeHelper = crazyflie.TimeHelper(self)
         share_folder = Path(__file__).parent
         traj.loadcsv(
-            f"{share_folder}/../../../../share/crazyflie_controller/crazyflie_controller/trajectory_data/{trajpath}.csv"
+            f"{share_folder}/../../../../share/crazyflie_controller/crazyflie_controller/trajectory_data/{msg.goal_id}.csv"
         )
 
         start_time = timeHelper.time()
@@ -110,30 +114,27 @@ class CrazyflyController(Node):
                 break
 
             e = traj.eval(t)
-
             self.cmdFullState(
-                e.pos + offset,
+                e.pos,
                 e.vel,
                 e.acc,
                 e.yaw,
                 e.omega,
             )
 
-        timeHelper.sleepForRate(rate)
+        # Goal Ended
+        gf.goal_state = GOAL_REACHED
+        gf.goal_id = msg.goal_id
+        self.goalStatePublisher.publish(gf)
+        self.notifySetpointsStop()
+        self.land(0.03, 1.0)
+        self.get_logger().info(f"Master GOAL ended")
 
     def ap_goal_callback(self, msg: Goal):
         if self.isMaster:
             self.get_logger().info(f"Received GOAL Msg")
-            gf = GoalFeedback()
-            gf.goal_state = GOAL_RUNNING
-            gf.goal_id = msg.goal_id
-            self.goalStatePublisher.publish(gf)
-            self.execute_master_trajectory(msg.goal_id)
-            self.get_logger().info(f"Master GOAL ended")
-            gf.goal_state = GOAL_REACHED
-            gf.goal_id = msg.goal_id
-            self.goalStatePublisher.publish(gf)
-            self.land(0.0, 1.0)
+            thread = threading.Thread(target=self.execute_master_trajectory, args=(msg,))
+            thread.start()
         else:
             e_p = np.array([msg.x, msg.y, msg.qz])
             if not np.isnan(e_p).any():
@@ -145,7 +146,8 @@ class CrazyflyController(Node):
         gf.goal_state = GOAL_ABORTED
         gf.goal_id = msg.goal_id
         self.goalStatePublisher.publish(gf)
-        self.land(0.0, 1.0)
+        self.notifySetpointsStop()
+        self.land(0.03, 1.0)
 
     def takeoff(self, targetHeight, duration, groupMask=0):
         req = Takeoff.Request()
@@ -206,13 +208,38 @@ class CrazyflyController(Node):
         self.cmdFullStateMsg.twist.angular.z = omega[2]
         self.cmdFullStatePublisher.publish(self.cmdFullStateMsg)
 
-    def cmdPosition(self, pos, yaw=0.0):
-        self.cmdPositionMsg.header.stamp = self.node.get_clock().now().to_msg()
-        self.cmdPositionMsg.x = pos[0]
-        self.cmdPositionMsg.y = pos[1]
-        self.cmdPositionMsg.z = pos[2]
-        self.cmdPositionMsg.yaw = yaw
-        self.cmdPositionPublisher.publish(self.cmdPositionMsg)
+    def notifySetpointsStop(self, remainValidMillisecs=100, groupMask=0):
+        """
+        Informs that streaming low-level setpoint packets are about to stop.
+
+        Streaming setpoints are :meth:`cmdVelocityWorld`, :meth:`cmdFullState`,
+        and so on. For safety purposes, they normally preempt onboard high-level
+        commands such as :meth:`goTo`.
+
+        Once preempted, the Crazyflie will not switch back to high-level
+        commands (or other behaviors determined by onboard planning/logic) until
+        a significant amount of time has elapsed where no low-level setpoint
+        was received.
+
+        This command short-circuits that waiting period to a user-chosen time.
+        It should be called after sending the last low-level setpoint, and
+        before sending any high-level command.
+
+        A common use case is to execute the :meth:`land` command after using
+        streaming setpoint modes.
+
+        Args:
+            remainValidMillisecs (int): Number of milliseconds that the last
+                streaming setpoint should be followed before reverting to the
+                onboard-determined behavior. May be longer e.g. if one radio
+                is controlling many robots.
+            groupMask (int): Group mask bits. See :meth:`setGroupMask()` doc.
+
+        """
+        req = NotifySetpointsStop.Request()
+        req.remain_valid_millisecs = remainValidMillisecs
+        req.group_mask = groupMask
+        self.notifySetpointsStopService.call_async(req)
 
 
 def main(args=None):

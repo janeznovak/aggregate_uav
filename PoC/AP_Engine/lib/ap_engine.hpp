@@ -368,34 +368,6 @@ namespace fcpp
             }
         }
 
-        //! @brief reset delle variabili nello storage inerenti alla formazione...
-        FUN void reset(ARGS) {
-            using namespace tags;
-            if (get<1>(node.storage(node_indexSlave{})) != 0) {
-                get<1>(node.storage(node_indexSlave{})) = 0;
-            }
-            if (get<0>(node.storage(node_posMaster{}))) {
-                get<0>(node.storage(node_posMaster{})) = false;
-            }
-            if (node.storage(node_numberOfSlave{}) != 0) {
-                node.storage(node_numberOfSlave{}) = 0;
-            }
-            if (node.storage(node_maxNumberOfSlave{}) != 0) {
-                node.storage(node_maxNumberOfSlave{}) = 0;
-            }
-            if (node.storage(node_myRadiant{}) != 0) {
-                node.storage(node_myRadiant{}) = 0;
-            }
-            if (node.storage(node_vecMyVersor{}) != make_vec(0, 0, 0)) {
-                node.storage(node_vecMyVersor{}) = make_vec(0, 0, 0);
-            }
-            if (node.storage(node_flagDistance{})) {
-                node.storage(node_flagDistance{}) = false;
-            }
-            node.propulsion() = make_vec(0, 0, 0);
-        }
-
-
         FUN void initialization(ARGS, node_type nt) {
             using namespace tags;
             tuple<bool, vec<3>> t = make_tuple(false, make_vec(0, 0, 0));
@@ -469,15 +441,7 @@ namespace fcpp
                 calculateMyCorner(CALL);
                 //!Sistema di collision avoidance
                 collisionAvoidance(CALL, nt);
-                // if (norm(node.velocity()) > maxVelocitySlaves) {
-                //     node.velocity() *= maxVelocitySlaves / norm(node.velocity());
-                // }
-                // errorCalculator(CALL);
             }
-
-            // if (node.storage(node_vecMyVersor{}) > 0) {
-            //     node.storage(node_vecMyVersor{}) -= node.storage(node_vecMyVersor{}) * reductor;
-            // }
 
             if (nt == node_type::ROBOT_SLAVE) {
                 if (!(get<0>(node.storage(node_posMaster{})))) {
@@ -545,7 +509,7 @@ namespace fcpp
                     .pos_x = (float)node.storage(node_vecMyVersor{})[0],
                     .pos_y = (float)node.storage(node_vecMyVersor{})[1],
                     .pos_z = (float)node.storage(node_vecMyVersor{})[2],
-                    .orient_w = node.storage(node_orient_w{})
+                    .orient_w = 0.0
                 };
                 action::manager::ActionManager::new_action(action_data);
             }
@@ -600,7 +564,7 @@ namespace fcpp
                 if (nt == node_type::ROBOT_MASTER) {
                     int r = counter(CALL);
                     // std::cout << "Conunter: " << r;
-                    if (r == 1 && node.storage(node_external_status{}) != feedback::GoalStatus::RUNNING)
+                    if (node.storage(node_external_status{}) != feedback::GoalStatus::RUNNING)
                         send_action_to_selected_node(CALL, nt, p, g, s);
                 }
 

@@ -160,11 +160,6 @@ namespace fcpp {
             struct node_collisionAvoidanceMaster {};
             struct node_exactExpectedPosition {};
             struct node_startPosition {};
-
-            struct node_vel_x {};
-            struct node_vel_y {};
-            struct node_vel_z {};
-            struct node_orient_w {};
             // END
 
         } // tags
@@ -206,29 +201,15 @@ namespace fcpp {
         constexpr double pi = 3.14159265358979323846;
         //! @brief Minimum distance between devices to avoid colliding.
         constexpr double minDistance = ((2 * distanceMasterSlave * pi) / (node_num - 1)) * 0.5;
-        //! @brief Id master.TODO: delete
-        constexpr int masterUid = 0;
-
+       
         //! @brief Hardness constant for elastic force Master-Slave.
         constexpr double hardnessMasterSlave = (distanceMasterSlave / 10000) * 2;
         //! @brief Hardness constant for elastic force CircularCrown-Slave.
         constexpr double hardnessCircularCrown = (distanceCircularCrown / 10000) * 2;
         //! @brief Hardness constant for elastic force Slave-Slave.
         constexpr double hardnessSlaveSlave = 0.01;
-        //! @brief Max value period for master moviment in rectangle
-        constexpr double maxPeriod = 0.1;
-        //! @brief Percentage reductor of velocity for devices
-        constexpr double reductor = 0.025;
-        //! @brief Percentage reductor of velocity for master
-        constexpr double reductorMaster = 0.5;
-        //! @brief Max master velocity
-        constexpr int masterVelocity = 1;
         //! @brief Percentage increment force if distance devices is < minimum distance, high collision risk
         constexpr double incrementForce = 50;
-        //! @brief Max slaves velocity
-        constexpr int maxVelocitySlaves = 1.5;
-        //! @brief Increment slaves angular acceleration
-        constexpr double incrementAcceleration = 0.0;
         // END Flocking
 
 
@@ -361,12 +342,7 @@ namespace fcpp {
             node_collisionAvoidanceMaster, vec<3>,
             node_exactExpectedPosition, vec<3>,
 
-            node_startPosition, vec<3>, //! Initialized only for the nominal test
-            node_vel_x, float,
-            node_vel_y, float,
-            node_vel_z, float,
-            node_orient_w, float
-
+            node_startPosition, vec<3> //! Initialized only for the nominal test
             // END Flocking
 
 

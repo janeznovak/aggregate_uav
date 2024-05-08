@@ -17,7 +17,7 @@ BATTERY_QOS_TOPIC = qos_profile_services_default
 POLL_WRITER_SECONDS = 0.2
 
 ROBOTS_PREFIX = "cf_"
-ROBOTS_LENGTH = 4
+ROBOTS_LENGTH = 10
 ROBOTS = [
     dict(name=ROBOTS_PREFIX + str(i), base=dict(x=0, y=0, w=0))
     for i in range(0, ROBOTS_LENGTH)
