@@ -25,13 +25,13 @@ robots:
     type: cf_sim  # see robot_types
   
   cf_4:
-    enabled: True
+    enabled: false
     uri: udp://0.0.0.0:19854
     initial_position: [3.0, 0.0, 0.0]
     type: cf_sim  # see robot_types
 
   cf_5:
-    enabled: True
+    enabled: false
     uri: udp://0.0.0.0:19855
     initial_position: [2.0, 0.0, 0.0]
     type: cf_sim  # see robot_types
@@ -165,15 +165,14 @@ robot_types:
       # marker: default_single_marker
       # dynamics: default
     big_quad: false
-    # battery:
-    #   voltage_warning: 3.8  # V
-    #   voltage_critical: 3.7 # V
+    battery:
+      voltage_warning: 3.8  # V
+      voltage_critical: 3.7 # V
     firmware_logging:
       enabled: true
       default_topics:
         pose:
           frequency: 5 # Hz
-
         # odom:
         #   frequency: 10 # Hz
         # scan:

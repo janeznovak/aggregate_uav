@@ -421,6 +421,7 @@ namespace fcpp
                 /**controllo nel caso degli indici si sovrapponessero*/
                 field <tuple<int, int>> identifierWrongIndex = nbr(CALL, node.storage(node_indexSlave{}));
 
+            // Aggiungere a true la batteria è a 0 
             bool flagIndex = all_hood(CALL, map_hood([](tuple<int, int> t, tuple<int, int> myValue) {
                 if (get<1>(myValue) == get<1>(t) && get<0>(myValue) != get<0>(t)) {
                     return false;
@@ -564,12 +565,12 @@ namespace fcpp
                 if (nt == node_type::ROBOT_MASTER) {
                     int r = counter(CALL);
                     // std::cout << "Conunter: " << r;
-                    if (node.storage(node_external_status{}) != feedback::GoalStatus::RUNNING)
+                    // if (node.storage(node_process_status{}) == ProcessingStatus::IDLE )
+                    if(r == 1)
                         send_action_to_selected_node(CALL, nt, p, g, s);
                 }
 
                 if (nt == node_type::ROBOT_SLAVE) {
-                    // TODO: add code from thesis
                     run_flocking(CALL, nt);
                     send_action_to_selected_node(CALL, nt, p, g, s);
                 }
@@ -586,14 +587,31 @@ namespace fcpp
         }
 
         //! @brief Termination logic using share (see SHARE termination in ACSOS22 paper)
-        FUN void termination_logic(ARGS, status& s, goal_tuple_type const&) {
+        FUN void termination_logic(ARGS, status& s, goal_tuple_type const&, node_type nt) {
             bool terminatingMyself = s == status::terminated_output;
             bool terminatingNeigh = nbr(CALL, terminatingMyself, [&](field<bool> nt) {
                 return any_hood(CALL, nt) or terminatingMyself;
                 });
             bool exiting = all_hood(CALL, nbr(CALL, terminatingNeigh), terminatingNeigh);
-            if (exiting) s = status::border;
-            else if (terminatingMyself) s = status::internal_output;
+
+            if (exiting) {
+                s = status::border; 
+                if (nt == node_type::ROBOT_SLAVE) {
+                    action::ActionData action_data = {
+                        .action = "LAND",
+                        .goal_code = node.storage(node_process_goal{}),
+                        .robot = get_real_robot_name(CALL, node.uid),
+                        .pos_x = 0,
+                        .pos_y = 0,
+                        .pos_z = 0,
+                        .orient_w = 0
+                    };
+                    action::manager::ActionManager::new_action(action_data);
+                }
+            }
+            else if (terminatingMyself) {
+                s = status::internal_output;
+            }
         }
 
 
@@ -717,6 +735,7 @@ namespace fcpp
                         // if new state is REACHED:
                         else if (feedback::GoalStatus::REACHED == rs.goal_status) {
                             manage_reached_goal_status(CALL);
+                            // node.storage(node_process_goal{}) = "";
                         }
                         // if new state is UNKNOWN: new color is idle    
                         else if (feedback::GoalStatus::UNKNOWN == rs.goal_status) {
@@ -783,7 +802,7 @@ namespace fcpp
                     manage_action_goal(CALL, nt, g, &s, n_round);
                 }
 
-                termination_logic(CALL, s, g);
+                termination_logic(CALL, s, g, nt);
                 return make_tuple(node.current_time(), s);
                 }, NewGoalsList);
         }
@@ -794,8 +813,7 @@ namespace fcpp
             if (node.storage(node_process_status{}) == ProcessingStatus::TERMINATING) {
                 // if process has been terminated, it isn't in the result map of spawn
                 bool process_found = false;
-                for (auto const& x : r)
-                {
+                for (auto const& x : r) {
                     auto g = x.first;
                     if (common::get<goal_code>(g) == node.storage(node_process_goal{})) {
                         process_found = true;

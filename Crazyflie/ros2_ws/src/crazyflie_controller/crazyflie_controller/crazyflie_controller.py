@@ -34,7 +34,8 @@ class CrazyflyController(Node):
         prefix = "/" + cfname
         self.cfname = cfname
         self.prefix = prefix
-        self.master_position = PoseStamped()
+
+        self.isMaster = cfname == MASTER_PREFIX
         self.cf_position = np.array([0.0, 0.0, 0.0])
 
         self.takeoffService = self.create_client(Takeoff, prefix + "/takeoff")
@@ -52,8 +53,6 @@ class CrazyflyController(Node):
         self.cmdFullStateMsg = FullState()
         self.cmdFullStateMsg.header.frame_id = "/world"
 
-        self.isMaster = cfname == MASTER_PREFIX
-
         self.goalTopic = self.create_subscription(
             Goal, f"{prefix}/ap_goal", self.ap_goal_callback, 10
         )
@@ -62,16 +61,16 @@ class CrazyflyController(Node):
             Goal, f"{prefix}/ap_abort", self.ap_abort_callback, 10
         )
 
-        # Master Branch
-        if self.isMaster:
-            self.goalStatePublisher = self.create_publisher(
-                GoalFeedback, prefix + "/goal_state", qos_profile_services_default
-            )
-
         self.cfPoseTopic = self.create_subscription(
             PoseStamped, f"{prefix}/pose", self.cf_pose_callback, 1
         )
 
+        # Master Branch
+        if self.isMaster:
+            self.abort_flag = False
+            self.goalStatePublisher = self.create_publisher(
+                GoalFeedback, prefix + "/goal_state", qos_profile_services_default
+            )
         # self.takeoff(1.0, 1.0)
 
     def cf_pose_callback(self, msg:PoseStamped):
@@ -103,12 +102,14 @@ class CrazyflyController(Node):
         traj = Trajectory()
         timeHelper = crazyflie.TimeHelper(self)
         share_folder = Path(__file__).parent
+        traj_name = msg.goal_id.split("-")[0]
+
         traj.loadcsv(
-            f"{share_folder}/../../../../share/crazyflie_controller/crazyflie_controller/trajectory_data/{msg.goal_id}.csv"
+            f"{share_folder}/../../../../share/crazyflie_controller/crazyflie_controller/trajectory_data/{traj_name}.csv"
         )
 
         start_time = timeHelper.time()
-        while not timeHelper.isShutdown():
+        while not timeHelper.isShutdown() and not self.abort_flag:
             t = timeHelper.time() - start_time
             if t > traj.duration:
                 break
@@ -123,31 +124,41 @@ class CrazyflyController(Node):
             )
 
         # Goal Ended
-        gf.goal_state = GOAL_REACHED
-        gf.goal_id = msg.goal_id
-        self.goalStatePublisher.publish(gf)
+        if not self.abort_flag:
+            gf.goal_state = GOAL_REACHED
+            gf.goal_id = msg.goal_id
+            self.goalStatePublisher.publish(gf)
+            self.get_logger().info(f"Master GOAL ended")
+        else:
+            gf.goal_state = GOAL_ABORTED
+            gf.goal_id = msg.goal_id
+            self.goalStatePublisher.publish(gf)
+            self.get_logger().info(f"Master GOAL aborted")
+
         self.notifySetpointsStop()
         self.land(0.03, 1.0)
-        self.get_logger().info(f"Master GOAL ended")
 
     def ap_goal_callback(self, msg: Goal):
         if self.isMaster:
-            self.get_logger().info(f"Received GOAL Msg")
-            thread = threading.Thread(target=self.execute_master_trajectory, args=(msg,))
-            thread.start()
+            if msg.type == "GOAL":
+                self.abort_flag = False
+                self.get_logger().info(f"Received GOAL Msg")
+                thread = threading.Thread(target=self.execute_master_trajectory, args=(msg,))
+                thread.start()
         else:
-            e_p = np.array([msg.x, msg.y, msg.qz])
-            if not np.isnan(e_p).any():
-                self.execute_trajectory(e_p)
+            if msg.type == "LAND":
+                self.get_logger().info("Landing Message SLAVE")
+                self.notifySetpointsStop()
+                self.land(0.03, 1.0)
+            else:
+                e_p = np.array([msg.x, msg.y, msg.qz])
+                if not np.isnan(e_p).any():
+                    self.execute_trajectory(e_p)
 
     def ap_abort_callback(self, msg: Goal):
         self.get_logger().info(f"Received ABORT Msg")
-        gf = GoalFeedback()
-        gf.goal_state = GOAL_ABORTED
-        gf.goal_id = msg.goal_id
-        self.goalStatePublisher.publish(gf)
-        self.notifySetpointsStop()
-        self.land(0.03, 1.0)
+        self.abort_flag = True
+        
 
     def takeoff(self, targetHeight, duration, groupMask=0):
         req = Takeoff.Request()
