@@ -57,10 +57,6 @@ class CrazyflyController(Node):
             Goal, f"{prefix}/ap_goal", self.ap_goal_callback, 10
         )
 
-        self.abortTopic = self.create_subscription(
-            Goal, f"{prefix}/ap_abort", self.ap_abort_callback, 10
-        )
-
         self.cfPoseTopic = self.create_subscription(
             PoseStamped, f"{prefix}/pose", self.cf_pose_callback, 1
         )
@@ -71,7 +67,10 @@ class CrazyflyController(Node):
             self.goalStatePublisher = self.create_publisher(
                 GoalFeedback, prefix + "/goal_state", qos_profile_services_default
             )
-        # self.takeoff(1.0, 1.0)
+
+            self.abortTopic = self.create_subscription(
+                Goal, f"{prefix}/ap_abort", self.ap_abort_callback, 10
+            )
 
     def cf_pose_callback(self, msg:PoseStamped):
         pose = msg.pose.position
@@ -158,7 +157,6 @@ class CrazyflyController(Node):
     def ap_abort_callback(self, msg: Goal):
         self.get_logger().info(f"Received ABORT Msg")
         self.abort_flag = True
-        
 
     def takeoff(self, targetHeight, duration, groupMask=0):
         req = Takeoff.Request()

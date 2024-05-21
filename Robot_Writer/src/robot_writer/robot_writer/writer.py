@@ -16,6 +16,7 @@ ROBOT_PLACEHOLDER = "#ROBOT"
 ROBOT_INPUT_PATH_FROM_AP = "from_ap/to_robot/actions/#ROBOT/"
 DELIMITER = ";"
 TIMER_PERIOD = 0.2
+MASTER_PREFIX = "cf_0"
 
 
 class GoalPublisher(Node):
@@ -60,20 +61,20 @@ class GoalPublisher(Node):
 
             if act["action"] in ["GOAL"]:
                 self.goal_publisher_.publish(msg)
-                if self.robot_name == "cf_0":
+                if self.robot_name == MASTER_PREFIX:
                     self.get_logger().info('Publishing new GOAL: "%s"' % act["goal"])
 
+            if act["action"] == "ABORT" and self.robot_name == MASTER_PREFIX:
+                self.abort_publisher_.publish(msg)
+                self.get_logger().info('Publishing ABORT: "%s"' % act["goal"])
+
+            if act["action"] in ["LAND"] :
+                self.goal_publisher_.publish(msg)
+                self.get_logger().info('Publishing LAND: "%s"' % act["goal"])
+            
             if act["action"] in ["SOS"]:
                 self.goal_publisher_.publish(msg)
                 self.get_logger().info('Publishing SOS: "%s"' % act["goal"])
-
-            if act["action"] in ["LAND"]:
-                self.goal_publisher_.publish(msg)
-                self.get_logger().info('Publishing LAND: "%s"' % act["goal"])
-
-            if act["action"] == "ABORT":
-                self.abort_publisher_.publish(msg)
-                self.get_logger().info('Publishing ABORT: "%s"' % act["goal"])
 
     def read_file(self, robot):
         """!

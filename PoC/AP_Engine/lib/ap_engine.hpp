@@ -294,18 +294,6 @@ namespace fcpp
             return true;
         }
 
-        FUN void errorCalculator(ARGS) {
-            using namespace tags;
-            if (get<0>(node.storage(node_posMaster{}))) {
-                double myRadiant = (get<1>(node.storage(node_indexSlave{}))) * ((2 * pi) / node.storage(node_numberOfSlave{}));
-                double x = std::sin(myRadiant) * distanceMasterSlave;
-                double y = std::cos(myRadiant) * distanceMasterSlave;
-                vec<3> vecMyRadiant = make_vec(x, y, 0); // TODO: aggiungere z
-                vec<3> exactPosition = vecMyRadiant + get<1>(node.storage(node_posMaster{}));
-                double error = distance(exactPosition, node.position());
-                node.storage(node_exactExpectedPosition{}) = exactPosition;
-            }
-        }
 
         FUN void collisionAvoidance(ARGS, node_type nt) {
             using namespace tags;
@@ -354,14 +342,11 @@ namespace fcpp
                     if ((!(isnan(node.storage(node_collisionAvoidanceMaster{})[0])) && !(std::isinf(node.storage(node_collisionAvoidanceMaster{})[0]))) ||
                         (!(isnan(node.storage(node_collisionAvoidanceMaster{})[1])) && !(std::isinf(node.storage(node_collisionAvoidanceMaster{})[1])))) {
 
-                        // node.propulsion() += node.storage(node_collisionAvoidanceMaster{});
                         node.storage(node_vecMyVersor{}) += node.storage(node_collisionAvoidanceMaster{});
                         if ((!(isnan(node.storage(node_collisionAvoidanceSlaves{})[0])) && !(std::isinf(node.storage(node_collisionAvoidanceSlaves{})[0]))) ||
                             (!(isnan(node.storage(node_collisionAvoidanceSlaves{})[1])) && !(std::isinf(node.storage(node_collisionAvoidanceSlaves{})[1])))) {
 
-                            // node.propulsion() += node.storage(node_collisionAvoidanceSlaves{});
                             node.storage(node_vecMyVersor{}) += node.storage(node_collisionAvoidanceSlaves{});
-
                         }
                     }
                 }
@@ -470,8 +455,6 @@ namespace fcpp
         //! @brief A robot has discharged the battery, so AP send a stop command
         FUN void battery_discharged_when_it_is_running(ARGS, process_tuple_type& p, goal_tuple_type const& g, status* s) {
             CODE
-                send_stop_command_to_robot(CALL, "ABORT", node.uid, g, ProcessingStatus::IDLE);
-
             *s = status::border; // listen neighbours, but not send messages
         }
 
@@ -557,24 +540,25 @@ namespace fcpp
                 }
 
                 // if battery is empty, then stop at current position
-                if (node.storage(node_external_status{}) == feedback::GoalStatus::RUNNING && //i'm reaching the goal
-                    percent_charge <= 0.0) { //the battery is full discharged
+                if (percent_charge <= 0.0) { //the battery is full discharged
                     battery_discharged_when_it_is_running(CALL, p, g, s);
                 }
 
-                if (nt == node_type::ROBOT_MASTER) {
-                    int r = counter(CALL);
-                    // std::cout << "Conunter: " << r;
-                    // if (node.storage(node_process_status{}) == ProcessingStatus::IDLE )
-                    if(r == 1)
+                // Battery charged
+                else {
+                    if (nt == node_type::ROBOT_MASTER) {
+                        int c = 0;
+                        if(node.storage(node_process_status{}) == ProcessingStatus::IDLE && (c = counter(CALL)) == 1){
+                            std::cout << "Process GOAL " << c;
+                            send_action_to_selected_node(CALL, nt, p, g, s);
+                        }
+                    }
+
+                    if (nt == node_type::ROBOT_SLAVE) {
+                        run_flocking(CALL, nt);
                         send_action_to_selected_node(CALL, nt, p, g, s);
+                    }
                 }
-
-                if (nt == node_type::ROBOT_SLAVE) {
-                    run_flocking(CALL, nt);
-                    send_action_to_selected_node(CALL, nt, p, g, s);
-                }
-
                 // blinking colors if not running
                 if (common::get<goal_code>(g) != node.storage(node_process_goal{}) &&
                     node.storage(node_process_status{}) != ProcessingStatus::SELECTED) {
@@ -596,18 +580,6 @@ namespace fcpp
 
             if (exiting) {
                 s = status::border; 
-                if (nt == node_type::ROBOT_SLAVE) {
-                    action::ActionData action_data = {
-                        .action = "LAND",
-                        .goal_code = node.storage(node_process_goal{}),
-                        .robot = get_real_robot_name(CALL, node.uid),
-                        .pos_x = 0,
-                        .pos_y = 0,
-                        .pos_z = 0,
-                        .orient_w = 0
-                    };
-                    action::manager::ActionManager::new_action(action_data);
-                }
             }
             else if (terminatingMyself) {
                 s = status::internal_output;
@@ -735,7 +707,6 @@ namespace fcpp
                         // if new state is REACHED:
                         else if (feedback::GoalStatus::REACHED == rs.goal_status) {
                             manage_reached_goal_status(CALL);
-                            // node.storage(node_process_goal{}) = "";
                         }
                         // if new state is UNKNOWN: new color is idle    
                         else if (feedback::GoalStatus::UNKNOWN == rs.goal_status) {
@@ -803,6 +774,20 @@ namespace fcpp
                 }
 
                 termination_logic(CALL, s, g, nt);
+
+                // Landing if status == border and pos_z > 0 
+                if (nt == node_type::ROBOT_SLAVE && s == status::border && counter(CALL) == 1) {
+                    action::ActionData action_data = {
+                        .action = "LAND",
+                        .goal_code = node.storage(node_process_goal{}),
+                        .robot = get_real_robot_name(CALL, node.uid),
+                        .pos_x = 0,
+                        .pos_y = 0,
+                        .pos_z = 0,
+                        .orient_w = 0
+                    };
+                    action::manager::ActionManager::new_action(action_data);
+                }
                 return make_tuple(node.current_time(), s);
                 }, NewGoalsList);
         }

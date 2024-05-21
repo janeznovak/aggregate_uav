@@ -62,7 +62,7 @@ install_component_custom() {
         *"ap_engine"*)
             log "Updating AP_Engine..."
             ./make.sh clean
-            ./make.sh gui build -DAP_ENGINE_DEBUG=true ap_engine
+            ./make.sh gui build -O ap_engine
             ;;
         *"sensors_server"*)
             # log "Updating Sensors_Server..."

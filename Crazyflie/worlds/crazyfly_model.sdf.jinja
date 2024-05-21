@@ -323,10 +323,9 @@
         <plugin 
             filename="gz-sim-linearbatteryplugin-system"
             name="gz::sim::systems::LinearBatteryPlugin">
-            <robotNamespace>cf_{{ cf_id }}</robotNamespace>
-
-            <battery_topic>/cf_{{ cf_id }}/battery_state</battery_topic>
-            <battery_publish_frequency>200</battery_publish_frequency>
+            <ros>
+                <remapping>/model/crazyflie_0/battery/linear_battery/state:=battery_state</remapping>
+            </ros>
 
             <!--Li-ion battery spec from LIR18650 datasheet-->
             <battery_name>linear_battery</battery_name>

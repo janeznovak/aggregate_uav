@@ -25,13 +25,14 @@
       <shadows>true</shadows>
     </scene>
     <model name="ground_plane">
+      <pose>10 10 0 0 0 0</pose>
       <static>true</static>
       <link name="link">
         <collision name="collision">
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>100 100</size>
+              <size>20 20</size>
             </plane>
           </geometry>
         </collision>
@@ -39,7 +40,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>100 100</size>
+              <size>20 20</size>
             </plane>
           </geometry>
            <material>
@@ -63,5 +64,14 @@
       </attenuation>
       <direction>-0.5 0.1 -0.9</direction>
     </light>
+
+
+     <!-- Base
+    <include>
+      <uri>
+        https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Depot
+      </uri>
+      <pose>7.19009 1.09982 0 0 0 0</pose>
+    </include> -->
   </world>
 </sdf>
