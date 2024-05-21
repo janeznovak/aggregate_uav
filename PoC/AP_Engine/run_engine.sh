@@ -6,4 +6,4 @@ fi
 
 
 robot_num=$1
-AP_ROBOT_COUNT=robot_num  ./make.sh gui run -O ap_engine  
+AP_ROBOT_COUNT=$robot_num  ./make.sh gui run -O ap_engine  
