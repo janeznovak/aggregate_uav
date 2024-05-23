@@ -355,15 +355,21 @@ namespace fcpp
 
         FUN void initialization(ARGS, node_type nt) {
             using namespace tags;
+            int slaves = 0;
+
             tuple<bool, vec<3>> t = make_tuple(false, make_vec(0, 0, 0));
             if (nt == node_type::ROBOT_MASTER) {
                 t = make_tuple(true, node.position());
             }
 
-            int slaves = (int)count_hood(CALL) - 1;
-            if (nt == node_type::ROBOT_SLAVE) {
-                slaves = 0;
+            float percent_charge = node.storage(node_battery_charge{}) / 100.0;
+            if(percent_charge > 0){
+                slaves = (int)count_hood(CALL) - 1;
+                if (nt == node_type::ROBOT_SLAVE) {
+                    slaves = 0;
+                }
             }
+
             field<int> identifierNumSlaves = nbr(CALL, 0, slaves);
             node.storage(node_numberOfSlave{}) = max_hood(CALL, identifierNumSlaves);
 
