@@ -26,98 +26,75 @@ It can be viewed using [/doc/doxygen/html/index.html](/doc/doxygen/html/index.ht
 [ROS 2 DDS tuning](https://docs.ros.org/en/foxy/How-To-Guides/DDS-tuning.html)
 
 ```bash
-# in ubuntu, before you should enable multiverse repository
+# Documentation for fcpp-crazyflie Setup and Demo Execution
 
-# Build deps
-apt install python3-colcon-common-extensions python3-vcstool python3-rosdep ros-humble-irobot-create-msgs
+## Clone Repository
 
-# Cyclone DDS
-apt install ros-humble-cyclonedds ros-humble-rmw-cyclonedds-cpp
-```
-#### NODEJS
-Choose the best tool for your SO or linux distribution to install last LTS version (14.14+):
-- using APT PPA package (for debian-based distributions):
-[NODESOURCE installation guide](https://github.com/nodesource/distributions#installation-instructions)
-- using NVM (Node Version Manager):
-[NVM installation guide](https://codedamn.com/news/nodejs/nvm-installation-setup-guide) 
+To clone the repository with all its submodules, run the following command:
 
-#### Angular CLI
-Install Angular CLI (ng) 13+ locally to project.
-[Angular 13 installation guide](https://dev.to/xenxei46/installing-angular-cli-locally-globally-3lei)
-
-#### Maven
-Install Maven 3.8.8+ version
-[Maven installation guide](https://maven.apache.org/install.html)
-
-### Simulation
-
-To launch a simulation execute from the root of the repository:
-
-```bash
-./PoC/turtlebot3_run.sh
+```sh
+git clone --recurse-submodules git@github.com:giatorta/fcpp-crazyflie.git
 ```
 
-The script will list the components that need to be compiled to run,
-enter the folders and follow compilation instructions.
+## Install Components
 
-#### Simulated SLAM
+Navigate to the `/Poc` directory and execute the installation script:
 
-To perform a SLAM of a simulated environment use the following command:
-
-```bash
-WORLD_PATH=/home/ws/NODES/use_case_resources/hospital/world.sdf ros2 launch turtlebot3_gazebo turtlebot3_slam.launch.py y_pose:=3.0 x_pose:=1.0
+```sh
+cd Poc
+./install_fcpp_crazyflie.sh
+cd ..
 ```
 
-This will load the world specified in WORLD\_PATH spawning a Turtlebot3 in position (x\_pose, y\_pose).
+## Execute Demo
 
-On another terminal launch the mapping node:
+### Note:
+In the file `Crazyflie/agents.txt`, you will find the initial positions (x, y) of the drones, with each line representing a drone. You can add more drones to the simulation by adding a new line with the coordinates. Ensure that the number of drones listed in this file matches the number configured in ROS2. You can enable the desired drones by setting the `enabled` value to `True` in the following configuration file:
 
-```bash
-TURTLEBOT3_MODEL=burger ros2 launch turtlebot3_cartographer cartographer.launch.py use_sim_time:=True
+`/Crazyflie/ros2_ws/src/system_launcher/config/crazyfliesConfig.yaml`
+
+### Run Gazebo with its plugin and SITL simulation:
+
+```sh
+cd Crazyflie/
+./run_gazebo_sitl.sh
+cd ..
 ```
 
-On another terminal launch the keyboard control node:
+### Initialize the ROS2 network with all nodes (in another terminal):
 
-```bash
-TURTLEBOT3_MODEL=burger ros2 run turtlebot3_teleop teleop_keyboard
+```sh
+cd PoC
+./crazyflie_run.sh
 ```
 
-When the map is complete save it using the following command:
+### Start the AP Engine (in another terminal):
 
-```bash
-ros2 run nav2_map_server map_saver_cli -f map-filename
+```sh
+cd AP_Engine
+./run_engine.sh <number_of_drones>
 ```
 
-### AP Engine
+It is important to start the simulation on the AP Engine by pressing the "p" key. You can view the connections between the drones by pressing the "l" key.
 
-To compile and execute the AP engine on a new terminal window:
+### Create a New Goal:
 
-```bash
-cd PoC/AP_Engine
-./make.sh build -O ap_engine_embedded
-cd bin
-AP_NODE_UID=1 AP_NET_BRADDR_IP_ADDR=0.0.0.0 ./run/ap_engine_embedded
+In a new terminal, navigate to the `Storage` directory:
+
+```sh
+cd Storage
+./create_goal <trajectory_name> <goal_id>
 ```
 
-### Java Server
+This command will create a new goal for the specified trajectory.
 
-REQUIRES: openjdk-11, maven
+### Abort a Goal:
 
-To launch the java server:
+To interrupt a goal, use the following script:
 
-```bash
-cd Sensors_Server
-mvn clean install
-mvn spring-boot:run
+```sh
+cd Storage
+./abort_goal <trajectory_name> <goal_id>
 ```
 
-### Angular Server
-
-REQUIRES: nodejs, angular cli
-
-```bash
-cd Sensors_Web_App
-npm install
-# to use specific config: add --configuration $config (library or hospital)
-ng serve
-```
+This command will abort the specified goal.
