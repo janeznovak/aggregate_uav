@@ -62,11 +62,20 @@ main() {
     # build_make_sh_package "AP_Engine" "gui build -O ap_engine"
     build_colcon_package "Robot_Reader"
     build_colcon_package "Robot_Writer"
+<<<<<<< HEAD
     build_colcon_package "Navigation_System"
     build_crazyflie_lib_python
+=======
+    #build_colcon_package "Navigation_System"
+    #build_crazyflie_lib_python
+>>>>>>> 35e861c6c949502a9bc3b7a70527901cde9d8ef3
     build_crazyflie_firmware
     build_crazyswarm_components
 }
 
 # Execute the main function
+<<<<<<< HEAD
 main
+=======
+main
+>>>>>>> 35e861c6c949502a9bc3b7a70527901cde9d8ef3
