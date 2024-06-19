@@ -59,7 +59,6 @@ In the file `Crazyflie/agents.txt`, you will find the initial positions (x, y) o
 ```sh
 cd Crazyflie/
 ./run_gazebo_sitl.sh
-cd ..
 ```
 
 ### Initialize the ROS2 network with all nodes (in another terminal):
