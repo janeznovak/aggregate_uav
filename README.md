@@ -72,7 +72,7 @@ cd PoC
 
 ```sh
 cd AP_Engine
-./run_engine.sh <number_of_drones>
+./run_engine.sh <number_of_drones_with_master>
 ```
 
 It is important to start the simulation on the AP Engine by pressing the "p" key. You can view the connections between the drones by pressing the "l" key.
@@ -83,7 +83,8 @@ In a new terminal, navigate to the `Storage` directory:
 
 ```sh
 cd Storage
-./create_goal <trajectory_name> <goal_id>
+# $TRAJECTORY_NAME can be traj1 or traj2
+./create_goal $TRAJECTORY_NAME <goal_id>
 ```
 
 This command will create a new goal for the specified trajectory.
@@ -94,7 +95,8 @@ To interrupt a goal, use the following script:
 
 ```sh
 cd Storage
-./abort_goal <trajectory_name> <goal_id>
+# $TRAJECTORY_NAME can be traj1 or traj2
+./abort_goal $TRAJECTORY_NAME <goal_id>
 ```
 
 This command will abort the specified goal.
