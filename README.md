@@ -25,14 +25,11 @@ It can be viewed using [/doc/doxygen/html/index.html](/doc/doxygen/html/index.ht
   
 [ROS 2 DDS tuning](https://docs.ros.org/en/foxy/How-To-Guides/DDS-tuning.html)
 
-```bash
-# Documentation for fcpp-crazyflie Setup and Demo Execution
-
 ## Clone Repository
 
 To clone the repository with all its submodules, run the following command:
 
-```sh
+```bash
 git clone --recurse-submodules git@github.com:giatorta/fcpp-crazyflie.git
 ```
 
