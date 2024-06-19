@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # Prefix used to log
-LOG_PREFIX="[INSTALL]"
+LOG_PREFIX="[INSTALLER]"
+
+POC_FOLDER="./PoC"
 
 # Excluded folders
 excluded_folders=("use_case_resources")
@@ -19,6 +21,18 @@ is_excluded_folder() {
 log() {
     echo "$LOG_PREFIX $@"
 }
+
+log "Starting installation script..."
+
+if [ -d "$POC_FOLDER" ]; then
+    WORKING_DIR="$POC_FOLDER"
+else
+    WORKING_DIR="."
+fi
+
+cd "$WORKING_DIR" || exit
+
+log "Use $WORKING_DIR as working directory"
 
 # Install or update custom component
 install_component_custom() {
@@ -90,7 +104,7 @@ install_component_custom() {
             # source install/local_setup.bash
             # cd ..
             # install_ros2_component
-            ;;
+1            ;;
         
         # All Ros2 Components
         *"crazyflie"*)
@@ -104,11 +118,12 @@ install_component_custom() {
             mkdir -p sitl_make/build && cd $_
             cmake ..
             make all
+            cd ../../../
 
             log "Updating CrazySwarm components..."
-            cd ../../../ros2_ws/src
-            colcon build
-            . install/local_setup.bash
+            cd ros2_ws/
+            install_ros2_component
+            source install/local_setup.bash
         ;;
 
 
@@ -131,29 +146,16 @@ install_all_components() {
     local navigation_system_installed=false
 
     # Check if Navigation_System is present and install it first if it is
-    # if [ -d "Navigation_System" ]; then
-    #     log "Installing/updating Navigation_System"
-    #     install_component_custom "Navigation_System"
-    #     navigation_system_installed=true
-    # fi
-
-    local wearable_reader_installed=false
-
-    # Check if Wearable_Reader is present and install it first if it is
-    # if [ -d "Wearable_Reader" ]; then
-    #     log "Installing/updating Wearable_Reader"
-    #     install_component_custom "Wearable_Reader"
-    #     navigation_system_installed=true
-    # fi
+    if [ -d "Navigation_System" ]; then
+        log "Installing/updating Navigation_System"
+        install_component_custom "Navigation_System"
+        navigation_system_installed=true
+    fi
 
     # Install/update other components
     for component_dir in */; do
         # Skip Navigation_System if it was installed first
         if [ "$navigation_system_installed" = true ] && [ "$component_dir" = "Navigation_System/" ]; then
-            continue
-        fi
-        # Skip Wearable_Reader if it was installed first
-        if [ "$wearable_reader_installed" = true ] && [ "$component_dir" = "Wearable_Reader/" ]; then
             continue
         fi
         log "Installing/updating component: ${component_dir%/}"
@@ -164,10 +166,11 @@ install_all_components() {
 # Install or update ROS2 component
 install_ros2_component() {
     log "Clearing build directories..."
-    rm -rf build/ log/ install/
+    find . -type d \( -name "build" -o -name "install" -o -name "log" \) -exec rm -rf {} +
     rosdep install --from-paths src --ignore-src -r -y -i --os="$OS"
     log "Build..."
     colcon build --symlink-install
+    source install/local_setup.bash
 }
 
 # Update submodules

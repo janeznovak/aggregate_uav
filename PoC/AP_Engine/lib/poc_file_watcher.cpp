@@ -84,7 +84,7 @@ void new_file_goal_callback(std::string file_path) {
 
 // FEEDBACK FROM ROBOT MANAGEMENT
 void new_file_feedback_callback(std::string file_path) {
-  // std::cout << "Feedback File created: " << file_path << endl;
+  std::cout << "Feedback File created: " << file_path << endl;
   new_file_callback(file_path, feedback::manager::FeedbackManager::new_line_feedback);
   // delete file
   std::filesystem::remove(file_path);
