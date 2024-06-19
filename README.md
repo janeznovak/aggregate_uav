@@ -62,7 +62,7 @@ cd ..
 ### Note:
 In the file `Crazyflie/agents.txt`, you will find the initial positions (x, y) of the drones, with each line representing a drone. You can add more drones to the simulation by adding a new line with the coordinates. Ensure that the number of drones listed in this file matches the number configured in ROS2. You can enable the desired drones by setting the `enabled` value to `True` in the following configuration file:
 
-`/Crazyflie/ros2_ws/src/system_launcher/config/crazyfliesConfig.yaml`
+`Crazyflie/ros2_ws/src/system_launcher/config/crazyfliesConfig.yaml`
 
 ### Run Gazebo with its plugin and SITL simulation:
 
