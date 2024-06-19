@@ -104,7 +104,7 @@ class CrazyflyController(Node):
         traj_name = msg.goal_id.split("-")[0]
 
         traj.loadcsv(
-            f"{share_folder}/../../../../share/crazyflie_controller/crazyflie_controller/trajectory_data/{traj_name}.csv"
+            f"{share_folder}/trajectory_data/{traj_name}.csv"
         )
 
         start_time = timeHelper.time()
