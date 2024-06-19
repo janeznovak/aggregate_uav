@@ -24,7 +24,7 @@ void add_to_input_status_map(feedback::FeedbackData data) {
   else {
     RobotStatesMap[data.robot].push_back(status);
   }
-  std::cout << "Status added and sent to AP about robot: "   << data.robot   << endl;
+  // std::cout << "Status added and sent to AP about robot: "   << data.robot   << endl;
 }
 
 /**** PUBLIC ****/

@@ -45,7 +45,7 @@ def generate_launch_description():
             condition=LaunchConfigurationEquals("backend", "cflib"),
             name="crazyflie_server",
             output="screen",
-            parameters=server_params,
+            parameters=server_params
         ),
         Node(
             package="rviz2",

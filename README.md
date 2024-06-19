@@ -25,6 +25,16 @@ It can be viewed using [/doc/doxygen/html/index.html](/doc/doxygen/html/index.ht
   
 [ROS 2 DDS tuning](https://docs.ros.org/en/foxy/How-To-Guides/DDS-tuning.html)
 
+#### Python
+
+```bash
+apt get install python-is-python3
+pip install -r requirements.txt
+```
+
+#### Crazyswarm2
+[Crazyswarm2](https://imrclab.github.io/crazyswarm2/installation.html)
+
 ## Clone Repository
 
 To clone the repository with all its submodules, run the following command:

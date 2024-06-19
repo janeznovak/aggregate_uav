@@ -8,8 +8,6 @@
   <license>TODO: License declaration</license>
   
   <depend>crazyflie_controller</depend>
-  <depend>robot_reader</depend>
-  <depend>robot_writer</depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
