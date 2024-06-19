@@ -30,7 +30,11 @@ It can be viewed using [/doc/doxygen/html/index.html](/doc/doxygen/html/index.ht
 To clone the repository with all its submodules, run the following command:
 
 ```bash
+# using SSH
 git clone --recurse-submodules git@github.com:giatorta/fcpp-crazyflie.git
+
+# using HTTPS
+git clone --recurse-submodules https://github.com/giatorta/fcpp-crazyflie.git
 ```
 
 ## Install Components
