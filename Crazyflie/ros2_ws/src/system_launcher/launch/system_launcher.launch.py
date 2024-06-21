@@ -2,7 +2,7 @@ import os
 import yaml
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument
+from launch.actions import DeclareLaunchArgument, GroupAction, TimerAction
 from launch_ros.actions import Node
 from launch.conditions import LaunchConfigurationEquals
 
@@ -67,33 +67,34 @@ def generate_launch_description():
     ]
 
     robots_node = []
+    time = 0.0
     for robot_name, robot_info in crazyflies['robots'].items():
         if str(robot_info['enabled']) == "True":
-
-            controller = Node(
-                package="crazyflie_controller",
-                executable="run_many",
-                name="controller_node",
-                output="screen",
-                arguments=[robot_name],
-            )
-
-            reader = Node(
-                package="robot_reader",
-                executable="robot_reader",
-                output="screen",
-                arguments=[robot_name, robot_name],
-            )
-
-            writer = Node(
-                package="robot_writer",
-                executable="robot_writer",
-                output='screen',
-                arguments=[robot_name, robot_name]
-            )
-            robots_node.append(controller)
-            robots_node.append(reader)
-            robots_node.append(writer)
+            group = GroupAction( [
+                Node(
+                    package="crazyflie_controller",
+                    executable="run_many",
+                    name="controller_node",
+                    output="screen",
+                    arguments=[robot_name],
+                    ),
+                Node(
+                    package="robot_reader",
+                    executable="robot_reader",
+                    output="screen",
+                    arguments=[robot_name, robot_name],
+                    ),
+                Node(
+                    package="robot_writer",
+                    executable="robot_writer",
+                    output='screen',
+                    arguments=[robot_name, robot_name]
+                    )
+                ])
+            timed_group = TimerAction(period=time,
+                    actions=[group])
+            time += 10.0
+            robots_node.append(timed_group)
 
     return LaunchDescription(server_node + robots_node)
 
