@@ -94,7 +94,7 @@ In a new terminal, navigate to the `Storage` directory:
 
 ```sh
 cd Storage
-./create_goal <trajectory_name> <goal_id>
+./create_goal.sh <trajectory_name> <goal_id>
 ```
 
 This command will create a new goal for the specified trajectory.
@@ -105,7 +105,7 @@ To interrupt a goal, use the following script:
 
 ```sh
 cd Storage
-./abort_goal <trajectory_name> <goal_id>
+./abort_goal.sh <trajectory_name> <goal_id>
 ```
 
 This command will abort the specified goal.
