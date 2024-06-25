@@ -66,36 +66,42 @@ def generate_launch_description():
         ),
     ]
 
+    # Define a delay action (e.g., 10 seconds) between server_node and robots_node
+    delay_action = TimerAction(
+        period=5.0,  # Delay period in seconds
+        actions=[]
+    )
+
     robots_node = []
     time = 0.0
     for robot_name, robot_info in crazyflies['robots'].items():
         if str(robot_info['enabled']) == "True":
-            group = GroupAction( [
+            group = GroupAction([
                 Node(
                     package="crazyflie_controller",
                     executable="run_many",
                     name="controller_node",
                     output="screen",
                     arguments=[robot_name],
-                    ),
+                ),
                 Node(
                     package="robot_reader",
                     executable="robot_reader",
                     output="screen",
                     arguments=[robot_name, robot_name],
-                    ),
+                ),
                 Node(
                     package="robot_writer",
                     executable="robot_writer",
                     output='screen',
                     arguments=[robot_name, robot_name]
-                    )
-                ])
-            timed_group = TimerAction(period=time,
-                    actions=[group])
-            time += 10.0
+                )
+            ])
+            timed_group = TimerAction(
+                period=time,
+                actions=[group]
+            )
+            time += 3.0
             robots_node.append(timed_group)
 
-    return LaunchDescription(server_node + robots_node)
-
-
+    return LaunchDescription(server_node + [delay_action] + robots_node)
