@@ -66,12 +66,6 @@ def generate_launch_description():
         ),
     ]
 
-    # Define a delay action (e.g., 10 seconds) between server_node and robots_node
-    delay_action = TimerAction(
-        period=5.0,  # Delay period in seconds
-        actions=[]
-    )
-
     robots_node = []
     time = 0.0
     for robot_name, robot_info in crazyflies['robots'].items():
@@ -104,4 +98,9 @@ def generate_launch_description():
             time += 3.0
             robots_node.append(timed_group)
 
-    return LaunchDescription(server_node + [delay_action] + robots_node)
+    delay_action_robots = TimerAction(
+            period=7.0,  
+            actions=robots_node
+    )
+
+    return LaunchDescription(server_node + [delay_action_robots])
