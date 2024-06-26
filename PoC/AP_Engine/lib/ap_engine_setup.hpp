@@ -159,6 +159,7 @@ namespace fcpp {
             struct node_collisionAvoidanceSlaves {};
             struct node_collisionAvoidanceMaster {};
             struct node_exactExpectedPosition {};
+            struct position_error {};
             struct node_startPosition {};
             // END
 
@@ -341,7 +342,7 @@ namespace fcpp {
             node_collisionAvoidanceSlaves, vec<3>,
             node_collisionAvoidanceMaster, vec<3>,
             node_exactExpectedPosition, vec<3>,
-
+            position_error, double,
             node_startPosition, vec<3> //! Initialized only for the nominal test
             // END Flocking
 

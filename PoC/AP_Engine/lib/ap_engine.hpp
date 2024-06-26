@@ -13,9 +13,12 @@
 #include <string>
 #include <ctime>
 #include <cmath>
+#include <fstream>
+#include <iostream>
 
 #include "lib/poc_config.hpp"
 #include "lib/fcpp.hpp"
+#include "lib/file_utils.hpp"
 
 #include "lib/common_data.hpp"
 #include "lib/ap_engine_setup.hpp"
@@ -120,6 +123,25 @@ namespace fcpp
         bool compare(double a, double b) {
             return a < b;
         }
+
+        void log_error(string uid, string time, double error){
+            std::string out_path = string(OUTPUT_FOLDER_BASE_PATH) + string("from_ap/to_log/");
+            create_folder_if_not_exists(out_path);
+
+            std::ofstream file;
+            std::string uniqueFilename = out_path + "/" + uid+"_error_log.txt";
+
+            file.open(uniqueFilename, std::ios::app);
+
+            if (file.is_open()) {
+                file << time << "," << std::to_string(error) << std::endl;
+                file.close();
+            }
+            else {
+                std::cout << "Error log file." << std::endl;
+            }
+        }
+
 
 
         // STATE MACHINE
@@ -295,6 +317,23 @@ namespace fcpp
         }
 
 
+        FUN void errorCalculator(ARGS) {
+            using namespace tags;
+            if (get<0>(node.storage(node_posMaster{}))) {
+                double theta = (get<1>(node.storage(node_indexSlave{}))) * ((2 * pi) / node.storage(node_numberOfSlave{}));
+                double x = std::sin(theta) * distanceMasterSlave;
+                double y = std::cos(theta) * distanceMasterSlave;
+                vec<3> vecTheta = make_vec(x, y, 0);
+                vec<3> exactPosition = vecTheta + get<1>(node.storage(node_posMaster{}));
+                double error = distance(exactPosition, node.position());
+                node.storage(position_error{}) = error;
+                log_error(
+                    std::to_string(node.uid), 
+                    std::to_string(std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now()).time_since_epoch().count()), 
+                    error);
+            }
+        }
+
         FUN void collisionAvoidance(ARGS, node_type nt) {
             using namespace tags;
             if (nt == node_type::ROBOT_SLAVE) {
@@ -433,6 +472,7 @@ namespace fcpp
                 calculateMyCorner(CALL);
                 //!Sistema di collision avoidance
                 collisionAvoidance(CALL, nt);
+                errorCalculator(CALL);
             }
 
             if (nt == node_type::ROBOT_SLAVE) {
