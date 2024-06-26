@@ -42,7 +42,7 @@ apt install python3-colcon-common-extensions python3-vcstool python3-rosdep ros-
 apt install ros-humble-cyclonedds ros-humble-rmw-cyclonedds-cpp
 ```
 
-# Set variables, adding these lines (change in according with your installation) to ~/.bashrc
+Set variables, adding these lines (change in according with your installation) to ~/.bashrc
 ```
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 export CYCLONEDDS_URI=/opt/projects/fcpp-crazyflie/config/cyclone-dds-interface-select-laptop.xml
