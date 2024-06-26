@@ -110,6 +110,7 @@ In a new terminal, navigate to the `Storage` directory:
 
 ```sh
 cd Storage
+# use traj3 as <trajectory_name> 
 ./create_goal.sh <trajectory_name> <goal_id>
 ```
 
@@ -121,7 +122,7 @@ To interrupt a goal, use the following script:
 
 ```sh
 cd Storage
-./abort_goal.sh <trajectory_name> <goal_id>
+./abort_goal.sh <previous_trajectory_name> <goal_id>
 ```
 
 This command will abort the specified goal.
