@@ -3,132 +3,132 @@ robots:
   cf_0:
     enabled: True
     uri: udp://0.0.0.0:19850
-    initial_position: [0.0, 0.0, 0.0]
+    initial_position: [10.0, 10.0, 0.0]
     type: cf_sim  # see robot_types
 
   cf_1:
     enabled: True
     uri: udp://0.0.0.0:19851
-    initial_position: [1.0, 0.0, 0.0]
+    initial_position: [11.0, 10.0, 0.0]
     type: cf_sim  # see robot_types
 
   cf_2:
     enabled: True
     uri: udp://0.0.0.0:19852
-    initial_position: [2.0, 0.0, 0.0]
+    initial_position: [12.0, 10.0, 0.0]
     type: cf_sim  # see robot_types
   
   cf_3:
     enabled: True
     uri: udp://0.0.0.0:19853
-    initial_position: [2.0, 2.0, 0.0]
+    initial_position: [13.0, 13.0, 0.0]
     type: cf_sim  # see robot_types
   
   cf_4:
-    enabled: false
+    enabled: True
     uri: udp://0.0.0.0:19854
-    initial_position: [3.0, 0.0, 0.0]
+    initial_position: [1.0, 1.0, 0.0]
     type: cf_sim  # see robot_types
 
   cf_5:
-    enabled: false
+    enabled: True
     uri: udp://0.0.0.0:19855
-    initial_position: [2.0, 0.0, 0.0]
+    initial_position: [2.0, 2.0, 0.0]
     type: cf_sim  # see robot_types
 
   cf_6:
-    enabled: false
+    enabled: True
     uri: udp://0.0.0.0:19856
-    initial_position: [1.0, 2.0, 0.0]
+    initial_position: [3.0, 3.0, 0.0]
     type: cf_sim  # see robot_types
 
   cf_7:
-    enabled: false
+    enabled: True
     uri: udp://0.0.0.0:19857
-    initial_position: [1.0, 2.0, 0.0]
+    initial_position: [4.0, 4.0, 0.0]
     type: cf_sim  # see robot_types
 
   cf_8:
-    enabled: false
+    enabled: True
     uri: udp://0.0.0.0:19858
-    initial_position: [1.0, 2.0, 0.0]
+    initial_position: [5.0, 5.0, 0.0]
     type: cf_sim  # see robot_types
 
   cf_9:
-    enabled: false
-    uri: udp://0.0.0.0:1989
-    initial_position: [2.0, 3.0, 0.0]
+    enabled: True
+    uri: udp://0.0.0.0:19859
+    initial_position: [6.0, 6.0, 0.0]
     type: cf_sim  # see robot_types
 
   cf_10:
     enabled: false
-    uri: udp://0.0.0.0:19859
-    initial_position: [2.0, 4.0, 0.0]
+    uri: udp://0.0.0.0:19860
+    initial_position: [7.0, 7.0, 0.0]
     type: cf_sim  # see robot_types
 
   cf_11:
     enabled: false
-    uri: udp://0.0.0.0:19860
+    uri: udp://0.0.0.0:19861
     initial_position: [2.0, 0.0, 0.0]
     type: cf_sim  # see robot_types
 
   cf_12:
     enabled: false
-    uri: udp://0.0.0.0:19861
+    uri: udp://0.0.0.0:19862
     initial_position: [2.0, 1.0, 0.0]
     type: cf_sim  # see robot_types
 
   cf_13:
     enabled: false
-    uri: udp://0.0.0.0:19862
+    uri: udp://0.0.0.0:19863
     initial_position: [3.0, 2.0, 0.0]
     type: cf_sim  # see robot_types
 
   cf_14:
     enabled: false
-    uri: udp://0.0.0.0:19863
+    uri: udp://0.0.0.0:19864
     initial_position: [3.0, 3.0, 0.0]
     type: cf_sim  # see robot_types
 
   cf_15:
     enabled: false
-    uri: udp://0.0.0.0:19864
+    uri: udp://0.0.0.0:19865
     initial_position: [3.0, 4.0, 0.0]
     type: cf_sim  # see robot_types
 
   cf_16:
     enabled: false
-    uri: udp://0.0.0.0:19865
+    uri: udp://0.0.0.0:19866
     initial_position: [3.0, 0.0, 0.0]
     type: cf_sim  # see robot_types
 
   # cf_17:
   #   enabled: true
-  #   uri: udp://0.0.0.0:19866
+  #   uri: udp://0.0.0.0:19867
   #   initial_position: [3.0, 1.0, 0.0]
   #   type: cf_sim  # see robot_types
 
   # cf_18:
   #   enabled: true
-  #   uri: udp://0.0.0.0:19867
+  #   uri: udp://0.0.0.0:19868
   #   initial_position: [3.0, 2.0, 0.0]
   #   type: cf_sim  # see robot_types
 
   # cf_19:
   #   enabled: true
-  #   uri: udp://0.0.0.0:19868
+  #   uri: udp://0.0.0.0:19869
   #   initial_position: [3.0, 3.0, 0.0]
   #   type: cf_sim  # see robot_types
 
   # cf_20:
   #   enabled: true
-  #   uri: udp://0.0.0.0:19869
+  #   uri: udp://0.0.0.0:19870
   #   initial_position: [3.0, 4.0, 0.0]
   #   type: cf_sim  # see robot_types
 
   # cf_21:
   #   enabled: true
-  #   uri: udp://0.0.0.0:19870
+  #   uri: udp://0.0.0.0:19871
   #   initial_position: [4.0, 0.0, 0.0]
   #   type: cf_sim  # see robot_types
 
