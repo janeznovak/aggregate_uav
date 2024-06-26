@@ -19,17 +19,33 @@ It can be viewed using [/doc/doxygen/html/index.html](/doc/doxygen/html/index.ht
 
 ### Dependencies
 
+#### Python
+
+```bash
+apt get install python-is-python3
+pip install -r requirements.txt
+```
+
 #### ROS 2
 
 [ROS 2 installation guide](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html)
   
 [ROS 2 DDS tuning](https://docs.ros.org/en/foxy/How-To-Guides/DDS-tuning.html)
 
-#### Python
-
 ```bash
-apt get install python-is-python3
-pip install -r requirements.txt
+# in ubuntu, before you should enable multiverse repository
+
+# Build deps
+apt install python3-colcon-common-extensions python3-vcstool python3-rosdep ros-humble-irobot-create-msgs
+
+# Cyclone DDS
+apt install ros-humble-cyclonedds ros-humble-rmw-cyclonedds-cpp
+```
+
+Set variables, adding these lines (change in according with your installation) to ~/.bashrc
+```
+export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+export CYCLONEDDS_URI=/opt/projects/fcpp-crazyflie/config/cyclone-dds-interface-select-laptop.xml
 ```
 
 #### Crazyswarm2
