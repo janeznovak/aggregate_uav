@@ -110,7 +110,7 @@ In a new terminal, navigate to the `Storage` directory:
 ```sh
 cd Storage
 # $TRAJECTORY_NAME can be traj1, traj2, traj3 (best trajectory)
-./create_goal $TRAJECTORY_NAME <goal_id>
+./create_goal.sh $TRAJECTORY_NAME <goal_id>
 ```
 
 This command will create a new goal for the specified trajectory.
@@ -122,7 +122,7 @@ To interrupt a goal, use the following script:
 ```sh
 cd Storage
 # $TRAJECTORY_NAME must be the previous trajectory used
-./abort_goal $TRAJECTORY_NAME <goal_id>
+./abort_goal.sh $TRAJECTORY_NAME <goal_id>
 ```
 
 This command will abort the specified goal.

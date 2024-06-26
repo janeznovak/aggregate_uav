@@ -122,7 +122,7 @@ install_component_custom() {
 
             log "Updating CrazySwarm components..."
             cd ros2_ws/
-            install_ros2_component
+            install_crazyswarm_component
             source install/local_setup.bash
         ;;
 
@@ -173,6 +173,14 @@ install_ros2_component() {
     source install/local_setup.bash
 }
 
+install_crazyswarm_component() {
+    log "Build..."
+    rm -rf build/ log/ install/
+    rosdep install --from-paths src --ignore-src -r -y -i --os="$OS"
+    colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
+    source install/local_setup.bash
+}
+
 # Update submodules
 log "Updating submodules..."
 git submodule update --init --recursive
@@ -199,4 +207,3 @@ else
         install_component_custom "$component"
     done
 fi
-
