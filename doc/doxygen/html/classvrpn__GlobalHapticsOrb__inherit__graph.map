@@ -1,0 +1,10 @@
+<map id="vrpn_GlobalHapticsOrb" name="vrpn_GlobalHapticsOrb">
+<area shape="rect" id="node1" title=" " alt="" coords="161,304,333,331"/>
+<area shape="rect" id="node2" href="$classvrpn__Serial__Analog.html" title=" " alt="" coords="5,229,152,256"/>
+<area shape="rect" id="node3" href="$classvrpn__Analog.html" title=" " alt="" coords="49,155,151,181"/>
+<area shape="rect" id="node4" href="$classvrpn__BaseClass.html" title=" " alt="" coords="184,80,309,107"/>
+<area shape="rect" id="node7" href="$classvrpn__Button.html" title=" " alt="" coords="196,155,297,181"/>
+<area shape="rect" id="node8" href="$classvrpn__Dial.html" title=" " alt="" coords="342,229,426,256"/>
+<area shape="rect" id="node5" href="$classvrpn__BaseClassUnique.html" title=" " alt="" coords="161,5,332,32"/>
+<area shape="rect" id="node6" href="$classvrpn__Button__Filter.html" title=" " alt="" coords="176,229,317,256"/>
+</map>

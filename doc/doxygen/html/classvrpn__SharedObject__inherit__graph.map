@@ -1,0 +1,12 @@
+<map id="vrpn_SharedObject" name="vrpn_SharedObject">
+<area shape="rect" id="node1" title=" " alt="" coords="5,177,151,203"/>
+<area shape="rect" id="node2" href="$classvrpn__Shared__String.html" title=" " alt="" coords="202,78,350,105"/>
+<area shape="rect" id="node5" href="$classvrpn__Shared__float64.html" title=" " alt="" coords="199,177,353,203"/>
+<area shape="rect" id="node8" href="$classvrpn__Shared__int32.html" title=" " alt="" coords="205,267,347,294"/>
+<area shape="rect" id="node3" href="$classvrpn__Shared__String__Remote.html" title=" " alt="" coords="428,5,576,47"/>
+<area shape="rect" id="node4" href="$classvrpn__Shared__String__Server.html" title=" " alt="" coords="428,71,576,112"/>
+<area shape="rect" id="node6" href="$classvrpn__Shared__float64__Remote.html" title=" " alt="" coords="425,136,579,177"/>
+<area shape="rect" id="node7" href="$classvrpn__Shared__float64__Server.html" title=" " alt="" coords="425,201,579,243"/>
+<area shape="rect" id="node9" href="$classvrpn__Shared__int32__Remote.html" title=" " alt="" coords="401,267,603,294"/>
+<area shape="rect" id="node10" href="$classvrpn__Shared__int32__Server.html" title=" " alt="" coords="406,318,598,345"/>
+</map>

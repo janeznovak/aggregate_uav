@@ -12,5 +12,7 @@ var dir_b14f43b8922130880b06a9ef11aa5acb =
       [ "PositionDTO", "classrobot__reader_1_1position_1_1PositionDTO.html", "classrobot__reader_1_1position_1_1PositionDTO" ]
     ] ],
     [ "reader.py", "reader_8py.html", "reader_8py" ],
-    [ "store.py", "store_8py.html", "store_8py" ]
+    [ "store.py", "store_8py.html", [
+      [ "Store", "classrobot__reader_1_1store_1_1Store.html", "classrobot__reader_1_1store_1_1Store" ]
+    ] ]
 ];

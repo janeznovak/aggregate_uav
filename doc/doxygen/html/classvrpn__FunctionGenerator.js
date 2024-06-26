@@ -1,0 +1,35 @@
+var classvrpn__FunctionGenerator =
+[
+    [ "FGError", "classvrpn__FunctionGenerator.html#a25fc990349fb567049718e2dc392cd7d", [
+      [ "NO_FG_ERROR", "classvrpn__FunctionGenerator.html#a25fc990349fb567049718e2dc392cd7dae1578a8d9f775e36461fb666c1440b0f", null ],
+      [ "INTERPRETER_ERROR", "classvrpn__FunctionGenerator.html#a25fc990349fb567049718e2dc392cd7dae5c48958e0cf1e53e493573d65499a84", null ],
+      [ "TAKING_TOO_LONG", "classvrpn__FunctionGenerator.html#a25fc990349fb567049718e2dc392cd7da905c6c7a9111ead4b3b7f0b69c54e929", null ],
+      [ "INVALID_RESULT_QUANTITY", "classvrpn__FunctionGenerator.html#a25fc990349fb567049718e2dc392cd7dab02807faa6c5899b537fe1ff5979860a", null ],
+      [ "INVALID_RESULT_RANGE", "classvrpn__FunctionGenerator.html#a25fc990349fb567049718e2dc392cd7dac3ea0f4df81a9b736f87b04d30318d3a", null ]
+    ] ],
+    [ "vrpn_FunctionGenerator", "classvrpn__FunctionGenerator.html#a8118ca8391aef11e3b802c2cd33f44a1", null ],
+    [ "~vrpn_FunctionGenerator", "classvrpn__FunctionGenerator.html#aff8880b87fb814e0e9eab8740d06bed3", null ],
+    [ "getChannel", "classvrpn__FunctionGenerator.html#a96ba95694dab38a31d456d4c60bfdd78", null ],
+    [ "getNumChannels", "classvrpn__FunctionGenerator.html#ae00d0b5240f939d7b510b16b95b204ea", null ],
+    [ "getSampleRate", "classvrpn__FunctionGenerator.html#a0904275fdc3eb104cb9cf6a27b788ff9", null ],
+    [ "register_types", "classvrpn__FunctionGenerator.html#aca6326a38243adf18f9159e6da6059f9", null ],
+    [ "channelMessageID", "classvrpn__FunctionGenerator.html#ab5644227e9b21c6f15b01a30339786a8", null ],
+    [ "channelReplyMessageID", "classvrpn__FunctionGenerator.html#a085136dfdb0d063ecdfe56490c3d4854", null ],
+    [ "channels", "classvrpn__FunctionGenerator.html#a55844fe8bbb0df54299415379c32edaf", null ],
+    [ "errorMessageID", "classvrpn__FunctionGenerator.html#a259242113af2b6ea609eadfd33d21413", null ],
+    [ "gotConnectionMessageID", "classvrpn__FunctionGenerator.html#af864c40f0cac0ff0a4f1cc66fc9375bd", null ],
+    [ "interpreterReplyMessageID", "classvrpn__FunctionGenerator.html#a4128810ad1c75636e010c7d2af35228f", null ],
+    [ "msgbuf", "classvrpn__FunctionGenerator.html#a313ca515da31c2b72b0eb151d9fcbdd9", null ],
+    [ "numChannels", "classvrpn__FunctionGenerator.html#ae97f68046daa5adc56b11bda12054ba9", null ],
+    [ "requestAllChannelsMessageID", "classvrpn__FunctionGenerator.html#a39997b0ff8fa42b40506375ad3d02359", null ],
+    [ "requestChannelMessageID", "classvrpn__FunctionGenerator.html#a46e87e1122318623fb5baab0d94b3668", null ],
+    [ "requestInterpreterMessageID", "classvrpn__FunctionGenerator.html#a13f67df7aaf56f002dac9609f3c7d142", null ],
+    [ "sampleRate", "classvrpn__FunctionGenerator.html#a23b00373f92f6814ffcd7b4c82adef07", null ],
+    [ "sampleRateMessageID", "classvrpn__FunctionGenerator.html#ac92f888f98cec42ba3ad8a832025cc1a", null ],
+    [ "sampleRateReplyMessageID", "classvrpn__FunctionGenerator.html#a963456db0183d71cd912350127a5e09b", null ],
+    [ "startFunctionMessageID", "classvrpn__FunctionGenerator.html#a7eb3cdd3b9159e9207badd3e15a0d398", null ],
+    [ "startFunctionReplyMessageID", "classvrpn__FunctionGenerator.html#ab8d2ce27fe274e9443d8610447a24762", null ],
+    [ "stopFunctionMessageID", "classvrpn__FunctionGenerator.html#a38b0411eef8b074c9f6bf82390a8d543", null ],
+    [ "stopFunctionReplyMessageID", "classvrpn__FunctionGenerator.html#ac7d69ec18dde846b28944ddca834d7b7", null ],
+    [ "timestamp", "classvrpn__FunctionGenerator.html#a4543fe0980448023d31d59ae3d6d42b4", null ]
+];

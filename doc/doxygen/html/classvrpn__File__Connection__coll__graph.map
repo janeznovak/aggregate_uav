@@ -1,0 +1,10 @@
+<map id="vrpn_File_Connection" name="vrpn_File_Connection">
+<area shape="rect" id="node1" title=" " alt="" coords="1033,144,1195,171"/>
+<area shape="rect" id="node2" href="$classvrpn__Connection.html" title="Generic connection class not specific to the transport mechanism." alt="" coords="713,31,843,57"/>
+<area shape="rect" id="node3" href="$classvrpn_1_1BoundEndpointAllocator.html" title="Combines the function pointer for an Endpoint Allocator with its two arguments into a single callable..." alt="" coords="253,5,468,32"/>
+<area shape="rect" id="node4" href="$classvrpn_1_1EndpointContainer.html" title="Container for endpoints, held by pointer." alt="" coords="271,56,450,83"/>
+<area shape="rect" id="node5" href="$structvrpn__LOGLIST.html" title="Placed here so vrpn_FileConnection can use it too." alt="" coords="305,163,417,189"/>
+<area shape="rect" id="node7" href="$classvrpn__File__Connection_1_1vrpn__FileBookmark.html" title=" " alt="" coords="697,189,859,230"/>
+<area shape="rect" id="node6" href="$structvrpn__HANDLERPARAM.html" title="This structure is what is passed to a vrpn_Connection message callback." alt="" coords="5,163,172,189"/>
+<area shape="rect" id="node8" href="$classvrpn__File__Connection_1_1FileTime__Accumulator.html" title=" " alt="" coords="691,254,865,295"/>
+</map>

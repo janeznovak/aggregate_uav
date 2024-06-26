@@ -1,0 +1,51 @@
+<map id="vrpn_BaseClassUnique" name="vrpn_BaseClassUnique">
+<area shape="rect" id="node1" title=" " alt="" coords="5,993,176,1020"/>
+<area shape="rect" id="node2" href="$classvrpn__BaseClass.html" title=" " alt="" coords="224,993,349,1020"/>
+<area shape="rect" id="node3" href="$classvrpn__Analog.html" title=" " alt="" coords="465,309,568,336"/>
+<area shape="rect" id="node23" href="$classvrpn__Analog__Output.html" title=" " alt="" coords="439,360,594,387"/>
+<area shape="rect" id="node24" href="$classvrpn__Auxiliary__Logger.html" title=" " alt="" coords="433,411,600,437"/>
+<area shape="rect" id="node25" href="$classvrpn__Button.html" title=" " alt="" coords="466,461,567,488"/>
+<area shape="rect" id="node26" href="$classvrpn__CHProducts__Controller__Raw.html" title=" " alt="" coords="397,512,636,539"/>
+<area shape="rect" id="node27" href="$classvrpn__Contour.html" title=" " alt="" coords="462,563,571,589"/>
+<area shape="rect" id="node28" href="$classvrpn__Dial.html" title=" " alt="" coords="475,867,559,893"/>
+<area shape="rect" id="node29" href="$classvrpn__DreamCheeky.html" title=" " alt="" coords="441,664,592,691"/>
+<area shape="rect" id="node30" href="$classvrpn__ForceDevice.html" title=" " alt="" coords="447,715,586,741"/>
+<area shape="rect" id="node31" href="$classvrpn__FunctionGenerator.html" title=" " alt="" coords="427,765,606,792"/>
+<area shape="rect" id="node32" href="$classvrpn__Futaba.html" title=" " alt="" coords="465,613,568,640"/>
+<area shape="rect" id="node33" href="$classvrpn__Griffin.html" title=" " alt="" coords="467,816,566,843"/>
+<area shape="rect" id="node34" href="$classvrpn__Imager.html" title="Base class for Imager class." alt="" coords="465,917,569,944"/>
+<area shape="rect" id="node35" href="$classvrpn__ImagerPose.html" title=" " alt="" coords="449,968,584,995"/>
+<area shape="rect" id="node36" href="$classvrpn__Logitech__Controller__Raw.html" title=" " alt="" coords="407,1069,626,1096"/>
+<area shape="rect" id="node37" href="$classvrpn__Microsoft__Controller__Raw.html" title=" " alt="" coords="405,1019,629,1045"/>
+<area shape="rect" id="node38" href="$classvrpn__Poser.html" title=" " alt="" coords="469,1120,564,1147"/>
+<area shape="rect" id="node39" href="$classvrpn__RedundantController.html" title=" " alt="" coords="421,1171,613,1197"/>
+<area shape="rect" id="node40" href="$classvrpn__RedundantRemote.html" title=" " alt="" coords="427,1221,606,1248"/>
+<area shape="rect" id="node41" href="$classvrpn__Retrolink.html" title=" " alt="" coords="458,1272,575,1299"/>
+<area shape="rect" id="node42" href="$classvrpn__Saitek__Controller__Raw.html" title=" " alt="" coords="414,1323,619,1349"/>
+<area shape="rect" id="node43" href="$classvrpn__Sound.html" title=" " alt="" coords="467,1373,566,1400"/>
+<area shape="rect" id="node44" href="$classvrpn__Text__Receiver.html" title="Allows a user to handle text messages directly, in addition to having the." alt="" coords="442,1424,591,1451"/>
+<area shape="rect" id="node45" href="$classvrpn__Text__Sender.html" title="Allows a user to send text messages from a device (usually,." alt="" coords="448,1475,585,1501"/>
+<area shape="rect" id="node46" href="$classvrpn__Tracker.html" title=" " alt="" coords="465,1525,569,1552"/>
+<area shape="rect" id="node47" href="$classvrpn__Vality.html" title=" " alt="" coords="469,1576,564,1603"/>
+<area shape="rect" id="node48" href="$classvrpn__Xkeys.html" title=" " alt="" coords="468,1627,565,1653"/>
+<area shape="rect" id="node49" href="$classvrpn__nVidia__shield.html" title=" " alt="" coords="444,1677,589,1704"/>
+<area shape="rect" id="node4" href="$classanalog__GTK.html" title=" " alt="" coords="759,360,859,387"/>
+<area shape="rect" id="node5" href="$classvrpn__3DConnexion.html" title=" " alt="" coords="737,411,882,437"/>
+<area shape="rect" id="node6" href="$classvrpn__ADBox.html" title=" " alt="" coords="758,461,861,488"/>
+<area shape="rect" id="node7" href="$classvrpn__Analog__5dtUSB.html" title="5th Dimension Technologies (5dt) &quot;Ultra&quot; USB data glove driver" alt="" coords="730,5,889,32"/>
+<area shape="rect" id="node8" href="$classvrpn__Analog__Remote.html" title=" " alt="" coords="729,56,890,83"/>
+<area shape="rect" id="node9" href="$classvrpn__Analog__Server.html" title=" " alt="" coords="733,107,885,133"/>
+<area shape="rect" id="node10" href="$classvrpn__Analog__USDigital__A2.html" title=" " alt="" coords="712,157,907,184"/>
+<area shape="rect" id="node11" href="$classvrpn__CHProducts__Fighterstick__USB.html" title=" " alt="" coords="684,512,935,539"/>
+<area shape="rect" id="node12" href="$classvrpn__Contour__ShuttlePROv2.html" title=" " alt="" coords="707,613,912,640"/>
+<area shape="rect" id="node13" href="$classvrpn__Contour__ShuttleXpress.html" title=" " alt="" coords="706,563,913,589"/>
+<area shape="rect" id="node14" href="$classvrpn__Event__Analog.html" title=" " alt="" coords="736,208,883,235"/>
+<area shape="rect" id="node15" href="$classvrpn__Futaba__InterLink__Elite.html" title=" " alt="" coords="726,665,893,706"/>
+<area shape="rect" id="node16" href="$classvrpn__Griffin__PowerMate.html" title=" " alt="" coords="720,743,899,769"/>
+<area shape="rect" id="node17" href="$classvrpn__Joylin.html" title=" " alt="" coords="762,259,857,285"/>
+<area shape="rect" id="node18" href="$classvrpn__Laputa.html" title="Laputa VR head&#45;mounted display base class." alt="" coords="758,309,861,336"/>
+<area shape="rect" id="node19" href="$classvrpn__Logitech__Extreme__3D__Pro.html" title=" " alt="" coords="722,977,897,1018"/>
+<area shape="rect" id="node20" href="$classvrpn__Microsoft__Controller__Raw__Xbox__360__base.html" title=" " alt="" coords="715,794,904,835"/>
+<area shape="rect" id="node21" href="$classvrpn__Microsoft__Controller__Raw__Xbox__S.html" title=" " alt="" coords="715,859,904,901"/>
+<area shape="rect" id="node22" href="$classvrpn__Microsoft__SideWinder.html" title=" " alt="" coords="710,925,909,952"/>
+</map>

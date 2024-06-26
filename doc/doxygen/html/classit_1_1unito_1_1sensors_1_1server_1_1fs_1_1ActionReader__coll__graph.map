@@ -1,4 +1,0 @@
-<map id="it.unito.sensors.server.fs.ActionReader" name="it.unito.sensors.server.fs.ActionReader">
-<area shape="rect" id="node1" title="ActionReader transforms a csv file containing actions to DTOs." alt="" coords="8,95,179,136"/>
-<area shape="rect" id="node2" href="$interfaceit_1_1unito_1_1sensors_1_1server_1_1fs_1_1Reader.html" title=" " alt="" coords="5,5,181,47"/>
-</map>

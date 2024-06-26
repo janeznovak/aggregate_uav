@@ -1,5 +1,0 @@
-<map id="it.unito.sensors.server.util.IWatcher" name="it.unito.sensors.server.util.IWatcher">
-<area shape="rect" id="node1" title="Interface used to watch a folder finding new files." alt="" coords="5,39,181,80"/>
-<area shape="rect" id="node2" href="$classit_1_1unito_1_1sensors_1_1server_1_1service_1_1ActionFileHandler.html" title="ActionFileHandler polls and handles actions files." alt="" coords="229,5,432,47"/>
-<area shape="rect" id="node3" href="$classit_1_1unito_1_1sensors_1_1server_1_1service_1_1FeedbackFileHandler.html" title="FeedbackFileHandler polls and handles feedbacks files." alt="" coords="229,71,432,112"/>
-</map>

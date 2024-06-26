@@ -1,5 +1,5 @@
 <map id="PoC/AP_Engine/lib/drivers/wifi/driver.hpp" name="PoC/AP_Engine/lib/drivers/wifi/driver.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="16,5,193,47"/>
-<area shape="rect" id="node2" href="$ap__engine__setup__embedded_8hpp.html" title="Setup for the AP engine for the NODES demo in embedded environment." alt="" coords="5,95,204,136"/>
-<area shape="rect" id="node3" href="$ap__engine__embedded_8cpp.html" title="Runs the AP engine for the NODES demo in embedded environment." alt="" coords="25,184,184,225"/>
+<area shape="rect" id="node1" title=" " alt="" coords="21,5,209,47"/>
+<area shape="rect" id="node2" href="$ap__engine__setup__embedded_8hpp.html" title="Setup for the AP engine for the NODES demo in embedded environment." alt="" coords="5,95,225,136"/>
+<area shape="rect" id="node3" href="$ap__engine__embedded_8cpp.html" title="Runs the AP engine for the NODES demo in embedded environment." alt="" coords="27,184,203,225"/>
 </map>

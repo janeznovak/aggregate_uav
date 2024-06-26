@@ -1,0 +1,7 @@
+var structtype__caster_3_01Eigen_1_1Ref_3_01PlainObjectType_00_010_00_01StrideType_01_4_00_01enable_475015de6320d02a62de84afa9ef11a1 =
+[
+    [ "cast_op_type", "structtype__caster_3_01Eigen_1_1Ref_3_01PlainObjectType_00_010_00_01StrideType_01_4_00_01enable_475015de6320d02a62de84afa9ef11a1.html#a3b666256badf35b095f136fc774c7c0d", null ],
+    [ "load", "structtype__caster_3_01Eigen_1_1Ref_3_01PlainObjectType_00_010_00_01StrideType_01_4_00_01enable_475015de6320d02a62de84afa9ef11a1.html#a878e1cda6c44df4deb615ca9fd78cfc0", null ],
+    [ "operator Type &", "structtype__caster_3_01Eigen_1_1Ref_3_01PlainObjectType_00_010_00_01StrideType_01_4_00_01enable_475015de6320d02a62de84afa9ef11a1.html#a8d022d4f50a6f350dea064b65833679a", null ],
+    [ "operator Type *", "structtype__caster_3_01Eigen_1_1Ref_3_01PlainObjectType_00_010_00_01StrideType_01_4_00_01enable_475015de6320d02a62de84afa9ef11a1.html#ab3297c6bfdd05a93e144679a1b952b3a", null ]
+];

@@ -1,8 +1,0 @@
-<map id="it.unito.sensors.server.dto.DTO" name="it.unito.sensors.server.dto.DTO">
-<area shape="rect" id="node1" title="Interface used to generic serializable DTOs." alt="" coords="143,111,347,138"/>
-<area shape="rect" id="node3" href="$classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1CustomWearableSOSDTO.html" title=" " alt="" coords="395,5,572,47"/>
-<area shape="rect" id="node4" href="$classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1FeedbackDTO.html" title=" " alt="" coords="395,71,572,112"/>
-<area shape="rect" id="node5" href="$classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1GoalDTO.html" title=" " alt="" coords="395,136,572,177"/>
-<area shape="rect" id="node6" href="$classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1MeasurementDTO.html" title=" " alt="" coords="395,201,572,243"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,111,95,138"/>
-</map>

@@ -1,4 +1,0 @@
-<map id="wearable_reader.wearable_reader.WearableInformationReader" name="wearable_reader.wearable_reader.WearableInformationReader">
-<area shape="rect" id="node1" title="Class extending WearableInformationReader to receive position data from the /odom topic." alt="" coords="5,80,235,121"/>
-<area shape="rect" id="node2" title=" " alt="" coords="93,5,147,32"/>
-</map>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['robot_5fphase_2506',['robot_phase',['../common__data_8hpp.html#a4dcbe91684eeee29c0afe3419f5f1b78',1,'common_data.hpp']]]
+  ['kind_21202',['Kind',['../structAnimal.html#abd6bed3bf6361cc3dc37c03f297e3f48',1,'Animal']]]
 ];

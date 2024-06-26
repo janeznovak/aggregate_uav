@@ -1,0 +1,4 @@
+<map id="ViconCGStream::VDeviceInfo" name="ViconCGStream::VDeviceInfo">
+<area shape="rect" id="node1" title="Contains the device identifier, frame period, and name of a newly connected or updated device." alt="" coords="5,80,216,107"/>
+<area shape="rect" id="node2" href="$classViconCGStream_1_1VItem.html" title="This is the base class for all top level items." alt="" coords="25,5,196,32"/>
+</map>

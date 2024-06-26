@@ -1,0 +1,27 @@
+var init_8h =
+[
+    [ "type_caster< value_and_holder >", "classtype__caster_3_01value__and__holder_01_4.html", "classtype__caster_3_01value__and__holder_01_4" ],
+    [ "constructor", "structconstructor.html", null ],
+    [ "alias_constructor", "structalias__constructor.html", null ],
+    [ "factory< Func, void_type(*)(), Return(Args...)>", "structfactory_3_01Func_00_01void__type_07_5_08_07_08_00_01Return_07Args_8_8_8_08_4.html", "structfactory_3_01Func_00_01void__type_07_5_08_07_08_00_01Return_07Args_8_8_8_08_4" ],
+    [ "factory< CFunc, AFunc, CReturn(CArgs...), AReturn(AArgs...)>", "structfactory_3_01CFunc_00_01AFunc_00_01CReturn_07CArgs_8_8_8_08_00_01AReturn_07AArgs_8_8_8_08_4.html", "structfactory_3_01CFunc_00_01AFunc_00_01CReturn_07CArgs_8_8_8_08_00_01AReturn_07AArgs_8_8_8_08_4" ],
+    [ "pickle_factory< Get, Set, RetState(Self), NewInstance(ArgState)>", "structpickle__factory_3_01Get_00_01Set_00_01RetState_07Self_08_00_01NewInstance_07ArgState_08_4.html", "structpickle__factory_3_01Get_00_01Set_00_01RetState_07Self_08_00_01NewInstance_07ArgState_08_4" ],
+    [ "Alias", "init_8h.html#a0c5fb3e293d36dd7d734678aa73baa61", null ],
+    [ "Cpp", "init_8h.html#af6eccd866be4b17802d53bcb3d5f7488", null ],
+    [ "Holder", "init_8h.html#a03642f0522e589bc555aa5ee4928d077", null ],
+    [ "is_alias_constructible", "init_8h.html#affc1abbdb5bac8c406902401ffab044b", null ],
+    [ "construct", "init_8h.html#a0de8154dc15d86f84de34347056c14ec", null ],
+    [ "construct", "init_8h.html#ac7559e62557fb139aa29b014b01b55a6", null ],
+    [ "construct", "init_8h.html#aa4a1457538616375f6bd5f76e49c9cfb", null ],
+    [ "construct", "init_8h.html#a968d87d976ee3207fce8655e86ef4c62", null ],
+    [ "construct", "init_8h.html#a9454df3d2815bfebb9af776ba6d8f7ee", null ],
+    [ "construct", "init_8h.html#acb95d6840f10b3a350107418c70b3499", null ],
+    [ "construct_alias_from_cpp", "init_8h.html#a94a4b43306814264dc83469beb0ca7f2", null ],
+    [ "construct_alias_from_cpp", "init_8h.html#a2792161cf29fa3a5a911fd7af79a6fd4", null ],
+    [ "construct_or_initialize", "init_8h.html#abc11e9622432fd558160525b8a9e92ee", null ],
+    [ "is_alias", "init_8h.html#aec356754da0d09f3dd962f5427383191", null ],
+    [ "is_alias", "init_8h.html#a74985655be7962fc7bd134acfbc17622", null ],
+    [ "no_nullptr", "init_8h.html#ae79d6ac374406143f31d99493ba43029", null ],
+    [ "setstate", "init_8h.html#a05add9e259143dade214a252a6d55c35", null ],
+    [ "setstate", "init_8h.html#a005bacb0e5e81128b884c04241ccdeb5", null ]
+];

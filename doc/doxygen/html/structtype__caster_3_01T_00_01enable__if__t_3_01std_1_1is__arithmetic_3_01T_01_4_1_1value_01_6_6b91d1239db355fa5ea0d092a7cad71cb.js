@@ -1,0 +1,8 @@
+var structtype__caster_3_01T_00_01enable__if__t_3_01std_1_1is__arithmetic_3_01T_01_4_1_1value_01_6_6b91d1239db355fa5ea0d092a7cad71cb =
+[
+    [ "_py_type_0", "structtype__caster_3_01T_00_01enable__if__t_3_01std_1_1is__arithmetic_3_01T_01_4_1_1value_01_6_6b91d1239db355fa5ea0d092a7cad71cb.html#a069954640b06a1786a4c5e254eaa6176", null ],
+    [ "_py_type_1", "structtype__caster_3_01T_00_01enable__if__t_3_01std_1_1is__arithmetic_3_01T_01_4_1_1value_01_6_6b91d1239db355fa5ea0d092a7cad71cb.html#ae7d4a4ef85d773f9a38afe8bcaf42a8d", null ],
+    [ "py_type", "structtype__caster_3_01T_00_01enable__if__t_3_01std_1_1is__arithmetic_3_01T_01_4_1_1value_01_6_6b91d1239db355fa5ea0d092a7cad71cb.html#a21f46f7de7bf5d168e95a61d69ac0076", null ],
+    [ "load", "structtype__caster_3_01T_00_01enable__if__t_3_01std_1_1is__arithmetic_3_01T_01_4_1_1value_01_6_6b91d1239db355fa5ea0d092a7cad71cb.html#acad49e0860c8d2cc010f7368592ff963", null ],
+    [ "PYBIND11_TYPE_CASTER", "structtype__caster_3_01T_00_01enable__if__t_3_01std_1_1is__arithmetic_3_01T_01_4_1_1value_01_6_6b91d1239db355fa5ea0d092a7cad71cb.html#a7874df43e5f4c4ad2859a548808a6c94", null ]
+];

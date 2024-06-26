@@ -1,0 +1,25 @@
+var structbuffer__info =
+[
+    [ "buffer_info", "structbuffer__info.html#a69d0034afbeccfd18a226724a0e5142b", null ],
+    [ "buffer_info", "structbuffer__info.html#a8104f4194a05f50ce3150367dcc52196", null ],
+    [ "buffer_info", "structbuffer__info.html#ac0c1b6032f809ef3ee6cd44af001b573", null ],
+    [ "buffer_info", "structbuffer__info.html#aa127fd9449a1c9c883866b6aa8012843", null ],
+    [ "buffer_info", "structbuffer__info.html#a0d78ac362b1859220c0cb859b5483390", null ],
+    [ "buffer_info", "structbuffer__info.html#a0287798bb2f50c8c19bbe5ee3e913cb6", null ],
+    [ "buffer_info", "structbuffer__info.html#a18bf6023b6d4bb685d345d5acb9b71ca", null ],
+    [ "buffer_info", "structbuffer__info.html#a7c5a7e3878ecda87f0e60448b2bf7d1e", null ],
+    [ "buffer_info", "structbuffer__info.html#a403fab7d91bcfda171c38dd4d2beed4f", null ],
+    [ "~buffer_info", "structbuffer__info.html#af1f9a46bb7b88c2ff00001b68d21cded", null ],
+    [ "operator=", "structbuffer__info.html#ad3139f9280edb04ab383d84e3c6a78ed", null ],
+    [ "operator=", "structbuffer__info.html#ab55caff9667d44d8ffec6822c4a09068", null ],
+    [ "view", "structbuffer__info.html#a424da735abdf6d562e6313be04e1cf45", null ],
+    [ "view", "structbuffer__info.html#a99db007199bd49f3da19c9e57b6f83fe", null ],
+    [ "format", "structbuffer__info.html#af5d89b84be8905b695a23b914e92bbda", null ],
+    [ "itemsize", "structbuffer__info.html#a8a95447f854c217a3b76168627900139", null ],
+    [ "ndim", "structbuffer__info.html#a81d14cf3fc7ceae1b811f335bf35cd97", null ],
+    [ "ptr", "structbuffer__info.html#a2976ad4b157156ebbcffe667888e2d28", null ],
+    [ "readonly", "structbuffer__info.html#aaa59cf34240184fc2bcad92bb3cb10bc", null ],
+    [ "shape", "structbuffer__info.html#a69da91575dde98ab488789dfd2d8daf4", null ],
+    [ "size", "structbuffer__info.html#aa8d7471a42f3656b1b7a8b94d8fe03ae", null ],
+    [ "strides", "structbuffer__info.html#abd738097cc1960c4955040eec0619026", null ]
+];

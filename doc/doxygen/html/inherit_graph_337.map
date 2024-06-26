@@ -1,0 +1,198 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" title=" " alt="" coords="772,158,847,185"/>
+<area shape="rect" id="node2" href="$classHIDDevice.html" title="Qt wrapper for a debugging HidInterface." alt="" coords="1049,158,1140,185"/>
+<area shape="rect" id="node3" href="$classInspector.html" title="Class to extract bytes from an array and turn into some kind of value." alt="" coords="1053,107,1136,134"/>
+<area shape="rect" id="node4" href="$classvrpn__Qt.html" title=" " alt="" coords="1058,922,1131,949"/>
+<area shape="rect" id="node5" href="$classvrpn__BaseClassUnique.html" title=" " alt="" coords="5,2294,176,2321"/>
+<area shape="rect" id="node6" href="$classvrpn__BaseClass.html" title=" " alt="" coords="231,2294,356,2321"/>
+<area shape="rect" id="node7" href="$classvrpn__Analog.html" title=" " alt="" coords="758,1630,861,1657"/>
+<area shape="rect" id="node94" href="$classvrpn__Analog__Output.html" title=" " alt="" coords="1017,821,1172,847"/>
+<area shape="rect" id="node99" href="$classvrpn__Auxiliary__Logger.html" title=" " alt="" coords="447,2670,613,2697"/>
+<area shape="rect" id="node104" href="$classvrpn__Button.html" title=" " alt="" coords="479,4067,581,4094"/>
+<area shape="rect" id="node126" href="$classvrpn__CHProducts__Controller__Raw.html" title=" " alt="" coords="411,1478,649,1505"/>
+<area shape="rect" id="node127" href="$classvrpn__Contour.html" title=" " alt="" coords="475,1719,585,1746"/>
+<area shape="rect" id="node128" href="$classvrpn__Dial.html" title=" " alt="" coords="767,2051,851,2078"/>
+<area shape="rect" id="node131" href="$classvrpn__DreamCheeky.html" title=" " alt="" coords="455,2421,605,2447"/>
+<area shape="rect" id="node132" href="$classvrpn__ForceDevice.html" title=" " alt="" coords="461,4513,599,4539"/>
+<area shape="rect" id="node135" href="$classvrpn__FunctionGenerator.html" title=" " alt="" coords="441,4766,619,4793"/>
+<area shape="rect" id="node138" href="$classvrpn__Futaba.html" title=" " alt="" coords="479,1529,581,1555"/>
+<area shape="rect" id="node139" href="$classvrpn__Griffin.html" title=" " alt="" coords="481,2161,579,2187"/>
+<area shape="rect" id="node140" href="$classvrpn__Imager.html" title="Base class for Imager class." alt="" coords="478,4422,582,4449"/>
+<area shape="rect" id="node143" href="$classvrpn__ImagerPose.html" title=" " alt="" coords="463,2319,597,2346"/>
+<area shape="rect" id="node146" href="$classvrpn__Logitech__Controller__Raw.html" title=" " alt="" coords="421,1427,639,1454"/>
+<area shape="rect" id="node147" href="$classvrpn__Microsoft__Controller__Raw.html" title=" " alt="" coords="697,1837,921,1863"/>
+<area shape="rect" id="node148" href="$classvrpn__Poser.html" title=" " alt="" coords="483,4270,577,4297"/>
+<area shape="rect" id="node153" href="$classvrpn__RedundantController.html" title=" " alt="" coords="434,4715,626,4742"/>
+<area shape="rect" id="node154" href="$classvrpn__RedundantRemote.html" title=" " alt="" coords="441,2721,619,2747"/>
+<area shape="rect" id="node155" href="$classvrpn__Retrolink.html" title=" " alt="" coords="471,1275,589,1302"/>
+<area shape="rect" id="node156" href="$classvrpn__Saitek__Controller__Raw.html" title=" " alt="" coords="427,1579,633,1606"/>
+<area shape="rect" id="node157" href="$classvrpn__Sound.html" title=" " alt="" coords="481,4614,579,4641"/>
+<area shape="rect" id="node160" href="$classvrpn__Text__Receiver.html" title="Allows a user to handle text messages directly, in addition to having the." alt="" coords="455,4563,605,4590"/>
+<area shape="rect" id="node161" href="$classvrpn__Text__Sender.html" title="Allows a user to send text messages from a device (usually,." alt="" coords="461,4665,599,4691"/>
+<area shape="rect" id="node162" href="$classvrpn__Tracker.html" title=" " alt="" coords="478,3611,582,3638"/>
+<area shape="rect" id="node189" href="$classvrpn__Vality.html" title=" " alt="" coords="483,971,577,998"/>
+<area shape="rect" id="node190" href="$classvrpn__Xkeys.html" title=" " alt="" coords="481,2269,579,2295"/>
+<area shape="rect" id="node194" href="$classvrpn__nVidia__shield.html" title=" " alt="" coords="457,1377,603,1403"/>
+<area shape="rect" id="node8" href="$classanalog__GTK.html" title=" " alt="" coords="1045,1175,1145,1202"/>
+<area shape="rect" id="node9" href="$classvrpn__3DConnexion.html" title=" " alt="" coords="1022,719,1167,746"/>
+<area shape="rect" id="node22" href="$classvrpn__ADBox.html" title=" " alt="" coords="1043,2683,1146,2710"/>
+<area shape="rect" id="node23" href="$classvrpn__Analog__5dtUSB.html" title="5th Dimension Technologies (5dt) &quot;Ultra&quot; USB data glove driver" alt="" coords="1015,209,1174,235"/>
+<area shape="rect" id="node28" href="$classvrpn__Analog__Remote.html" title=" " alt="" coords="1014,1074,1175,1101"/>
+<area shape="rect" id="node29" href="$classvrpn__Analog__Server.html" title=" " alt="" coords="1319,1302,1471,1329"/>
+<area shape="rect" id="node33" href="$classvrpn__Analog__USDigital__A2.html" title=" " alt="" coords="997,1125,1192,1151"/>
+<area shape="rect" id="node34" href="$classvrpn__CHProducts__Fighterstick__USB.html" title=" " alt="" coords="969,1461,1220,1487"/>
+<area shape="rect" id="node35" href="$classvrpn__Contour__ShuttlePROv2.html" title=" " alt="" coords="992,1679,1197,1706"/>
+<area shape="rect" id="node36" href="$classvrpn__Contour__ShuttleXpress.html" title=" " alt="" coords="991,1629,1198,1655"/>
+<area shape="rect" id="node37" href="$classvrpn__Event__Analog.html" title=" " alt="" coords="1021,2531,1168,2558"/>
+<area shape="rect" id="node39" href="$classvrpn__Futaba__InterLink__Elite.html" title=" " alt="" coords="1011,1512,1178,1553"/>
+<area shape="rect" id="node40" href="$classvrpn__Griffin__PowerMate.html" title=" " alt="" coords="1005,2161,1184,2187"/>
+<area shape="rect" id="node41" href="$classvrpn__Joylin.html" title=" " alt="" coords="1047,2785,1142,2811"/>
+<area shape="rect" id="node42" href="$classvrpn__Laputa.html" title="Laputa VR head&#45;mounted display base class." alt="" coords="1043,618,1146,645"/>
+<area shape="rect" id="node43" href="$classvrpn__Logitech__Extreme__3D__Pro.html" title=" " alt="" coords="1007,1395,1182,1436"/>
+<area shape="rect" id="node44" href="$classvrpn__Microsoft__Controller__Raw__Xbox__360__base.html" title=" " alt="" coords="1000,1731,1189,1772"/>
+<area shape="rect" id="node48" href="$classvrpn__Microsoft__Controller__Raw__Xbox__S.html" title=" " alt="" coords="1000,1861,1189,1903"/>
+<area shape="rect" id="node49" href="$classvrpn__Microsoft__SideWinder.html" title=" " alt="" coords="995,1927,1194,1954"/>
+<area shape="rect" id="node50" href="$classvrpn__Microsoft__SideWinder__Precision__2.html" title=" " alt="" coords="995,1796,1194,1837"/>
+<area shape="rect" id="node51" href="$classvrpn__Mouse.html" title=" " alt="" coords="1044,2734,1145,2761"/>
+<area shape="rect" id="node52" href="$classvrpn__National__Instruments__Server.html" title=" " alt="" coords="1296,1040,1495,1081"/>
+<area shape="rect" id="node53" href="$classvrpn__Oculus.html" title="Oculus Rift head&#45;mounted display base class." alt="" coords="1043,442,1146,469"/>
+<area shape="rect" id="node58" href="$classvrpn__Retrolink__GameCube.html" title=" " alt="" coords="997,1226,1193,1253"/>
+<area shape="rect" id="node59" href="$classvrpn__Retrolink__Genesis.html" title=" " alt="" coords="1007,1023,1183,1050"/>
+<area shape="rect" id="node60" href="$classvrpn__Saitek__ST290__Pro.html" title=" " alt="" coords="1007,1578,1182,1605"/>
+<area shape="rect" id="node61" href="$classvrpn__Serial__Analog.html" title=" " alt="" coords="1021,2481,1168,2507"/>
+<area shape="rect" id="node79" href="$classvrpn__Tracker__DTrack.html" title=" " alt="" coords="1017,3865,1172,3891"/>
+<area shape="rect" id="node80" href="$classvrpn__Tracker__OSVRHackerDevKit.html" title="OSVR Hacker Dev Kit HMD The official name of the Razer/Sensics HMD (until they change it again...." alt="" coords="977,871,1213,898"/>
+<area shape="rect" id="node81" href="$classvrpn__Tracker__RazerHydra.html" title="Device supporting the Razer Hydra game controller as a tracker, analog device, and button device,..." alt="" coords="1001,3915,1188,3942"/>
+<area shape="rect" id="node82" href="$classvrpn__Vality__vGlass.html" title=" " alt="" coords="1021,669,1168,695"/>
+<area shape="rect" id="node83" href="$classvrpn__Xkeys__Jog__And__Shuttle.html" title=" " alt="" coords="1017,2263,1173,2304"/>
+<area shape="rect" id="node84" href="$classvrpn__Xkeys__Jog__And__Shuttle12.html" title=" " alt="" coords="1017,2044,1173,2085"/>
+<area shape="rect" id="node85" href="$classvrpn__Xkeys__Jog__And__Shuttle68.html" title=" " alt="" coords="1017,1979,1173,2020"/>
+<area shape="rect" id="node86" href="$classvrpn__Xkeys__Joystick.html" title=" " alt="" coords="1017,2211,1172,2238"/>
+<area shape="rect" id="node87" href="$classvrpn__Xkeys__Joystick12.html" title=" " alt="" coords="1009,2110,1180,2137"/>
+<area shape="rect" id="node88" href="$classvrpn__YEI__3Space.html" title="Base class with routines for YEI 3Space units." alt="" coords="1029,4067,1161,4094"/>
+<area shape="rect" id="node91" href="$classvrpn__nVidia__shield__USB.html" title=" " alt="" coords="1005,1343,1184,1370"/>
+<area shape="rect" id="node92" href="$classvrpn__nVidia__shield__stealth__USB.html" title=" " alt="" coords="1022,1277,1167,1319"/>
+<area shape="rect" id="node93" href="$classvrpn__raw__SGIBox.html" title=" " alt="" coords="1027,2633,1163,2659"/>
+<area shape="rect" id="node10" href="$classvrpn__3DConnexion__Navigator.html" title=" " alt="" coords="1287,871,1503,898"/>
+<area shape="rect" id="node11" href="$classvrpn__3DConnexion__Navigator__for__Notebooks.html" title=" " alt="" coords="1287,923,1503,964"/>
+<area shape="rect" id="node12" href="$classvrpn__3DConnexion__SpaceBall5000.html" title=" " alt="" coords="1271,989,1519,1015"/>
+<area shape="rect" id="node13" href="$classvrpn__3DConnexion__SpaceExplorer.html" title=" " alt="" coords="1273,369,1518,395"/>
+<area shape="rect" id="node14" href="$classvrpn__3DConnexion__SpaceMouse.html" title=" " alt="" coords="1278,419,1513,446"/>
+<area shape="rect" id="node15" href="$classvrpn__3DConnexion__SpaceMouseCompact.html" title=" " alt="" coords="1278,471,1513,512"/>
+<area shape="rect" id="node16" href="$classvrpn__3DConnexion__SpaceMousePro.html" title=" " alt="" coords="1268,537,1523,563"/>
+<area shape="rect" id="node17" href="$classvrpn__3DConnexion__SpaceMouseProWireless.html" title=" " alt="" coords="1278,588,1513,629"/>
+<area shape="rect" id="node18" href="$classvrpn__3DConnexion__SpaceMouseWireless.html" title=" " alt="" coords="1278,653,1513,695"/>
+<area shape="rect" id="node19" href="$classvrpn__3DConnexion__SpacePilot.html" title=" " alt="" coords="1285,719,1505,746"/>
+<area shape="rect" id="node20" href="$classvrpn__3DConnexion__SpacePilotPro.html" title=" " alt="" coords="1275,770,1516,797"/>
+<area shape="rect" id="node21" href="$classvrpn__3DConnexion__Traveler.html" title=" " alt="" coords="1293,821,1497,847"/>
+<area shape="rect" id="node24" href="$classvrpn__Analog__5dtUSB__Glove14Left.html" title=" " alt="" coords="1316,136,1475,177"/>
+<area shape="rect" id="node25" href="$classvrpn__Analog__5dtUSB__Glove14Right.html" title=" " alt="" coords="1316,201,1475,243"/>
+<area shape="rect" id="node26" href="$classvrpn__Analog__5dtUSB__Glove5Left.html" title="Specialization of vrpn_Analog_5dtUSB for a 5&#45;sensor, left&#45;hand glove." alt="" coords="1316,5,1475,47"/>
+<area shape="rect" id="node27" href="$classvrpn__Analog__5dtUSB__Glove5Right.html" title="Specialization of vrpn_Analog_5dtUSB for a 5&#45;sensor, right&#45;hand glove." alt="" coords="1316,71,1475,112"/>
+<area shape="rect" id="node30" href="$classvrpn__Atmel.html" title=" " alt="" coords="1617,1178,1714,1205"/>
+<area shape="rect" id="node31" href="$classvrpn__Clipping__Analog__Server.html" title="Analog server that can scale and clip its range to &#45;1..1." alt="" coords="1584,1265,1747,1307"/>
+<area shape="rect" id="node32" href="$classvrpn__IMU__Magnetometer.html" title="Normalizes the three directions for a magnetometer into a unit vector." alt="" coords="1572,1331,1759,1358"/>
+<area shape="rect" id="node38" href="$classvrpn__Event__Mouse.html" title=" " alt="" coords="1323,3779,1468,3806"/>
+<area shape="rect" id="node45" href="$classvrpn__Afterglow__Ax1__For__Xbox__360.html" title=" " alt="" coords="1319,1796,1471,1837"/>
+<area shape="rect" id="node46" href="$classvrpn__Microsoft__Controller__Raw__Xbox__360.html" title=" " alt="" coords="1301,1665,1490,1707"/>
+<area shape="rect" id="node47" href="$classvrpn__Microsoft__Controller__Raw__Xbox__360__Wireless.html" title=" " alt="" coords="1300,1731,1491,1772"/>
+<area shape="rect" id="node54" href="$classvrpn__Oculus__DK1.html" title="Oculus Rift DK1 head&#45;mounted display." alt="" coords="1327,267,1463,294"/>
+<area shape="rect" id="node55" href="$classvrpn__Oculus__DK2.html" title="Oculus Rift DK2 head&#45;mounted display base class for both intertial&#45; only and LED&#45;enabled version." alt="" coords="1327,318,1463,345"/>
+<area shape="rect" id="node56" href="$classvrpn__Oculus__DK2__LEDs.html" title="Oculus Rift DK2 head&#45;mounted display (LEDs enabled)" alt="" coords="1578,293,1753,319"/>
+<area shape="rect" id="node57" href="$classvrpn__Oculus__DK2__inertial.html" title="Oculus Rift DK2 head&#45;mounted display (inertial measurement unit only)" alt="" coords="1571,343,1760,370"/>
+<area shape="rect" id="node62" href="$classvrpn__5dt.html" title="Class to support reading data from serial 5DT data gloves." alt="" coords="1356,2531,1435,2558"/>
+<area shape="rect" id="node63" href="$classvrpn__5dt16.html" title=" " alt="" coords="1348,2582,1443,2609"/>
+<area shape="rect" id="node64" href="$classvrpn__BiosciencesTools.html" title=" " alt="" coords="1311,2329,1479,2355"/>
+<area shape="rect" id="node65" href="$classvrpn__CerealBox.html" title=" " alt="" coords="1333,2886,1458,2913"/>
+<area shape="rect" id="node66" href="$classvrpn__GlobalHapticsOrb.html" title=" " alt="" coords="1309,2937,1481,2963"/>
+<area shape="rect" id="node67" href="$classvrpn__IDEA.html" title=" " alt="" coords="1351,2379,1440,2406"/>
+<area shape="rect" id="node68" href="$classvrpn__ImmersionBox.html" title=" " alt="" coords="1319,2987,1472,3014"/>
+<area shape="rect" id="node69" href="$classvrpn__Joystick.html" title=" " alt="" coords="1341,3375,1450,3402"/>
+<area shape="rect" id="node70" href="$classvrpn__Magellan.html" title=" " alt="" coords="1336,3595,1455,3622"/>
+<area shape="rect" id="node71" href="$classvrpn__Nikon__Controls.html" title=" " alt="" coords="1317,1561,1473,1587"/>
+<area shape="rect" id="node72" href="$classvrpn__Radamec__SPI.html" title=" " alt="" coords="1322,2481,1469,2507"/>
+<area shape="rect" id="node73" href="$classvrpn__Spaceball.html" title=" " alt="" coords="1335,3646,1456,3673"/>
+<area shape="rect" id="node74" href="$classvrpn__Streaming__Arduino.html" title=" " alt="" coords="1304,2430,1487,2457"/>
+<area shape="rect" id="node75" href="$classvrpn__Tng3.html" title=" " alt="" coords="1350,3707,1441,3734"/>
+<area shape="rect" id="node76" href="$classvrpn__Wanda.html" title=" " alt="" coords="1344,2670,1447,2697"/>
+<area shape="rect" id="node77" href="$classvrpn__Zaber.html" title=" " alt="" coords="1347,1405,1443,1431"/>
+<area shape="rect" id="node78" href="$classvrpn__inertiamouse.html" title=" " alt="" coords="1323,2759,1467,2786"/>
+<area shape="rect" id="node89" href="$classvrpn__YEI__3Space__Sensor.html" title="Class to support reading data from a wired YEI 3Space unit." alt="" coords="1304,4038,1487,4065"/>
+<area shape="rect" id="node90" href="$classvrpn__YEI__3Space__Sensor__Wireless.html" title="Class to support reading data from a wireless YEI 3Space unit." alt="" coords="1304,4089,1487,4131"/>
+<area shape="rect" id="node95" href="$classvrpn__Analog__Output__Remote.html" title=" " alt="" coords="1318,1236,1473,1277"/>
+<area shape="rect" id="node96" href="$classvrpn__Analog__Output__Server.html" title=" " alt="" coords="1318,1105,1473,1147"/>
+<area shape="rect" id="node98" href="$classvrpn__Analog__Output__Server__NI.html" title=" " alt="" coords="1318,1171,1473,1212"/>
+<area shape="rect" id="node97" href="$classvrpn__Analog__Output__Callback__Server.html" title=" " alt="" coords="1588,1105,1743,1147"/>
+<area shape="rect" id="node100" href="$classvrpn__Auxiliary__Logger__Remote.html" title=" " alt="" coords="726,2861,893,2903"/>
+<area shape="rect" id="node101" href="$classvrpn__Auxiliary__Logger__Server.html" title=" " alt="" coords="726,3191,893,3232"/>
+<area shape="rect" id="node102" href="$classvrpn__Auxiliary__Logger__Server__Generic.html" title=" " alt="" coords="1011,4777,1178,4819"/>
+<area shape="rect" id="node103" href="$classvrpn__Imager__Stream__Buffer.html" title=" " alt="" coords="1015,4960,1174,5001"/>
+<area shape="rect" id="node105" href="$classbutton__GTK.html" title=" " alt="" coords="760,4219,859,4246"/>
+<area shape="rect" id="node106" href="$classvrpn__Button__Filter.html" title=" " alt="" coords="739,2759,880,2786"/>
+<area shape="rect" id="node124" href="$classvrpn__Button__Remote.html" title=" " alt="" coords="730,4169,889,4195"/>
+<area shape="rect" id="node125" href="$classvrpn__Tracker__SpacePoint.html" title=" " alt="" coords="718,4067,901,4094"/>
+<area shape="rect" id="node107" href="$classvrpn__3DMicroscribe.html" title=" " alt="" coords="1019,4909,1170,4935"/>
+<area shape="rect" id="node108" href="$classvrpn__Button__5DT__Server.html" title=" " alt="" coords="1003,3545,1186,3571"/>
+<area shape="rect" id="node109" href="$classvrpn__Button__Example__Server.html" title=" " alt="" coords="1012,3596,1177,3637"/>
+<area shape="rect" id="node110" href="$classvrpn__Button__NI__DIO24.html" title=" " alt="" coords="1010,3662,1179,3689"/>
+<area shape="rect" id="node111" href="$classvrpn__Button__Parallel.html" title=" " alt="" coords="1017,4675,1173,4702"/>
+<area shape="rect" id="node113" href="$classvrpn__Button__Serial.html" title=" " alt="" coords="1022,4625,1167,4651"/>
+<area shape="rect" id="node115" href="$classvrpn__Button__SerialMouse.html" title=" " alt="" coords="1001,3494,1189,3521"/>
+<area shape="rect" id="node116" href="$classvrpn__Button__Server.html" title=" " alt="" coords="1019,4017,1170,4043"/>
+<area shape="rect" id="node117" href="$classvrpn__DreamCheeky__Drum__Kit.html" title=" " alt="" coords="985,4118,1204,4145"/>
+<area shape="rect" id="node118" href="$classvrpn__Keyboard.html" title=" " alt="" coords="1035,3342,1154,3369"/>
+<area shape="rect" id="node119" href="$classvrpn__Tracker__3DMouse.html" title=" " alt="" coords="1009,4169,1181,4195"/>
+<area shape="rect" id="node120" href="$classvrpn__VPJoystick.html" title=" " alt="" coords="1031,3393,1158,3419"/>
+<area shape="rect" id="node121" href="$classvrpn__Xkeys__Desktop.html" title=" " alt="" coords="1015,3038,1174,3065"/>
+<area shape="rect" id="node122" href="$classvrpn__Xkeys__Pro.html" title=" " alt="" coords="1032,3089,1157,3115"/>
+<area shape="rect" id="node123" href="$classvrpn__Xkeys__XK3.html" title=" " alt="" coords="1029,4726,1160,4753"/>
+<area shape="rect" id="node112" href="$classvrpn__Button__Python.html" title=" " alt="" coords="1319,4679,1472,4706"/>
+<area shape="rect" id="node114" href="$classvrpn__Button__PinchGlove.html" title=" " alt="" coords="1305,4629,1486,4655"/>
+<area shape="rect" id="node129" href="$classvrpn__Dial__Example__Server.html" title=" " alt="" coords="996,2582,1193,2609"/>
+<area shape="rect" id="node130" href="$classvrpn__Dial__Remote.html" title=" " alt="" coords="1023,2835,1166,2862"/>
+<area shape="rect" id="node133" href="$classvrpn__ForceDeviceServer.html" title=" " alt="" coords="719,4574,899,4601"/>
+<area shape="rect" id="node134" href="$classvrpn__ForceDevice__Remote.html" title=" " alt="" coords="711,4523,907,4550"/>
+<area shape="rect" id="node136" href="$classvrpn__FunctionGenerator__Remote.html" title=" " alt="" coords="720,4748,899,4789"/>
+<area shape="rect" id="node137" href="$classvrpn__FunctionGenerator__Server.html" title=" " alt="" coords="720,4813,899,4855"/>
+<area shape="rect" id="node141" href="$classvrpn__Imager__Remote.html" title=" " alt="" coords="728,4473,891,4499"/>
+<area shape="rect" id="node142" href="$classvrpn__Imager__Server.html" title=" " alt="" coords="733,4422,886,4449"/>
+<area shape="rect" id="node144" href="$classvrpn__ImagerPose__Remote.html" title=" " alt="" coords="713,2319,906,2346"/>
+<area shape="rect" id="node145" href="$classvrpn__ImagerPose__Server.html" title=" " alt="" coords="717,2370,901,2397"/>
+<area shape="rect" id="node149" href="$classvrpn__Poser__Analog.html" title=" " alt="" coords="736,4270,883,4297"/>
+<area shape="rect" id="node150" href="$classvrpn__Poser__Remote.html" title=" " alt="" coords="733,4371,885,4398"/>
+<area shape="rect" id="node151" href="$classvrpn__Poser__Server.html" title=" " alt="" coords="738,4321,881,4347"/>
+<area shape="rect" id="node152" href="$classvrpn__Poser__Tek4662.html" title=" " alt="" coords="732,4118,887,4145"/>
+<area shape="rect" id="node158" href="$classvrpn__Sound__Client.html" title=" " alt="" coords="738,4625,881,4651"/>
+<area shape="rect" id="node159" href="$classvrpn__Sound__Server.html" title=" " alt="" coords="736,4675,883,4702"/>
+<area shape="rect" id="node163" href="$classtracker__GTK.html" title=" " alt="" coords="759,3358,860,3385"/>
+<area shape="rect" id="node164" href="$classvrpn__IMU__SimpleCombiner.html" title="This class will turn set of two or three analog devices into a tracker by." alt="" coords="710,3409,909,3435"/>
+<area shape="rect" id="node165" href="$classvrpn__Tracker__AnalogFly.html" title="This class will turn an analog device such as a joystick or a camera." alt="" coords="721,3459,897,3486"/>
+<area shape="rect" id="node166" href="$classvrpn__Tracker__ButtonFly.html" title="This class will turn a button device into a tracker by interpreting." alt="" coords="722,3510,897,3537"/>
+<area shape="rect" id="node167" href="$classvrpn__Tracker__FilterOneEuro.html" title="Tracker filter based on the one&#45;Euro filter by Jan Ciger jan.ciger@reviatech.com" alt="" coords="710,3561,909,3587"/>
+<area shape="rect" id="node168" href="$classvrpn__Tracker__GameTrak.html" title=" " alt="" coords="721,3611,898,3638"/>
+<area shape="rect" id="node169" href="$classvrpn__Tracker__JoyFly.html" title=" " alt="" coords="734,3662,885,3689"/>
+<area shape="rect" id="node170" href="$classvrpn__Tracker__NDI__Polaris.html" title=" " alt="" coords="716,3713,903,3739"/>
+<area shape="rect" id="node171" href="$classvrpn__Tracker__NULL.html" title=" " alt="" coords="737,3763,882,3790"/>
+<area shape="rect" id="node172" href="$classvrpn__Tracker__Remote.html" title=" " alt="" coords="728,3814,891,3841"/>
+<area shape="rect" id="node173" href="$classvrpn__Tracker__Serial.html" title=" " alt="" coords="735,3089,883,3115"/>
+<area shape="rect" id="node184" href="$classvrpn__Tracker__Server.html" title=" " alt="" coords="733,3966,886,3993"/>
+<area shape="rect" id="node186" href="$classvrpn__Tracker__Spin.html" title=" " alt="" coords="740,3257,879,3283"/>
+<area shape="rect" id="node187" href="$classvrpn__Tracker__WiimoteHead.html" title="Provides a tracker device given data from a Wii Remote and LED glasses." alt="" coords="709,3307,909,3334"/>
+<area shape="rect" id="node188" href="$classvrpn__Tracker__Wintracker.html" title=" " alt="" coords="719,2577,900,2603"/>
+<area shape="rect" id="node174" href="$classvrpn__Tracker__3Space.html" title=" " alt="" coords="1015,4219,1174,4246"/>
+<area shape="rect" id="node175" href="$classvrpn__Tracker__Crossbow.html" title=" " alt="" coords="1007,4270,1182,4297"/>
+<area shape="rect" id="node176" href="$classvrpn__Tracker__Dyna.html" title=" " alt="" coords="1022,4321,1167,4347"/>
+<area shape="rect" id="node177" href="$classvrpn__Tracker__Fastrak.html" title=" " alt="" coords="1015,4371,1174,4398"/>
+<area shape="rect" id="node178" href="$classvrpn__Tracker__Flock.html" title=" " alt="" coords="1021,4574,1168,4601"/>
+<area shape="rect" id="node181" href="$classvrpn__Tracker__GPS.html" title=" " alt="" coords="1026,4523,1163,4550"/>
+<area shape="rect" id="node182" href="$classvrpn__Tracker__Isotrak.html" title=" " alt="" coords="1017,4422,1173,4449"/>
+<area shape="rect" id="node183" href="$classvrpn__Tracker__Liberty.html" title=" " alt="" coords="1017,4473,1173,4499"/>
+<area shape="rect" id="node179" href="$classvrpn__Tracker__Flock__Parallel.html" title=" " alt="" coords="1322,4563,1469,4604"/>
+<area shape="rect" id="node180" href="$classvrpn__Tracker__Flock__Parallel__Slave.html" title=" " alt="" coords="1322,4497,1469,4539"/>
+<area shape="rect" id="node185" href="$classvrpn__Tracker__DeadReckoning__Rotation.html" title="Use angular velocity reports, if available, to predict the future orientation." alt="" coords="989,4843,1201,4884"/>
+<area shape="rect" id="node191" href="$classvrpn__Xkeys__noLEDs.html" title=" " alt="" coords="733,3139,885,3166"/>
+<area shape="rect" id="node192" href="$classvrpn__Xkeys__v1.html" title=" " alt="" coords="749,2269,869,2295"/>
+<area shape="rect" id="node193" href="$classvrpn__Xkeys__v2.html" title=" " alt="" coords="749,2106,869,2133"/>
+<area shape="rect" id="node195" href="$classvrpn__HidInterface.html" title=" " alt="" coords="224,1453,363,1479"/>
+<area shape="rect" id="node196" href="$classHIDDevice_1_1VRPNDevice.html" title=" " alt="" coords="440,870,620,897"/>
+</map>

@@ -1,0 +1,8 @@
+<map id="PrintCereals" name="PrintCereals">
+<area shape="rect" id="node1" title=" " alt="" coords="291,143,392,170"/>
+<area shape="rect" id="node2" href="$interfacevrpn_1_1ButtonRemote_1_1ButtonChangeListener.html" title=" " alt="" coords="26,5,222,47"/>
+<area shape="rect" id="node3" href="$interfacevrpn_1_1AnalogRemote_1_1AnalogChangeListener.html" title=" " alt="" coords="24,71,224,112"/>
+<area shape="rect" id="node4" href="$interfacevrpn_1_1TrackerRemote_1_1PositionChangeListener.html" title=" " alt="" coords="20,136,228,177"/>
+<area shape="rect" id="node5" href="$interfacevrpn_1_1TrackerRemote_1_1VelocityChangeListener.html" title=" " alt="" coords="20,201,228,243"/>
+<area shape="rect" id="node6" href="$interfacevrpn_1_1TrackerRemote_1_1AccelerationChangeListener.html" title=" " alt="" coords="5,267,243,308"/>
+</map>

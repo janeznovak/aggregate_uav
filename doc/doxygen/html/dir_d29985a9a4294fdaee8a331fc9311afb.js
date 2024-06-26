@@ -1,4 +1,0 @@
-var dir_d29985a9a4294fdaee8a331fc9311afb =
-[
-    [ "sensors", "dir_192751c020fe1951f475e762558d251a.html", "dir_192751c020fe1951f475e762558d251a" ]
-];

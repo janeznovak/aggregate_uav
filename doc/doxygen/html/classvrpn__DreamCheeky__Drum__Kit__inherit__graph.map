@@ -1,0 +1,9 @@
+<map id="vrpn_DreamCheeky_Drum_Kit" name="vrpn_DreamCheeky_Drum_Kit">
+<area shape="rect" id="node1" title=" " alt="" coords="46,304,265,331"/>
+<area shape="rect" id="node2" href="$classvrpn__DreamCheeky.html" title=" " alt="" coords="5,155,156,181"/>
+<area shape="rect" id="node3" href="$classvrpn__BaseClass.html" title=" " alt="" coords="169,80,294,107"/>
+<area shape="rect" id="node7" href="$classvrpn__Button.html" title=" " alt="" coords="181,155,282,181"/>
+<area shape="rect" id="node4" href="$classvrpn__BaseClassUnique.html" title=" " alt="" coords="146,5,317,32"/>
+<area shape="rect" id="node5" href="$classvrpn__HidInterface.html" title=" " alt="" coords="6,80,145,107"/>
+<area shape="rect" id="node6" href="$classvrpn__Button__Filter.html" title=" " alt="" coords="150,229,291,256"/>
+</map>

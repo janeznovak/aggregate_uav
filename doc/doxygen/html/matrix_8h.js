@@ -1,0 +1,27 @@
+var matrix_8h =
+[
+    [ "EigenConformable", "structEigenConformable.html", "structEigenConformable" ],
+    [ "eigen_extract_stride", "structeigen__extract__stride.html", "structeigen__extract__stride" ],
+    [ "eigen_extract_stride< Eigen::Map< PlainObjectType, MapOptions, StrideType > >", "structeigen__extract__stride_3_01Eigen_1_1Map_3_01PlainObjectType_00_01MapOptions_00_01StrideType_01_4_01_4.html", "structeigen__extract__stride_3_01Eigen_1_1Map_3_01PlainObjectType_00_01MapOptions_00_01StrideType_01_4_01_4" ],
+    [ "eigen_extract_stride< Eigen::Ref< PlainObjectType, Options, StrideType > >", "structeigen__extract__stride_3_01Eigen_1_1Ref_3_01PlainObjectType_00_01Options_00_01StrideType_01_4_01_4.html", "structeigen__extract__stride_3_01Eigen_1_1Ref_3_01PlainObjectType_00_01Options_00_01StrideType_01_4_01_4" ],
+    [ "EigenProps", "structEigenProps.html", "structEigenProps" ],
+    [ "type_caster< Type, enable_if_t< is_eigen_dense_plain< Type >::value > >", "structtype__caster_3_01Type_00_01enable__if__t_3_01is__eigen__dense__plain_3_01Type_01_4_1_1value_01_4_01_4.html", "structtype__caster_3_01Type_00_01enable__if__t_3_01is__eigen__dense__plain_3_01Type_01_4_1_1value_01_4_01_4" ],
+    [ "eigen_map_caster", "structeigen__map__caster.html", "structeigen__map__caster" ],
+    [ "type_caster< Type, enable_if_t< is_eigen_dense_map< Type >::value > >", "structtype__caster_3_01Type_00_01enable__if__t_3_01is__eigen__dense__map_3_01Type_01_4_1_1value_01_4_01_4.html", null ],
+    [ "type_caster< Eigen::Ref< PlainObjectType, 0, StrideType >, enable_if_t< is_eigen_dense_map< Eigen::Ref< PlainObjectType, 0, StrideType > >::value > >", "structtype__caster_3_01Eigen_1_1Ref_3_01PlainObjectType_00_010_00_01StrideType_01_4_00_01enable_475015de6320d02a62de84afa9ef11a1.html", "structtype__caster_3_01Eigen_1_1Ref_3_01PlainObjectType_00_010_00_01StrideType_01_4_00_01enable_475015de6320d02a62de84afa9ef11a1" ],
+    [ "type_caster< Type, enable_if_t< is_eigen_other< Type >::value > >", "structtype__caster_3_01Type_00_01enable__if__t_3_01is__eigen__other_3_01Type_01_4_1_1value_01_4_01_4.html", "structtype__caster_3_01Type_00_01enable__if__t_3_01is__eigen__other_3_01Type_01_4_1_1value_01_4_01_4" ],
+    [ "type_caster< Type, enable_if_t< is_eigen_sparse< Type >::value > >", "structtype__caster_3_01Type_00_01enable__if__t_3_01is__eigen__sparse_3_01Type_01_4_1_1value_01_4_01_4.html", "structtype__caster_3_01Type_00_01enable__if__t_3_01is__eigen__sparse_3_01Type_01_4_1_1value_01_4_01_4" ],
+    [ "EigenDMap", "matrix_8h.html#a4a2c97fc69ae1875e8c48bf44891fbfd", null ],
+    [ "EigenDRef", "matrix_8h.html#acbc233ed620e7b33cb07e33dd3b64246", null ],
+    [ "EigenDStride", "matrix_8h.html#a509c0a3fae790584bf0cfcccef41c784", null ],
+    [ "EigenIndex", "matrix_8h.html#a4e595ab182718d84a409dd05e0829bdd", null ],
+    [ "EigenMapSparseMatrix", "matrix_8h.html#ad85353517ff51cd72fd627d5b10cac1b", null ],
+    [ "is_eigen_dense_map", "matrix_8h.html#a403c575c8e7ae68daa89a11a4b683038", null ],
+    [ "is_eigen_dense_plain", "matrix_8h.html#a93c6985faade6e9052f9e0917826b26d", null ],
+    [ "is_eigen_mutable_map", "matrix_8h.html#aabbcc3f1a17addf39e1577576553acf5", null ],
+    [ "is_eigen_other", "matrix_8h.html#af3121d2504a66b612148938b6ffb142c", null ],
+    [ "is_eigen_sparse", "matrix_8h.html#af680e1af5697a93b0f4fc037a2100fbc", null ],
+    [ "eigen_array_cast", "matrix_8h.html#a3c3714c0ebfda3176a02ed911375184a", null ],
+    [ "eigen_encapsulate", "matrix_8h.html#a5ebcb9c19dfc26cd6ef45955a0492e83", null ],
+    [ "eigen_ref_array", "matrix_8h.html#a4b925631bc4c732a0301f6cf0a08317f", null ]
+];

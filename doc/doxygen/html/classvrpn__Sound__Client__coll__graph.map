@@ -1,0 +1,13 @@
+<map id="vrpn_Sound_Client" name="vrpn_Sound_Client">
+<area shape="rect" id="node1" title=" " alt="" coords="193,483,335,509"/>
+<area shape="rect" id="node2" href="$classvrpn__Sound.html" title=" " alt="" coords="289,407,388,433"/>
+<area shape="rect" id="node3" href="$classvrpn__BaseClass.html" title=" " alt="" coords="276,310,401,337"/>
+<area shape="rect" id="node9" href="$classvrpn__Text__Receiver.html" title="Allows a user to handle text messages directly, in addition to having the." alt="" coords="116,407,265,433"/>
+<area shape="rect" id="node4" href="$classvrpn__BaseClassUnique.html" title=" " alt="" coords="265,199,436,225"/>
+<area shape="rect" id="node5" href="$structvrpn__HANDLERPARAM.html" title="This structure is what is passed to a vrpn_Connection message callback." alt="" coords="203,95,370,121"/>
+<area shape="rect" id="node6" href="$classvrpn__Connection.html" title="Generic connection class not specific to the transport mechanism." alt="" coords="395,95,525,121"/>
+<area shape="rect" id="node7" href="$classvrpn_1_1BoundEndpointAllocator.html" title="Combines the function pointer for an Endpoint Allocator with its two arguments into a single callable..." alt="" coords="242,5,457,32"/>
+<area shape="rect" id="node8" href="$classvrpn_1_1EndpointContainer.html" title="Container for endpoints, held by pointer." alt="" coords="481,5,660,32"/>
+<area shape="rect" id="node10" href="$classvrpn__Callback__List.html" title=" " alt="" coords="94,303,239,344"/>
+<area shape="rect" id="node11" href="$structvrpn__Callback__List_1_1vrpn__CBS.html" title=" " alt="" coords="5,184,184,240"/>
+</map>

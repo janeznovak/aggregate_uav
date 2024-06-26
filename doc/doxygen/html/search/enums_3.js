@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['ldtype_2044',['LDType',['../namespaceldlidar.html#af712d1a7890914df199cbf5fb4b74f14',1,'ldlidar']]],
-  ['lidarstatus_2045',['LidarStatus',['../namespaceldlidar.html#ab76d3a30bfb2cea1715af1066e6ade29',1,'ldlidar']]],
-  ['loglevel_2046',['LogLevel',['../classLogModule.html#ad43650a9dabd882ad9718b0eceaa2a0d',1,'LogModule']]]
+  ['datadescriptors_21162',['DataDescriptors',['../NatNetTypes_8h.html#ae2ef7da0d8fb1dcb1079333508bd3172',1,'NatNetTypes.h']]],
+  ['device_5fstring_5fid_21163',['device_string_id',['../linux_2hid_8c.html#aa6d92ab04844f58836f237b1994e3007',1,'hid.c']]]
 ];

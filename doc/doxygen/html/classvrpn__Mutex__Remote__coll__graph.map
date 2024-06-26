@@ -1,0 +1,8 @@
+<map id="vrpn_Mutex_Remote" name="vrpn_Mutex_Remote">
+<area shape="rect" id="node1" title=" " alt="" coords="222,332,379,359"/>
+<area shape="rect" id="node2" href="$classvrpn__Mutex.html" title=" " alt="" coords="174,191,273,218"/>
+<area shape="rect" id="node3" href="$classvrpn__Connection.html" title="Generic connection class not specific to the transport mechanism." alt="" coords="158,95,289,121"/>
+<area shape="rect" id="node4" href="$classvrpn_1_1BoundEndpointAllocator.html" title="Combines the function pointer for an Endpoint Allocator with its two arguments into a single callable..." alt="" coords="5,5,220,32"/>
+<area shape="rect" id="node5" href="$classvrpn_1_1EndpointContainer.html" title="Container for endpoints, held by pointer." alt="" coords="245,5,423,32"/>
+<area shape="rect" id="node6" href="$structvrpn__Mutex__Remote_1_1mutexCallback.html" title=" " alt="" coords="297,184,462,225"/>
+</map>

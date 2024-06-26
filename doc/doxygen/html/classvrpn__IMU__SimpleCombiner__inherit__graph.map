@@ -1,0 +1,6 @@
+<map id="vrpn_IMU_SimpleCombiner" name="vrpn_IMU_SimpleCombiner">
+<area shape="rect" id="node1" title="This class will turn set of two or three analog devices into a tracker by." alt="" coords="5,229,204,256"/>
+<area shape="rect" id="node2" href="$classvrpn__Tracker.html" title=" " alt="" coords="53,155,157,181"/>
+<area shape="rect" id="node3" href="$classvrpn__BaseClass.html" title=" " alt="" coords="42,80,167,107"/>
+<area shape="rect" id="node4" href="$classvrpn__BaseClassUnique.html" title=" " alt="" coords="19,5,190,32"/>
+</map>

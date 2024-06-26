@@ -1,0 +1,7 @@
+<map id="vrpn_Tracker_DeadReckoning_Rotation" name="vrpn_Tracker_DeadReckoning_Rotation">
+<area shape="rect" id="node1" title="Use angular velocity reports, if available, to predict the future orientation." alt="" coords="5,304,217,345"/>
+<area shape="rect" id="node2" href="$classvrpn__Tracker__Server.html" title=" " alt="" coords="35,229,188,256"/>
+<area shape="rect" id="node3" href="$classvrpn__Tracker.html" title=" " alt="" coords="59,155,163,181"/>
+<area shape="rect" id="node4" href="$classvrpn__BaseClass.html" title=" " alt="" coords="49,80,174,107"/>
+<area shape="rect" id="node5" href="$classvrpn__BaseClassUnique.html" title=" " alt="" coords="26,5,197,32"/>
+</map>

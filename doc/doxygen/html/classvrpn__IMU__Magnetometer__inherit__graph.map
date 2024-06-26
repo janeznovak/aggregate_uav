@@ -1,0 +1,7 @@
+<map id="vrpn_IMU_Magnetometer" name="vrpn_IMU_Magnetometer">
+<area shape="rect" id="node1" title="Normalizes the three directions for a magnetometer into a unit vector." alt="" coords="5,304,192,331"/>
+<area shape="rect" id="node2" href="$classvrpn__Analog__Server.html" title=" " alt="" coords="23,229,175,256"/>
+<area shape="rect" id="node3" href="$classvrpn__Analog.html" title=" " alt="" coords="47,155,150,181"/>
+<area shape="rect" id="node4" href="$classvrpn__BaseClass.html" title=" " alt="" coords="36,80,161,107"/>
+<area shape="rect" id="node5" href="$classvrpn__BaseClassUnique.html" title=" " alt="" coords="13,5,184,32"/>
+</map>

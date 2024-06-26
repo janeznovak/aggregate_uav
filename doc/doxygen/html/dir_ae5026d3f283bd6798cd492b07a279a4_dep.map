@@ -1,0 +1,8 @@
+<map id="Crazyflie/ros2_ws/src/motion_capture_tracking/motion_capture_tracking/deps/libmotioncapture/deps/vrpn/python/quaternion" name="Crazyflie/ros2_ws/src/motion_capture_tracking/motion_capture_tracking/deps/libmotioncapture/deps/vrpn/python/quaternion">
+<area shape="rect" id="node1" href="dir_4d1bc9102e9ed2a2087136c4dac6b39c.html" title="include" alt="" coords="37,148,109,196"/>
+<area shape="rect" id="node2" href="dir_ae5026d3f283bd6798cd492b07a279a4.html" title="quaternion" alt="" coords="27,52,119,100"/>
+<area shape="rect" id="edge1-headlabel" href="dir_000084_000083.html" title="1" alt="" coords="77,122,86,137"/>
+<area shape="rect" id="node3" href="dir_7263dc34a6af54387d021e0f12f18dad.html" title="quat" alt="" coords="141,148,213,196"/>
+<area shape="rect" id="edge2-headlabel" href="dir_000084_000090.html" title="1" alt="" coords="139,122,149,137"/>
+<area shape="rect" id="clust1" href="dir_8dc591dc0c4e91a849b321e1cf3f19f0.html" title="python" alt="" coords="16,16,131,207"/>
+</map>

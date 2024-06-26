@@ -1,0 +1,38 @@
+<map id="ViconDataStreamSDK::CPP::Output_SimpleResult" name="ViconDataStreamSDK::CPP::Output_SimpleResult">
+<area shape="rect" id="node1" title=" " alt="" coords="5,1194,205,1235"/>
+<area shape="rect" id="node2" href="$classViconDataStreamSDK_1_1CPP_1_1Output__AddToSubjectFilter.html" title=" " alt="" coords="282,5,483,61"/>
+<area shape="rect" id="node3" href="$classViconDataStreamSDK_1_1CPP_1_1Output__ClearSubjectFilter.html" title=" " alt="" coords="285,85,481,141"/>
+<area shape="rect" id="node4" href="$classViconDataStreamSDK_1_1CPP_1_1Output__Connect.html" title=" " alt="" coords="299,166,466,207"/>
+<area shape="rect" id="node5" href="$classViconDataStreamSDK_1_1CPP_1_1Output__ConnectToMulticast.html" title=" " alt="" coords="262,231,503,273"/>
+<area shape="rect" id="node6" href="$classViconDataStreamSDK_1_1CPP_1_1Output__DisableCentroidData.html" title=" " alt="" coords="258,297,507,338"/>
+<area shape="rect" id="node7" href="$classViconDataStreamSDK_1_1CPP_1_1Output__DisableDebugData.html" title=" " alt="" coords="265,362,501,403"/>
+<area shape="rect" id="node8" href="$classViconDataStreamSDK_1_1CPP_1_1Output__DisableDeviceData.html" title=" " alt="" coords="263,427,502,469"/>
+<area shape="rect" id="node9" href="$classViconDataStreamSDK_1_1CPP_1_1Output__DisableGreyscaleData.html" title=" " alt="" coords="253,493,512,534"/>
+<area shape="rect" id="node10" href="$classViconDataStreamSDK_1_1CPP_1_1Output__DisableLightweightSegmentData.html" title=" " alt="" coords="263,559,502,615"/>
+<area shape="rect" id="node11" href="$classViconDataStreamSDK_1_1CPP_1_1Output__DisableMarkerData.html" title=" " alt="" coords="263,639,502,681"/>
+<area shape="rect" id="node12" href="$classViconDataStreamSDK_1_1CPP_1_1Output__DisableMarkerRayData.html" title=" " alt="" coords="279,705,487,761"/>
+<area shape="rect" id="node13" href="$classViconDataStreamSDK_1_1CPP_1_1Output__DisableSegmentData.html" title=" " alt="" coords="257,786,509,827"/>
+<area shape="rect" id="node14" href="$classViconDataStreamSDK_1_1CPP_1_1Output__DisableUnlabeledMarkerData.html" title=" " alt="" coords="268,852,497,908"/>
+<area shape="rect" id="node15" href="$classViconDataStreamSDK_1_1CPP_1_1Output__DisableVideoData.html" title=" " alt="" coords="267,933,498,974"/>
+<area shape="rect" id="node16" href="$classViconDataStreamSDK_1_1CPP_1_1Output__Disconnect.html" title=" " alt="" coords="289,998,476,1039"/>
+<area shape="rect" id="node17" href="$classViconDataStreamSDK_1_1CPP_1_1Output__EnableCentroidData.html" title=" " alt="" coords="261,1063,505,1105"/>
+<area shape="rect" id="node18" href="$classViconDataStreamSDK_1_1CPP_1_1Output__EnableDebugData.html" title=" " alt="" coords="267,1129,498,1170"/>
+<area shape="rect" id="node19" href="$classViconDataStreamSDK_1_1CPP_1_1Output__EnableDeviceData.html" title=" " alt="" coords="265,1194,500,1235"/>
+<area shape="rect" id="node20" href="$classViconDataStreamSDK_1_1CPP_1_1Output__EnableGreyscaleData.html" title=" " alt="" coords="255,1259,510,1301"/>
+<area shape="rect" id="node21" href="$classViconDataStreamSDK_1_1CPP_1_1Output__EnableLightweightSegmentData.html" title=" " alt="" coords="265,1325,500,1381"/>
+<area shape="rect" id="node22" href="$classViconDataStreamSDK_1_1CPP_1_1Output__EnableMarkerData.html" title=" " alt="" coords="265,1406,500,1447"/>
+<area shape="rect" id="node23" href="$classViconDataStreamSDK_1_1CPP_1_1Output__EnableMarkerRayData.html" title=" " alt="" coords="281,1472,484,1528"/>
+<area shape="rect" id="node24" href="$classViconDataStreamSDK_1_1CPP_1_1Output__EnableSegmentData.html" title=" " alt="" coords="259,1553,506,1594"/>
+<area shape="rect" id="node25" href="$classViconDataStreamSDK_1_1CPP_1_1Output__EnableUnlabeledMarkerData.html" title=" " alt="" coords="271,1619,495,1675"/>
+<area shape="rect" id="node26" href="$classViconDataStreamSDK_1_1CPP_1_1Output__EnableVideoData.html" title=" " alt="" coords="269,1699,496,1741"/>
+<area shape="rect" id="node27" href="$classViconDataStreamSDK_1_1CPP_1_1Output__GetFrame.html" title=" " alt="" coords="293,1765,472,1806"/>
+<area shape="rect" id="node28" href="$classViconDataStreamSDK_1_1CPP_1_1Output__SetApexDeviceFeedback.html" title=" " alt="" coords="276,1831,489,1887"/>
+<area shape="rect" id="node29" href="$classViconDataStreamSDK_1_1CPP_1_1Output__SetAxisMapping.html" title=" " alt="" coords="273,1911,492,1953"/>
+<area shape="rect" id="node30" href="$classViconDataStreamSDK_1_1CPP_1_1Output__SetCameraFilter.html" title=" " alt="" coords="273,1977,492,2018"/>
+<area shape="rect" id="node31" href="$classViconDataStreamSDK_1_1CPP_1_1Output__SetStreamMode.html" title=" " alt="" coords="273,2042,492,2083"/>
+<area shape="rect" id="node32" href="$classViconDataStreamSDK_1_1CPP_1_1Output__SetTimingLogFile.html" title=" " alt="" coords="269,2107,496,2149"/>
+<area shape="rect" id="node33" href="$classViconDataStreamSDK_1_1CPP_1_1Output__StartTransmittingMulticast.html" title=" " alt="" coords="269,2173,496,2229"/>
+<area shape="rect" id="node34" href="$classViconDataStreamSDK_1_1CPP_1_1Output__StopTransmittingMulticast.html" title=" " alt="" coords="271,2253,495,2309"/>
+<area shape="rect" id="node35" href="$classViconDataStreamSDK_1_1CPP_1_1Output__UpdateFrame.html" title=" " alt="" coords="281,2334,484,2375"/>
+<area shape="rect" id="node36" href="$classViconDataStreamSDK_1_1CPP_1_1Output__WaitForFrame.html" title=" " alt="" coords="281,2399,485,2441"/>
+</map>

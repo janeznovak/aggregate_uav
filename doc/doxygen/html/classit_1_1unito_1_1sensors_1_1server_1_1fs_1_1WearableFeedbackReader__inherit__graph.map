@@ -1,4 +1,0 @@
-<map id="it.unito.sensors.server.fs.WearableFeedbackReader" name="it.unito.sensors.server.fs.WearableFeedbackReader">
-<area shape="rect" id="node1" title="WearableFeedbackReader transforms a csv file containing wearable feedbacks to DTOs." alt="" coords="43,95,218,136"/>
-<area shape="rect" id="node2" href="$interfaceit_1_1unito_1_1sensors_1_1server_1_1fs_1_1Reader.html" title=" " alt="" coords="5,5,256,47"/>
-</map>

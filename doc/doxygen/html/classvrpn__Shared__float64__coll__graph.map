@@ -1,0 +1,12 @@
+<map id="vrpn_Shared_float64" name="vrpn_Shared_float64">
+<area shape="rect" id="node1" title=" " alt="" coords="1219,234,1373,261"/>
+<area shape="rect" id="node2" href="$classvrpn__SharedObject.html" title=" " alt="" coords="897,137,1043,163"/>
+<area shape="rect" id="node3" href="$structvrpn__SharedObject_1_1deferredUpdateCallbackEntry.html" title=" " alt="" coords="443,44,657,85"/>
+<area shape="rect" id="node4" href="$classvrpn__Connection.html" title="Generic connection class not specific to the transport mechanism." alt="" coords="485,110,615,137"/>
+<area shape="rect" id="node5" href="$classvrpn_1_1BoundEndpointAllocator.html" title="Combines the function pointer for an Endpoint Allocator with its two arguments into a single callable..." alt="" coords="5,85,220,111"/>
+<area shape="rect" id="node6" href="$classvrpn_1_1EndpointContainer.html" title="Container for endpoints, held by pointer." alt="" coords="23,135,202,162"/>
+<area shape="rect" id="node7" href="$classvrpn__LamportTimestamp.html" title=" " alt="" coords="457,161,643,187"/>
+<area shape="rect" id="node8" href="$classvrpn__LamportClock.html" title=" " alt="" coords="476,211,624,238"/>
+<area shape="rect" id="node9" href="$structvrpn__Shared__float64_1_1callbackEntry.html" title=" " alt="" coords="893,227,1047,268"/>
+<area shape="rect" id="node10" href="$structvrpn__Shared__float64_1_1timedCallbackEntry.html" title=" " alt="" coords="891,331,1049,372"/>
+</map>

@@ -1,0 +1,21 @@
+<map id="vrpn_3DConnexion" name="vrpn_3DConnexion">
+<area shape="rect" id="node1" title=" " alt="" coords="737,312,883,339"/>
+<area shape="rect" id="node8" href="$classvrpn__3DConnexion__Navigator.html" title=" " alt="" coords="950,5,1166,32"/>
+<area shape="rect" id="node9" href="$classvrpn__3DConnexion__Navigator__for__Notebooks.html" title=" " alt="" coords="950,57,1166,98"/>
+<area shape="rect" id="node10" href="$classvrpn__3DConnexion__SpaceBall5000.html" title=" " alt="" coords="934,123,1182,149"/>
+<area shape="rect" id="node11" href="$classvrpn__3DConnexion__SpaceExplorer.html" title=" " alt="" coords="935,173,1181,200"/>
+<area shape="rect" id="node12" href="$classvrpn__3DConnexion__SpaceMouse.html" title=" " alt="" coords="941,224,1175,251"/>
+<area shape="rect" id="node13" href="$classvrpn__3DConnexion__SpaceMouseCompact.html" title=" " alt="" coords="941,275,1175,317"/>
+<area shape="rect" id="node14" href="$classvrpn__3DConnexion__SpaceMousePro.html" title=" " alt="" coords="931,341,1185,368"/>
+<area shape="rect" id="node15" href="$classvrpn__3DConnexion__SpaceMouseProWireless.html" title=" " alt="" coords="941,393,1175,434"/>
+<area shape="rect" id="node16" href="$classvrpn__3DConnexion__SpaceMouseWireless.html" title=" " alt="" coords="941,458,1175,499"/>
+<area shape="rect" id="node17" href="$classvrpn__3DConnexion__SpacePilot.html" title=" " alt="" coords="948,524,1168,551"/>
+<area shape="rect" id="node18" href="$classvrpn__3DConnexion__SpacePilotPro.html" title=" " alt="" coords="937,575,1179,601"/>
+<area shape="rect" id="node19" href="$classvrpn__3DConnexion__Traveler.html" title=" " alt="" coords="956,625,1160,652"/>
+<area shape="rect" id="node2" href="$classvrpn__Button__Filter.html" title=" " alt="" coords="548,261,689,288"/>
+<area shape="rect" id="node3" href="$classvrpn__Button.html" title=" " alt="" coords="398,261,499,288"/>
+<area shape="rect" id="node4" href="$classvrpn__BaseClass.html" title=" " alt="" coords="224,287,349,313"/>
+<area shape="rect" id="node6" href="$classvrpn__Analog.html" title=" " alt="" coords="397,312,500,339"/>
+<area shape="rect" id="node5" href="$classvrpn__BaseClassUnique.html" title=" " alt="" coords="5,287,176,313"/>
+<area shape="rect" id="node7" href="$classvrpn__HidInterface.html" title=" " alt="" coords="549,363,688,389"/>
+</map>

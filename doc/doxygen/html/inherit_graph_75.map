@@ -1,3 +1,11 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classit_1_1unito_1_1sensors_1_1server_1_1configuration_1_1AppConfiguration.html" title="Configuration of APP regarding storage, etc." alt="" coords="5,5,239,47"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,183,144,209"/>
+<area shape="rect" id="node2" href="$classbuiltin__exception.html" title="C++ bindings of builtin Python exceptions." alt="" coords="229,5,363,32"/>
+<area shape="rect" id="node3" href="$structvrpn__SerialPort_1_1CloseFailure.html" title=" " alt="" coords="192,56,400,83"/>
+<area shape="rect" id="node4" href="$structvrpn__SerialPort_1_1DrainFailure.html" title=" " alt="" coords="193,107,399,133"/>
+<area shape="rect" id="node5" href="$structvrpn__SerialPort_1_1FlushFailure.html" title=" " alt="" coords="193,157,399,184"/>
+<area shape="rect" id="node6" href="$structvrpn__SerialPort_1_1OpenFailure.html" title=" " alt="" coords="193,208,399,235"/>
+<area shape="rect" id="node7" href="$structvrpn__SerialPort_1_1RTSFailure.html" title=" " alt="" coords="198,259,394,285"/>
+<area shape="rect" id="node8" href="$structvrpn__SerialPort_1_1ReadFailure.html" title=" " alt="" coords="193,309,399,336"/>
+<area shape="rect" id="node9" href="$structvrpn__SerialPort_1_1WriteFailure.html" title=" " alt="" coords="193,360,399,387"/>
 </map>

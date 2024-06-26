@@ -1,6 +1,6 @@
 var classrobot__reader_1_1battery_1_1BatteryDTO =
 [
-    [ "__init__", "classrobot__reader_1_1battery_1_1BatteryDTO.html#a6834ba71407c0ecaede277035666f383", null ],
+    [ "__init__", "classrobot__reader_1_1battery_1_1BatteryDTO.html#a18170e4dec90789ae4e7bf468efc6df5", null ],
     [ "__str__", "classrobot__reader_1_1battery_1_1BatteryDTO.html#a15b2f27cc36a6a51dfdd2d5bfe61afb3", null ],
     [ "capacity", "classrobot__reader_1_1battery_1_1BatteryDTO.html#ac6a5aced4a8f35b1fba59cd34298e922", null ],
     [ "percentage_charge", "classrobot__reader_1_1battery_1_1BatteryDTO.html#a0ab3123dd26cce38460e63baaf9cb7da", null ],
