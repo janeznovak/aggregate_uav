@@ -1,7 +1,0 @@
-<map id="Navigation_System/src/create3_examples/create3_coverage/include/create3_coverage/behaviors/drive&#45;straight&#45;behavior.hpp" name="Navigation_System/src/create3_examples/create3_coverage/include/create3_coverage/behaviors/drive&#45;straight&#45;behavior.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="247,5,425,91"/>
-<area shape="rect" id="node2" href="$coverage__state__machine_8hpp.html" title=" " alt="" coords="89,139,343,209"/>
-<area shape="rect" id="node5" href="$drive-straight-behavior_8cpp.html" title=" " alt="" coords="368,139,547,209"/>
-<area shape="rect" id="node3" href="$coverage__state__machine_8cpp.html" title=" " alt="" coords="5,257,200,328"/>
-<area shape="rect" id="node4" href="$create3__coverage__node_8cpp.html" title=" " alt="" coords="225,257,434,328"/>
-</map>

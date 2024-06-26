@@ -1,0 +1,11 @@
+<map id="AnalogRandomValueGenerator" name="AnalogRandomValueGenerator">
+<area shape="rect" id="node1" title=" " alt="" coords="5,408,228,435"/>
+<area shape="rect" id="node2" title=" " alt="" coords="62,319,129,345"/>
+<area shape="rect" id="node3" href="$classvrpn_1_1AnalogOutputRemote.html" title=" " alt="" coords="153,319,347,345"/>
+<area shape="rect" id="node4" href="$classvrpn_1_1VRPNDevice.html" title=" " alt="" coords="253,243,389,269"/>
+<area shape="rect" id="node5" href="$classvrpn_1_1VRPN.html" title=" " alt="" coords="579,95,670,121"/>
+<area shape="rect" id="node6" href="$classObject.html" title="Reference counted object base class." alt="" coords="593,5,657,32"/>
+<area shape="rect" id="node7" title=" " alt="" coords="174,95,257,121"/>
+<area shape="rect" id="node8" title=" " alt="" coords="281,95,341,121"/>
+<area shape="rect" id="node9" title=" " alt="" coords="469,95,522,121"/>
+</map>

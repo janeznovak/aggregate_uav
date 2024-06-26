@@ -1,0 +1,5 @@
+<map id="NMEAData" name="NMEAData">
+<area shape="rect" id="node1" title=" " alt="" coords="103,95,195,121"/>
+<area shape="rect" id="node2" href="$structRangeResidualData.html" title=" " alt="" coords="5,5,156,32"/>
+<area shape="rect" id="node3" href="$structSatData.html" title=" " alt="" coords="181,5,255,32"/>
+</map>

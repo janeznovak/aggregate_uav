@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['battery_5fconfig_1254',['battery_config',['../namespacebattery__config.html',1,'']]]
+  ['benchmark_12520',['benchmark',['../namespacebenchmark.html',1,'']]]
 ];

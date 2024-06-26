@@ -1,0 +1,5 @@
+<map id="TypedCoord" name="TypedCoord">
+<area shape="rect" id="node1" title=" " alt="" coords="67,5,166,32"/>
+<area shape="rect" id="node2" href="$classLatLonCoord.html" title=" " alt="" coords="5,80,108,107"/>
+<area shape="rect" id="node3" href="$classUTMCoord.html" title=" " alt="" coords="133,80,223,107"/>
+</map>

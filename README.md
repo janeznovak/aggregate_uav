@@ -19,11 +19,37 @@ It can be viewed using [/doc/doxygen/html/index.html](/doc/doxygen/html/index.ht
 
 ### Dependencies
 
+#### Python
+
+```bash
+apt get install python-is-python3
+pip install -r requirements.txt
+```
+
 #### ROS 2
 
 [ROS 2 installation guide](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html)
   
 [ROS 2 DDS tuning](https://docs.ros.org/en/foxy/How-To-Guides/DDS-tuning.html)
+
+```bash
+# in ubuntu, before you should enable multiverse repository
+
+# Build deps
+apt install python3-colcon-common-extensions python3-vcstool python3-rosdep ros-humble-irobot-create-msgs
+
+# Cyclone DDS
+apt install ros-humble-cyclonedds ros-humble-rmw-cyclonedds-cpp
+```
+
+Set variables, adding these lines (change in according with your installation) to ~/.bashrc
+```
+export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+export CYCLONEDDS_URI=/opt/projects/fcpp-crazyflie/config/cyclone-dds-interface-select-laptop.xml
+```
+
+#### Crazyswarm2
+[Crazyswarm2](https://imrclab.github.io/crazyswarm2/installation.html)
 
 ## Clone Repository
 
@@ -52,7 +78,7 @@ cd ..
 ### Note:
 In the file `Crazyflie/agents.txt`, you will find the initial positions (x, y) of the drones, with each line representing a drone. You can add more drones to the simulation by adding a new line with the coordinates. Ensure that the number of drones listed in this file matches the number configured in ROS2. You can enable the desired drones by setting the `enabled` value to `True` in the following configuration file:
 
-`/Crazyflie/ros2_ws/src/system_launcher/config/crazyfliesConfig.yaml`
+`Crazyflie/ros2_ws/src/system_launcher/config/crazyfliesConfig.yaml`
 
 ### Run Gazebo with its plugin and SITL simulation:
 
@@ -83,7 +109,7 @@ In a new terminal, navigate to the `Storage` directory:
 
 ```sh
 cd Storage
-# $TRAJECTORY_NAME can be traj1 or traj2
+# $TRAJECTORY_NAME can be traj1, traj2, traj3 (best trajectory)
 ./create_goal $TRAJECTORY_NAME <goal_id>
 ```
 
@@ -95,7 +121,7 @@ To interrupt a goal, use the following script:
 
 ```sh
 cd Storage
-# $TRAJECTORY_NAME can be traj1 or traj2
+# $TRAJECTORY_NAME must be the previous trajectory used
 ./abort_goal $TRAJECTORY_NAME <goal_id>
 ```
 

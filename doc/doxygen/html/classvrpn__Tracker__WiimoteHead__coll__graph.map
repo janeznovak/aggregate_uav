@@ -1,0 +1,15 @@
+<map id="vrpn_Tracker_WiimoteHead" name="vrpn_Tracker_WiimoteHead">
+<area shape="rect" id="node1" title="Provides a tracker device given data from a Wii Remote and LED glasses." alt="" coords="244,599,444,625"/>
+<area shape="rect" id="node2" href="$classvrpn__Tracker.html" title=" " alt="" coords="292,444,396,471"/>
+<area shape="rect" id="node3" href="$classvrpn__BaseClass.html" title=" " alt="" coords="273,275,399,301"/>
+<area shape="rect" id="node10" href="$classvrpn__Analog.html" title=" " alt="" coords="203,386,306,413"/>
+<area shape="rect" id="node4" href="$classvrpn__BaseClassUnique.html" title=" " alt="" coords="251,184,421,211"/>
+<area shape="rect" id="node5" href="$structvrpn__HANDLERPARAM.html" title="This structure is what is passed to a vrpn_Connection message callback." alt="" coords="211,95,378,121"/>
+<area shape="rect" id="node6" href="$classvrpn__Connection.html" title="Generic connection class not specific to the transport mechanism." alt="" coords="403,95,533,121"/>
+<area shape="rect" id="node7" href="$classvrpn_1_1BoundEndpointAllocator.html" title="Combines the function pointer for an Endpoint Allocator with its two arguments into a single callable..." alt="" coords="250,5,465,32"/>
+<area shape="rect" id="node8" href="$classvrpn_1_1EndpointContainer.html" title="Container for endpoints, held by pointer." alt="" coords="489,5,668,32"/>
+<area shape="rect" id="node9" href="$classvrpn__Analog__Remote.html" title=" " alt="" coords="145,495,306,521"/>
+<area shape="rect" id="node11" href="$classvrpn__Callback__List.html" title=" " alt="" coords="11,379,179,420"/>
+<area shape="rect" id="node12" href="$structvrpn__Callback__List_1_1vrpn__CBS.html" title=" " alt="" coords="5,260,184,316"/>
+<area shape="rect" id="node13" href="$structq__xyz__quat__struct.html" title=" " alt="" coords="382,495,522,521"/>
+</map>

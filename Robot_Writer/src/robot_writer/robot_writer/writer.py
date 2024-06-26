@@ -11,11 +11,11 @@ from nav_system_interfaces.msg import Goal
 from pathlib import Path
 from . import coords
 
-STORAGE_BASE_PATH = "../../../../../../../Storage/"
+STORAGE_BASE_PATH = "../../../../Storage/"
 ROBOT_PLACEHOLDER = "#ROBOT"
 ROBOT_INPUT_PATH_FROM_AP = "from_ap/to_robot/actions/#ROBOT/"
 DELIMITER = ";"
-TIMER_PERIOD = 0.2
+TIMER_PERIOD = 0.1
 MASTER_PREFIX = "cf_0"
 
 

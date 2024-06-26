@@ -1,0 +1,10 @@
+<map id="vrpn_RedundantReceiver" name="vrpn_RedundantReceiver">
+<area shape="rect" id="node1" title=" " alt="" coords="270,303,455,329"/>
+<area shape="rect" id="node2" href="$structvrpn__RedundantReceiver_1_1RRRecord.html" title=" " alt="" coords="65,184,250,225"/>
+<area shape="rect" id="node3" href="$structvrpnMsgCallbackEntry.html" title="Description of a callback entry for a user type." alt="" coords="5,95,173,121"/>
+<area shape="rect" id="node4" href="$structvrpn__HANDLERPARAM.html" title="This structure is what is passed to a vrpn_Connection message callback." alt="" coords="6,5,173,32"/>
+<area shape="rect" id="node5" href="$classvrpn__Connection.html" title="Generic connection class not specific to the transport mechanism." alt="" coords="297,191,428,218"/>
+<area shape="rect" id="node6" href="$classvrpn_1_1BoundEndpointAllocator.html" title="Combines the function pointer for an Endpoint Allocator with its two arguments into a single callable..." alt="" coords="255,95,470,121"/>
+<area shape="rect" id="node7" href="$classvrpn_1_1EndpointContainer.html" title="Container for endpoints, held by pointer." alt="" coords="495,95,673,121"/>
+<area shape="rect" id="node8" href="$structvrpn__RedundantReceiver_1_1RRMemory.html" title=" " alt="" coords="453,184,638,225"/>
+</map>

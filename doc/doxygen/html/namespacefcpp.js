@@ -5,5 +5,6 @@ var namespacefcpp =
     ] ],
     [ "coordination", "namespacefcpp_1_1coordination.html", "namespacefcpp_1_1coordination" ],
     [ "option", "namespacefcpp_1_1option.html", "namespacefcpp_1_1option" ],
-    [ "os", "namespacefcpp_1_1os.html", "namespacefcpp_1_1os" ]
+    [ "os", "namespacefcpp_1_1os.html", "namespacefcpp_1_1os" ],
+    [ "operator<", "namespacefcpp.html#ae875555ecf6f9af2e736d39a3eb9325f", null ]
 ];

@@ -1,5 +1,0 @@
-<map id="it.unito.sensors.server.ros2.messages.storage_msgs.FileMessage" name="it.unito.sensors.server.ros2.messages.storage_msgs.FileMessage">
-<area shape="rect" id="node1" title="ROS2 message used to communicate between proxies and java server. The file contains path of the file ..." alt="" coords="5,124,296,165"/>
-<area shape="rect" id="node2" title=" " alt="" coords="69,5,144,32"/>
-<area shape="rect" id="node3" title=" " alt="" coords="168,5,224,32"/>
-</map>

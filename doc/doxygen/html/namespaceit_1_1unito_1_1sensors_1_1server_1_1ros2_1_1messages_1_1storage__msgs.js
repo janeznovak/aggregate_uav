@@ -1,4 +1,0 @@
-var namespaceit_1_1unito_1_1sensors_1_1server_1_1ros2_1_1messages_1_1storage__msgs =
-[
-    [ "FileMessage", "classit_1_1unito_1_1sensors_1_1server_1_1ros2_1_1messages_1_1storage__msgs_1_1FileMessage.html", "classit_1_1unito_1_1sensors_1_1server_1_1ros2_1_1messages_1_1storage__msgs_1_1FileMessage" ]
-];

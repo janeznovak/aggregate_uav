@@ -1,0 +1,11 @@
+<map id="vrpn_Griffin_PowerMate" name="vrpn_Griffin_PowerMate">
+<area shape="rect" id="node1" title=" " alt="" coords="132,304,311,331"/>
+<area shape="rect" id="node2" href="$classvrpn__Griffin.html" title=" " alt="" coords="25,155,124,181"/>
+<area shape="rect" id="node3" href="$classvrpn__BaseClass.html" title=" " alt="" coords="177,80,303,107"/>
+<area shape="rect" id="node6" href="$classvrpn__Analog.html" title=" " alt="" coords="97,229,199,256"/>
+<area shape="rect" id="node8" href="$classvrpn__Button.html" title=" " alt="" coords="229,155,331,181"/>
+<area shape="rect" id="node9" href="$classvrpn__Dial.html" title=" " alt="" coords="390,229,474,256"/>
+<area shape="rect" id="node4" href="$classvrpn__BaseClassUnique.html" title=" " alt="" coords="155,5,325,32"/>
+<area shape="rect" id="node5" href="$classvrpn__HidInterface.html" title=" " alt="" coords="5,80,144,107"/>
+<area shape="rect" id="node7" href="$classvrpn__Button__Filter.html" title=" " alt="" coords="224,229,365,256"/>
+</map>

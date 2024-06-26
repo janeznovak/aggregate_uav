@@ -1,0 +1,16 @@
+<map id="vrpn_Microsoft_SideWinder" name="vrpn_Microsoft_SideWinder">
+<area shape="rect" id="node1" title=" " alt="" coords="111,527,310,553"/>
+<area shape="rect" id="node2" href="$classvrpn__Microsoft__Controller__Raw.html" title=" " alt="" coords="232,349,456,376"/>
+<area shape="rect" id="node3" href="$classvrpn__BaseClass.html" title=" " alt="" coords="103,273,228,300"/>
+<area shape="rect" id="node11" href="$classvrpn__Analog.html" title=" " alt="" coords="186,400,289,427"/>
+<area shape="rect" id="node13" href="$classvrpn__Button.html" title=" " alt="" coords="5,349,107,376"/>
+<area shape="rect" id="node14" href="$classvrpn__Dial.html" title=" " alt="" coords="95,400,179,427"/>
+<area shape="rect" id="node4" href="$classvrpn__BaseClassUnique.html" title=" " alt="" coords="80,184,251,211"/>
+<area shape="rect" id="node5" href="$structvrpn__HANDLERPARAM.html" title="This structure is what is passed to a vrpn_Connection message callback." alt="" coords="41,95,207,121"/>
+<area shape="rect" id="node6" href="$classvrpn__Connection.html" title="Generic connection class not specific to the transport mechanism." alt="" coords="232,95,363,121"/>
+<area shape="rect" id="node7" href="$classvrpn_1_1BoundEndpointAllocator.html" title="Combines the function pointer for an Endpoint Allocator with its two arguments into a single callable..." alt="" coords="79,5,294,32"/>
+<area shape="rect" id="node8" href="$classvrpn_1_1EndpointContainer.html" title="Container for endpoints, held by pointer." alt="" coords="319,5,497,32"/>
+<area shape="rect" id="node9" href="$classvrpn__HidInterface.html" title=" " alt="" coords="263,273,401,300"/>
+<area shape="rect" id="node10" href="$classvrpn__HidAcceptor.html" title=" " alt="" coords="329,184,466,211"/>
+<area shape="rect" id="node12" href="$classvrpn__Button__Filter.html" title=" " alt="" coords="5,451,147,477"/>
+</map>

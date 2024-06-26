@@ -1,0 +1,6 @@
+<map id="vrpn_Log" name="vrpn_Log">
+<area shape="rect" id="node1" title=" " alt="" coords="138,201,219,228"/>
+<area shape="rect" id="node2" href="$structvrpnLogFilterEntry.html" title=" " alt="" coords="5,96,147,123"/>
+<area shape="rect" id="node3" href="$structvrpn__LOGLIST.html" title="Placed here so vrpn_FileConnection can use it too." alt="" coords="228,96,340,123"/>
+<area shape="rect" id="node4" href="$structvrpn__HANDLERPARAM.html" title="This structure is what is passed to a vrpn_Connection message callback." alt="" coords="201,5,367,32"/>
+</map>

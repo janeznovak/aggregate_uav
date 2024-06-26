@@ -1,0 +1,8 @@
+<map id="Crazyflie/ros2_ws/src/motion_capture_tracking/motion_capture_tracking/deps/libmotioncapture/deps/vrpn/vrpn_SerialPort.h" name="Crazyflie/ros2_ws/src/motion_capture_tracking/motion_capture_tracking/deps/libmotioncapture/deps/vrpn/vrpn_SerialPort.h">
+<area shape="rect" id="node1" title="Header." alt="" coords="119,5,325,91"/>
+<area shape="rect" id="node2" href="$vrpn__Configure_8h.html" title=" " alt="" coords="5,213,137,240"/>
+<area shape="rect" id="node3" href="$vrpn__Serial_8h.html" title="vrpn_Serial: Pulls all the serial port routines into one file to make porting to new operating system..." alt="" coords="109,139,215,165"/>
+<area shape="rect" id="node5" title=" " alt="" coords="240,139,327,165"/>
+<area shape="rect" id="node6" title=" " alt="" coords="351,139,410,165"/>
+<area shape="rect" id="node4" title=" " alt="" coords="162,213,237,240"/>
+</map>

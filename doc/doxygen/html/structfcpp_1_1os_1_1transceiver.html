@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>NODES: fcpp::os::transceiver Struct Reference</title>
+<title>fcpp-crazyflie: fcpp::os::transceiver Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -30,7 +30,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">NODES
+   <div id="projectname">fcpp-crazyflie
    </div>
   </td>
    <td>        <div id="MSearchBox" class="MSearchBoxInactive">
@@ -110,9 +110,9 @@ Collaboration diagram for fcpp::os::transceiver:</div>
 <div class="dyncontent">
 <div class="center"><img src="structfcpp_1_1os_1_1transceiver__coll__graph.png" border="0" usemap="#afcpp_1_1os_1_1transceiver_coll__map" alt="Collaboration graph"/></div>
 <map name="afcpp_1_1os_1_1transceiver_coll__map" id="afcpp_1_1os_1_1transceiver_coll__map">
-<area shape="rect" title="Low&#45;level interface for hardware network capabilities. It uses UDP messages and broadcast communicati..." alt="" coords="5,199,145,225"/>
-<area shape="rect" href="structfcpp_1_1os_1_1transceiver_1_1data__type.html" title="Default&#45;constructible type for settings." alt="" coords="5,95,145,136"/>
-<area shape="rect" title=" " alt="" coords="48,5,103,32"/>
+<area shape="rect" title="Low&#45;level interface for hardware network capabilities. It uses UDP messages and broadcast communicati..." alt="" coords="5,199,160,225"/>
+<area shape="rect" href="structfcpp_1_1os_1_1transceiver_1_1data__type.html" title="Default&#45;constructible type for settings." alt="" coords="5,95,160,136"/>
+<area shape="rect" title=" " alt="" coords="53,5,112,32"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -149,7 +149,7 @@ Public Attributes</h2></td></tr>
 <div class="line"><a class="code" href="structfcpp_1_1os_1_1transceiver.html#aa7eb56ab6978c206b50e55b9bca01e64">transceiver</a>(data_type);                      <span class="comment">// constructor with settings</span></div>
 <div class="line"><span class="keywordtype">bool</span> <a class="code" href="structfcpp_1_1os_1_1transceiver.html#af24fe24f336b3cc30664bb50743aa3a7">send</a>(device_t, std::vector&lt;char&gt;, <span class="keywordtype">int</span>); <span class="comment">// broadcasts a message after given attemps</span></div>
 <div class="line">message_type <a class="code" href="structfcpp_1_1os_1_1transceiver.html#a3a2b38ff38241f433ff053b3bf761070">receive</a>(<span class="keywordtype">int</span>);                   <span class="comment">// listens for messages after given failed sends</span></div>
-<div class="ttc" id="astructfcpp_1_1os_1_1transceiver_html_a3a2b38ff38241f433ff053b3bf761070"><div class="ttname"><a href="structfcpp_1_1os_1_1transceiver.html#a3a2b38ff38241f433ff053b3bf761070">fcpp::os::transceiver::receive</a></div><div class="ttdeci">message_type receive(int attempt)</div><div class="ttdoc">Receives the next incoming message (empty if no incoming message).</div><div class="ttdef"><b>Definition:</b> driver.hpp:185</div></div>
+<div class="ttc" id="astructfcpp_1_1os_1_1transceiver_html_a3a2b38ff38241f433ff053b3bf761070"><div class="ttname"><a href="structfcpp_1_1os_1_1transceiver.html#a3a2b38ff38241f433ff053b3bf761070">fcpp::os::transceiver::receive</a></div><div class="ttdeci">message_type receive(int attempt)</div><div class="ttdoc">Receives the next incoming message (empty if no incoming message).</div><div class="ttdef"><b>Definition:</b> driver.hpp:186</div></div>
 <div class="ttc" id="astructfcpp_1_1os_1_1transceiver_html_a8d1b4c3a82cf61bada7f92dd945ec97b"><div class="ttname"><a href="structfcpp_1_1os_1_1transceiver.html#a8d1b4c3a82cf61bada7f92dd945ec97b">fcpp::os::transceiver::data</a></div><div class="ttdeci">data_type data</div><div class="ttdoc">Network settings.</div><div class="ttdef"><b>Definition:</b> driver.hpp:110</div></div>
 <div class="ttc" id="astructfcpp_1_1os_1_1transceiver_html_aa7eb56ab6978c206b50e55b9bca01e64"><div class="ttname"><a href="structfcpp_1_1os_1_1transceiver.html#aa7eb56ab6978c206b50e55b9bca01e64">fcpp::os::transceiver::transceiver</a></div><div class="ttdeci">transceiver(data_type d)</div><div class="ttdoc">Constructor with settings.</div><div class="ttdef"><b>Definition:</b> driver.hpp:118</div></div>
 <div class="ttc" id="astructfcpp_1_1os_1_1transceiver_html_af24fe24f336b3cc30664bb50743aa3a7"><div class="ttname"><a href="structfcpp_1_1os_1_1transceiver.html#af24fe24f336b3cc30664bb50743aa3a7">fcpp::os::transceiver::send</a></div><div class="ttdeci">bool send(device_t id, const std::vector&lt; char &gt; &amp;m, int attempt)</div><div class="ttdoc">Broadcasts a given message.</div><div class="ttdef"><b>Definition:</b> driver.hpp:154</div></div>

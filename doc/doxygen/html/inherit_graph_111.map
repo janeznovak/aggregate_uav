@@ -1,3 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classit_1_1unito_1_1sensors_1_1server_1_1fs_1_1dto_1_1FilePersistedDTO.html" title=" " alt="" coords="5,5,197,47"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,78,61,105"/>
+<area shape="rect" id="node2" href="$classcrazyflie__controller_1_1crazyflie__controller_1_1CrazyflyController.html" title=" " alt="" coords="109,5,320,47"/>
+<area shape="rect" id="node3" href="$classrobot__reader_1_1reader_1_1RobotInformationReader.html" title="Class exteding ROS2 Node to receive sensor data from the robot and write it onto files to be used by ..." alt="" coords="119,71,310,112"/>
+<area shape="rect" id="node5" href="$classrobot__writer_1_1writer_1_1GoalPublisher.html" title="Class used for publishing navigation goal with coordinates compatible with the selected robot." alt="" coords="127,136,302,177"/>
+<area shape="rect" id="node4" href="$classrobot__reader_1_1odom__reader_1_1OdomRobotInformationReader.html" title="Class extending RobotInformationReader to receive position data from the /odom topic." alt="" coords="368,71,589,112"/>
 </map>

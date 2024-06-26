@@ -1,0 +1,12 @@
+<map id="vrpn_RedundantController" name="vrpn_RedundantController">
+<area shape="rect" id="node1" title=" " alt="" coords="177,392,369,419"/>
+<area shape="rect" id="node2" href="$classvrpn__BaseClass.html" title=" " alt="" coords="28,295,153,322"/>
+<area shape="rect" id="node3" href="$classvrpn__BaseClassUnique.html" title=" " alt="" coords="5,191,176,218"/>
+<area shape="rect" id="node4" href="$structvrpn__HANDLERPARAM.html" title="This structure is what is passed to a vrpn_Connection message callback." alt="" coords="110,95,277,121"/>
+<area shape="rect" id="node10" href="$structvrpn__RedundantTransmission_1_1queuedMessage.html" title=" " alt="" coords="200,184,413,225"/>
+<area shape="rect" id="node5" href="$classvrpn__Connection.html" title="Generic connection class not specific to the transport mechanism." alt="" coords="325,95,456,121"/>
+<area shape="rect" id="node9" href="$classvrpn__RedundantTransmission.html" title=" " alt="" coords="393,295,607,322"/>
+<area shape="rect" id="node6" href="$classvrpn_1_1BoundEndpointAllocator.html" title="Combines the function pointer for an Endpoint Allocator with its two arguments into a single callable..." alt="" coords="173,5,387,32"/>
+<area shape="rect" id="node7" href="$classvrpn_1_1EndpointContainer.html" title="Container for endpoints, held by pointer." alt="" coords="412,5,591,32"/>
+<area shape="rect" id="node8" href="$structvrpn__RedundantController__Protocol.html" title=" " alt="" coords="177,288,369,329"/>
+</map>

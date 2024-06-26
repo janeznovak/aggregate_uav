@@ -1,0 +1,5 @@
+<map id="vrpn_File_Connection::vrpn_FileBookmark" name="vrpn_File_Connection::vrpn_FileBookmark">
+<area shape="rect" id="node1" title=" " alt="" coords="8,201,169,243"/>
+<area shape="rect" id="node2" href="$structvrpn__LOGLIST.html" title="Placed here so vrpn_FileConnection can use it too." alt="" coords="33,96,145,123"/>
+<area shape="rect" id="node3" href="$structvrpn__HANDLERPARAM.html" title="This structure is what is passed to a vrpn_Connection message callback." alt="" coords="5,5,172,32"/>
+</map>

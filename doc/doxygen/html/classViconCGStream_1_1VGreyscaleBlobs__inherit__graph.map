@@ -1,0 +1,5 @@
+<map id="ViconCGStream::VGreyscaleBlobs" name="ViconCGStream::VGreyscaleBlobs">
+<area shape="rect" id="node1" title="Contains a frame of greyscale blobs, along with the camera identifier and frame number." alt="" coords="5,80,212,121"/>
+<area shape="rect" id="node3" href="$classViconCGStream_1_1VGreyscaleSubsampledBlobs.html" title="Writes additional sensor pixel stride information for a frame of greyscale blobs to the CG stream." alt="" coords="5,169,212,211"/>
+<area shape="rect" id="node2" href="$classViconCGStream_1_1VItem.html" title="This is the base class for all top level items." alt="" coords="23,5,194,32"/>
+</map>

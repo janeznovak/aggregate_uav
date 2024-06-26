@@ -1,4 +1,0 @@
-<map id="it.unito.sensors.server.service.ROS2ProxySubscriberService" name="it.unito.sensors.server.service.ROS2ProxySubscriberService">
-<area shape="rect" id="node1" title="ROS2ProxySubscriberService listens new FileMessage coming from ROS2 DDS, using a java implementation ..." alt="" coords="5,95,208,136"/>
-<area shape="rect" id="node2" href="$classit_1_1unito_1_1sensors_1_1server_1_1service_1_1ROS2ProxyCommonService.html" title="ROS2ProxyCommonService includes some common features about in/out proxies." alt="" coords="5,5,208,47"/>
-</map>

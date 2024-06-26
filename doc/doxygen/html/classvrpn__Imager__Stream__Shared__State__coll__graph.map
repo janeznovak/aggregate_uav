@@ -1,0 +1,7 @@
+<map id="vrpn_Imager_Stream_Shared_State" name="vrpn_Imager_Stream_Shared_State">
+<area shape="rect" id="node1" title=" " alt="" coords="31,317,189,359"/>
+<area shape="rect" id="node2" href="$classvrpn__Semaphore.html" title=" " alt="" coords="5,213,137,240"/>
+<area shape="rect" id="node3" href="$classvrpn__Message__List.html" title=" " alt="" coords="162,213,309,240"/>
+<area shape="rect" id="node4" href="$structvrpn__Message__List_1_1d__ELEMENT.html" title=" " alt="" coords="158,95,313,136"/>
+<area shape="rect" id="node5" href="$structvrpn__HANDLERPARAM.html" title="This structure is what is passed to a vrpn_Connection message callback." alt="" coords="152,5,319,32"/>
+</map>

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>NODES: robot_reader.coords Namespace Reference</title>
+<title>fcpp-crazyflie: robot_reader.coords Namespace Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -30,7 +30,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">NODES
+   <div id="projectname">fcpp-crazyflie
    </div>
   </td>
    <td>        <div id="MSearchBox" class="MSearchBoxInactive">
@@ -100,13 +100,13 @@ $(document).ready(function(){initNavTree('namespacerobot__reader_1_1coords.html'
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a130ed9a71015b586b70912042f89c6f1"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacerobot__reader_1_1coords.html#a130ed9a71015b586b70912042f89c6f1">rel2abs</a> (x, y, qz, qw, origin_x, origin_y, rotation=0.0)</td></tr>
-<tr class="memdesc:a130ed9a71015b586b70912042f89c6f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns x, y from a system with origin in coordinates (origin_x, origin_y) rotated by qz, qw in absolute coordinates.  <a href="namespacerobot__reader_1_1coords.html#a130ed9a71015b586b70912042f89c6f1">More...</a><br /></td></tr>
-<tr class="separator:a130ed9a71015b586b70912042f89c6f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a157fa0a24eff491ea5003d4cd1c3b1ba"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacerobot__reader_1_1coords.html#a157fa0a24eff491ea5003d4cd1c3b1ba">rel2abs</a> (x, y, z, qz, qw, origin_x, origin_y, origin_z, rotation=0.0)</td></tr>
+<tr class="memdesc:a157fa0a24eff491ea5003d4cd1c3b1ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns x, y, z from a system with origin in coordinates (origin_x, origin_y, origin_z) rotated by qz, qw in absolute coordinates.  <a href="namespacerobot__reader_1_1coords.html#a157fa0a24eff491ea5003d4cd1c3b1ba">More...</a><br /></td></tr>
+<tr class="separator:a157fa0a24eff491ea5003d4cd1c3b1ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a130ed9a71015b586b70912042f89c6f1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a130ed9a71015b586b70912042f89c6f1">&#9670;&nbsp;</a></span>rel2abs()</h2>
+<a id="a157fa0a24eff491ea5003d4cd1c3b1ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a157fa0a24eff491ea5003d4cd1c3b1ba">&#9670;&nbsp;</a></span>rel2abs()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -122,6 +122,12 @@ Functions</h2></td></tr>
           <td></td>
           <td class="paramtype">&#160;</td>
           <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>z</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -151,6 +157,12 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>origin_z</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
           <td class="paramname"><em>rotation</em> = <code>0.0</code>&#160;</td>
         </tr>
         <tr>
@@ -161,7 +173,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Returns x, y from a system with origin in coordinates (origin_x, origin_y) rotated by qz, qw in absolute coordinates. </p>
+<p>Returns x, y, z from a system with origin in coordinates (origin_x, origin_y, origin_z) rotated by qz, qw in absolute coordinates. </p>
 
 </div>
 </div>

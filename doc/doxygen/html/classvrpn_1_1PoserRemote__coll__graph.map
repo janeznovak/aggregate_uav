@@ -1,0 +1,9 @@
+<map id="vrpn.PoserRemote" name="vrpn.PoserRemote">
+<area shape="rect" id="node1" title=" " alt="" coords="10,319,153,345"/>
+<area shape="rect" id="node2" href="$classvrpn_1_1VRPNDevice.html" title=" " alt="" coords="84,243,220,269"/>
+<area shape="rect" id="node3" href="$classvrpn_1_1VRPN.html" title=" " alt="" coords="411,95,501,121"/>
+<area shape="rect" id="node4" href="$classObject.html" title="Reference counted object base class." alt="" coords="424,5,488,32"/>
+<area shape="rect" id="node5" title=" " alt="" coords="5,95,88,121"/>
+<area shape="rect" id="node6" title=" " alt="" coords="113,95,173,121"/>
+<area shape="rect" id="node7" title=" " alt="" coords="300,95,353,121"/>
+</map>

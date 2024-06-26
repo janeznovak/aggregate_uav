@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['board_5fproxy_1286',['board_proxy',['../namespaceoutbound__proxy_1_1board__proxy.html',1,'outbound_proxy']]],
-  ['config_1287',['config',['../namespaceoutbound__proxy_1_1config.html',1,'outbound_proxy']]],
-  ['proxy_1288',['proxy',['../namespaceoutbound__proxy_1_1proxy.html',1,'outbound_proxy']]]
+  ['implicit_5fconversion_5ffrom_5f0_5fto_5fhandle_12555',['implicit_conversion_from_0_to_handle',['../namespaceimplicit__conversion__from__0__to__handle.html',1,'']]]
 ];

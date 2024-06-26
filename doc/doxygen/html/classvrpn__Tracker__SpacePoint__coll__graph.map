@@ -1,0 +1,13 @@
+<map id="vrpn_Tracker_SpacePoint" name="vrpn_Tracker_SpacePoint">
+<area shape="rect" id="node1" title=" " alt="" coords="93,425,275,452"/>
+<area shape="rect" id="node2" href="$classvrpn__Tracker.html" title=" " alt="" coords="5,349,109,376"/>
+<area shape="rect" id="node3" href="$classvrpn__BaseClass.html" title=" " alt="" coords="96,260,221,287"/>
+<area shape="rect" id="node9" href="$classvrpn__Button.html" title=" " alt="" coords="133,349,235,376"/>
+<area shape="rect" id="node4" href="$classvrpn__BaseClassUnique.html" title=" " alt="" coords="73,184,244,211"/>
+<area shape="rect" id="node5" href="$structvrpn__HANDLERPARAM.html" title="This structure is what is passed to a vrpn_Connection message callback." alt="" coords="34,95,201,121"/>
+<area shape="rect" id="node6" href="$classvrpn__Connection.html" title="Generic connection class not specific to the transport mechanism." alt="" coords="225,95,356,121"/>
+<area shape="rect" id="node7" href="$classvrpn_1_1BoundEndpointAllocator.html" title="Combines the function pointer for an Endpoint Allocator with its two arguments into a single callable..." alt="" coords="73,5,287,32"/>
+<area shape="rect" id="node8" href="$classvrpn_1_1EndpointContainer.html" title="Container for endpoints, held by pointer." alt="" coords="312,5,491,32"/>
+<area shape="rect" id="node10" href="$classvrpn__HidInterface.html" title=" " alt="" coords="259,349,397,376"/>
+<area shape="rect" id="node11" href="$classvrpn__HidAcceptor.html" title=" " alt="" coords="259,260,397,287"/>
+</map>

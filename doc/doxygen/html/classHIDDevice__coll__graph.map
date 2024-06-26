@@ -1,0 +1,7 @@
+<map id="HIDDevice" name="HIDDevice">
+<area shape="rect" id="node1" title="Qt wrapper for a debugging HidInterface." alt="" coords="19,260,109,287"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,171,80,197"/>
+<area shape="rect" id="node3" href="$classHIDDevice_1_1VRPNDevice.html" title=" " alt="" coords="105,171,285,197"/>
+<area shape="rect" id="node4" href="$classvrpn__HidInterface.html" title=" " alt="" coords="125,95,264,121"/>
+<area shape="rect" id="node5" href="$classvrpn__HidAcceptor.html" title=" " alt="" coords="126,5,263,32"/>
+</map>

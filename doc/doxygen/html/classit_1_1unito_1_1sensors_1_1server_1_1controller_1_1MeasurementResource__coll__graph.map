@@ -1,6 +1,0 @@
-<map id="it.unito.sensors.server.controller.MeasurementResource" name="it.unito.sensors.server.controller.MeasurementResource">
-<area shape="rect" id="node1" title="REST API to handle measurements from sensors equipped on boards." alt="" coords="704,55,916,97"/>
-<area shape="rect" id="node2" href="$classit_1_1unito_1_1sensors_1_1server_1_1dto_1_1mapper_1_1MeasurementDTOMapper.html" title=" " alt="" coords="279,13,503,54"/>
-<area shape="rect" id="node3" href="$interfaceit_1_1unito_1_1sensors_1_1server_1_1dto_1_1mapper_1_1DTOMapper.html" title=" " alt="" coords="5,5,229,61"/>
-<area shape="rect" id="node4" href="$classit_1_1unito_1_1sensors_1_1server_1_1service_1_1MeasurementService.html" title="MeasurementService exposes to other services some extended features about measurements." alt="" coords="289,78,492,119"/>
-</map>

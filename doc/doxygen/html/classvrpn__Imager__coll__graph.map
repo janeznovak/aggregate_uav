@@ -1,0 +1,10 @@
+<map id="vrpn_Imager" name="vrpn_Imager">
+<area shape="rect" id="node1" title="Base class for Imager class." alt="" coords="162,349,266,376"/>
+<area shape="rect" id="node2" href="$classvrpn__BaseClass.html" title=" " alt="" coords="67,260,193,287"/>
+<area shape="rect" id="node3" href="$classvrpn__BaseClassUnique.html" title=" " alt="" coords="45,184,215,211"/>
+<area shape="rect" id="node4" href="$structvrpn__HANDLERPARAM.html" title="This structure is what is passed to a vrpn_Connection message callback." alt="" coords="5,95,172,121"/>
+<area shape="rect" id="node5" href="$classvrpn__Connection.html" title="Generic connection class not specific to the transport mechanism." alt="" coords="197,95,327,121"/>
+<area shape="rect" id="node6" href="$classvrpn_1_1BoundEndpointAllocator.html" title="Combines the function pointer for an Endpoint Allocator with its two arguments into a single callable..." alt="" coords="44,5,259,32"/>
+<area shape="rect" id="node7" href="$classvrpn_1_1EndpointContainer.html" title="Container for endpoints, held by pointer." alt="" coords="283,5,462,32"/>
+<area shape="rect" id="node8" href="$classvrpn__Imager__Channel.html" title=" " alt="" coords="217,260,381,287"/>
+</map>

@@ -1,9 +1,0 @@
-<map id="create3_coverage::Behavior" name="create3_coverage::Behavior">
-<area shape="rect" id="node1" title=" " alt="" coords="5,163,188,189"/>
-<area shape="rect" id="node2" href="$classcreate3__coverage_1_1DockBehavior.html" title=" " alt="" coords="236,5,451,32"/>
-<area shape="rect" id="node3" href="$classcreate3__coverage_1_1DriveStraightBehavior.html" title=" " alt="" coords="240,57,447,98"/>
-<area shape="rect" id="node4" href="$classcreate3__coverage_1_1ReflexBehavior.html" title=" " alt="" coords="259,122,428,163"/>
-<area shape="rect" id="node5" href="$classcreate3__coverage_1_1RotateBehavior.html" title=" " alt="" coords="258,187,429,229"/>
-<area shape="rect" id="node6" href="$classcreate3__coverage_1_1SpiralBehavior.html" title=" " alt="" coords="261,253,426,294"/>
-<area shape="rect" id="node7" href="$classcreate3__coverage_1_1UndockBehavior.html" title=" " alt="" coords="255,318,432,359"/>
-</map>
