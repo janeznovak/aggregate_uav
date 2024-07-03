@@ -326,6 +326,7 @@ namespace fcpp
                 vec<3> vecTheta = make_vec(x, y, 0);
                 vec<3> exactPosition = vecTheta + get<1>(node.storage(node_posMaster{}));
                 double error = distance(exactPosition, node.position());
+                double normalizedError = error / distanceMasterSlave;  // Normalizzazione dell'errore
                 node.storage(position_error{}) = error;
                 log_error(
                     std::to_string(node.uid), 
@@ -438,6 +439,9 @@ namespace fcpp
                         get<1>(node.storage(node_indexSlave{})) = node.storage(node_numberOfSlave{});
                     }
                 }
+            }
+            else{
+                node.storage(node_posMaster{}) = identified;
             }
 
             node.storage(node_maxNumberOfSlave{}) = old(CALL, 0, [&](int b) {

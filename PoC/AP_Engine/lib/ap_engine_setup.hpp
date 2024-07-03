@@ -188,16 +188,35 @@ namespace fcpp {
 
 
         // Start Flocking
+
+#define  DEFAULT 0
+#define  HIGHDISTANCE 1
+#define  LOWDISTANCE 2
+
+#ifndef AP_USE_CASE
+#define AP_USE_CASE DEFAULT
+#endif
+
+        //! @brief Distance CircularCrown-slave, equivale al raggio della corona circolare della circonferenza,
+        constexpr double distanceCircularCrown = comm - ((comm / 100) * 20);
+
+#if AP_USE_CASE == HIGHDISTANCE
+        //! @brief Distance master-slave, equivale al raggio della circonferenza della formazione.
+        constexpr double distanceMasterSlave = distanceCircularCrown - ((distanceCircularCrown / 100) * 0);
+
+#elif AP_USE_CASE == LOWDISTANCE
+        //! @brief Distance master-slave, equivalente al range di comunicazione
+        constexpr double distanceMasterSlave = distanceCircularCrown - ((distanceCircularCrown / 100) * 80);
+
+#else
+        //! @brief Distance master-slave, equivale al raggio della circonferenza della formazione.
+        constexpr double distanceMasterSlave = distanceCircularCrown - ((distanceCircularCrown / 100) * 50);
+#endif
+
         //! @brief Constant minimum number of nodes to form a circle
         constexpr int minNodesToFormCircle = 5;
         //! @brief Number of people in the area.
         constexpr int node_num = minNodesToFormCircle + 5;
-        //! @brief Distance CircularCrown-slave, equivale al raggio della corona circolare della circonferenza, "sosta di ricalcolo".
-        //! con un numero di slave molto basso non ne vale la pena usarla (anche se mi pare che usandola aumenta le prestazioni, gli slave che si
-        //! ricalcolano si sistemano prima) TODO: refactor
-        constexpr double distanceCircularCrown = comm - ((comm / 100) * 0);
-        //! @brief Distance master-slave, equivale al raggio della circonferenza della formazione.
-        constexpr double distanceMasterSlave = distanceCircularCrown - ((distanceCircularCrown / 100) * 50);
         //! @brief Constant pi-greco, usata per i calcoli trigonometrici.
         constexpr double pi = 3.14159265358979323846;
         //! @brief Minimum distance between devices to avoid colliding.
