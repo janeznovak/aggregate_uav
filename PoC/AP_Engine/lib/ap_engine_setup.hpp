@@ -12,6 +12,11 @@
 #include "lib/poc_config.hpp"
 #include "lib/fcpp.hpp"
 
+
+#define  DEFAULT 0
+#define  HIGHDISTANCE 1
+#define  LOWDISTANCE 2
+
  /**
   * @brief Namespace containing all the objects in the FCPP library.
   */
@@ -165,8 +170,20 @@ namespace fcpp {
 
         } // tags
 
-            //! @brief Communication radius.
+#ifndef AP_USE_CASE
+#define AP_USE_CASE DEFAULT
+#endif
+
+#if AP_USE_CASE == HIGHDISTANCE
+        //! @brief Communication radius.
+        constexpr size_t comm = 10;
+#elif AP_USE_CASE == LOWDISTANCE
+        //! @brief Communication radius.
         constexpr size_t comm = AP_COMM_RANGE;
+#else
+        //! @brief Communication radius.
+        constexpr size_t comm = AP_COMM_RANGE;
+#endif
 
         //! @brief Retain time for messages.
         constexpr size_t retain = AP_RETAIN_SEC;
@@ -189,20 +206,12 @@ namespace fcpp {
 
         // Start Flocking
 
-#define  DEFAULT 0
-#define  HIGHDISTANCE 1
-#define  LOWDISTANCE 2
-
-#ifndef AP_USE_CASE
-#define AP_USE_CASE DEFAULT
-#endif
-
         //! @brief Distance CircularCrown-slave, equivale al raggio della corona circolare della circonferenza,
-        constexpr double distanceCircularCrown = comm - ((comm / 100) * 20);
+        constexpr double distanceCircularCrown = comm - ((comm / 100) * 0);
 
 #if AP_USE_CASE == HIGHDISTANCE
         //! @brief Distance master-slave, equivale al raggio della circonferenza della formazione.
-        constexpr double distanceMasterSlave = distanceCircularCrown - ((distanceCircularCrown / 100) * 0);
+        constexpr double distanceMasterSlave = distanceCircularCrown - ((distanceCircularCrown / 100) * 50);
 
 #elif AP_USE_CASE == LOWDISTANCE
         //! @brief Distance master-slave, equivalente al range di comunicazione
@@ -380,7 +389,8 @@ namespace fcpp {
             nodes_by_goal_subcode, subcode_map_distr<nodes_by_goal_subcode>
             >,
             dimension<fcpp::coordination::dim>, // dimensionality of the space
-            connector<connect::fixed<fcpp::coordination::comm, 1, fcpp::coordination::dim>>, // connection allowed within a fixed comm range
+            connector<connect::radial<80, connect::fixed<fcpp::coordination::comm, 1, fcpp::coordination::dim>>>, // connection allowed within a radius comm range
+	    // connector<connect::fixed<fcpp::coordination::comm, 1, fcpp::coordination::dim>>, // connection allowed within a fixed comm range
             shape_tag<node_shape>, // the shape of a node is read from this tag in the store
             size_tag<node_size>,   // the size of a node is read from this tag in the store
             color_tag<node_color, left_color, right_color>, // colors of a node are read from these

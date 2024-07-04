@@ -664,6 +664,8 @@ namespace fcpp
         FUN node_type init_main_fn(ARGS, int n_round) {
             node_type nt;
 
+            // std::cout << "range: " << fcpp::coordination::comm << std::endl;
+
             if (AP_ENGINE_DEBUG) {
                 std::cout << std::endl << std::endl;
                 std::cout << "[node-" << node.uid << "] Time: " <<

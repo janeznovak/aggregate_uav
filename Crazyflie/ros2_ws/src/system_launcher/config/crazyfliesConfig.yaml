@@ -49,13 +49,13 @@ robots:
     type: cf_sim  # see robot_types
 
   cf_8:
-    enabled: True
+    enabled: False
     uri: udp://0.0.0.0:19858
     initial_position: [5.0, 5.0, 0.0]
     type: cf_sim  # see robot_types
 
   cf_9:
-    enabled: True
+    enabled: False
     uri: udp://0.0.0.0:19859
     initial_position: [6.0, 6.0, 0.0]
     type: cf_sim  # see robot_types
