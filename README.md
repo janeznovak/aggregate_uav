@@ -22,7 +22,7 @@ It can be viewed using [/doc/doxygen/html/index.html](/doc/doxygen/html/index.ht
 #### Python
 
 ```bash
-apt get install python-is-python3
+apt get install python-is-python3 python3-pip
 pip install -r requirements.txt
 ```
 
