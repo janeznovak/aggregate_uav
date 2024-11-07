@@ -48,6 +48,9 @@ export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 export CYCLONEDDS_URI=/opt/projects/fcpp-crazyflie/config/cyclone-dds-interface-select-laptop.xml
 ```
 
+#### Gazebo Garden
+[Gazebo installation guide](https://staging.gazebosim.org/docs/garden/install_ubuntu)
+
 #### Crazyswarm2
 [Crazyswarm2](https://imrclab.github.io/crazyswarm2/installation.html)
 
