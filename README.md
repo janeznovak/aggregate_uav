@@ -36,7 +36,7 @@ pip install -r requirements.txt
 # in ubuntu, before you should enable multiverse repository
 
 # Build deps
-apt install python3-colcon-common-extensions python3-vcstool python3-rosdep ros-humble-irobot-create-msgs
+apt install python3-colcon-common-extensions python3-vcstool python3-rosdep
 
 # Cyclone DDS
 apt install ros-humble-cyclonedds ros-humble-rmw-cyclonedds-cpp
