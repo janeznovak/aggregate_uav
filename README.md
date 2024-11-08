@@ -100,7 +100,7 @@ cd PoC
 ### Start the AP Engine (in another terminal):
 
 ```sh
-cd AP_Engine
+cd PoC/AP_Engine
 ./run_engine.sh <number_of_drones_with_master>
 ```
 
