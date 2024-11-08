@@ -101,7 +101,7 @@ cd PoC
 
 ```sh
 cd PoC/AP_Engine
-./run_engine.sh <number_of_drones_with_master>
+./run_engine_default.sh <number_of_drones_with_master>
 ```
 
 It is important to start the simulation on the AP Engine by pressing the "p" key. You can view the connections between the drones by pressing the "l" key.
