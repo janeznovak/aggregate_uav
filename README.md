@@ -125,7 +125,7 @@ To interrupt a goal, use the following script:
 ```sh
 cd Storage
 # $TRAJECTORY_NAME must be the previous trajectory used
-./abort_goal.sh $TRAJECTORY_NAME <goal_id>
+./create_abort.sh $TRAJECTORY_NAME <goal_id>
 ```
 
 This command will abort the specified goal.
