@@ -446,7 +446,7 @@ namespace fcpp
 
             node.storage(node_maxNumberOfSlave{}) = old(CALL, 0, [&](int b) {
                 return max(b, (node.storage(node_numberOfSlave{})));
-                });
+            });
         }
 
 
@@ -674,16 +674,16 @@ namespace fcpp
                         ).count() << endl;
             }
 
-#if   defined(RUN_SIMULATION)
-            if (node.uid == 0) {
-                nt = node_type::ROBOT_MASTER;
-            }
-            else if (node.uid <= ROBOTS.size()) {
-                nt = node_type::ROBOT_SLAVE;
-            }
-#elif defined(RUN_EMBEDDED)
-            nt = node.uid == 0 ? node_type::ROBOT_MASTER : node_type::ROBOT_SLAVE;
-#endif
+            #if   defined(RUN_SIMULATION)
+                if (node.uid == 0) {
+                    nt = node_type::ROBOT_MASTER;
+                }
+                else if (node.uid <= ROBOTS.size()) {
+                    nt = node_type::ROBOT_SLAVE;
+                }
+            #elif defined(RUN_EMBEDDED)
+                nt = node.uid == 0 ? node_type::ROBOT_MASTER : node_type::ROBOT_SLAVE;
+            #endif
             if (AP_ENGINE_DEBUG) {
                 std::cout << "MAIN FUNCTION in node " << node.uid << " of type " << nt << endl;
             }
@@ -699,16 +699,16 @@ namespace fcpp
 
         //! @brief Acquire new goals from storage, in according with node_type.
         FUN void acquire_new_goals(ARGS, node_type nt, std::vector<goal_tuple_type>& NewGoalsList) {
-#if FCPP_SYSTEM == FCPP_SYSTEM_GENERAL
-            if (nt == node_type::ROBOT_MASTER) {
-                // Guardare stato (running/selected) per decidere se prendere in carico goal 
-                read_new_goals(CALL, NewGoalsList);
-            }
-#else
-            if (nt == node_type::ROBOT_MASTER && EMBEDDED_NODE_KIOSK == node.uid) {
-                read_new_goals(CALL, NewGoalsList);
-            }
-#endif
+            #if FCPP_SYSTEM == FCPP_SYSTEM_GENERAL
+                if (nt == node_type::ROBOT_MASTER) {
+                    // Guardare stato (running/selected) per decidere se prendere in carico goal 
+                    read_new_goals(CALL, NewGoalsList);
+                }
+            #else
+                if (nt == node_type::ROBOT_MASTER && EMBEDDED_NODE_KIOSK == node.uid) {
+                    read_new_goals(CALL, NewGoalsList);
+                }
+            #endif
         }
 
         //! @brief Initialize variables (storage, etc...) of a robot using feedback data.
@@ -840,8 +840,8 @@ namespace fcpp
                     };
                     action::manager::ActionManager::new_action(action_data);
                 }
-                return make_tuple(node.current_time(), s);
-                }, NewGoalsList);
+            return make_tuple(node.current_time(), s);
+            }, NewGoalsList);
         }
 
         //! @brief Manage termination of the spawn processes.
