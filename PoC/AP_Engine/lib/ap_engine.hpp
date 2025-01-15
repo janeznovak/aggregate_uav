@@ -278,10 +278,8 @@ namespace fcpp
         }
 
 
-        // to calculate where in the circumference the slave is
         FUN void calculateMyCorner(ARGS) {
             using namespace tags;
-            // if it has a master
             if (get<0>(node.storage(node_posMaster{}))) {
                 double myRadiant = (get<1>(node.storage(node_indexSlave{}))) * ((2 * pi) / node.storage(node_numberOfSlave{}));
                 node.storage(node_myRadiant{}) = myRadiant;
@@ -399,7 +397,6 @@ namespace fcpp
             using namespace tags;
             int slaves = 0;
 
-            // tuple of is_master and position
             tuple<bool, vec<3>> t = make_tuple(false, make_vec(0, 0, 0));
             if (nt == node_type::ROBOT_MASTER) {
                 t = make_tuple(true, node.position());
@@ -408,20 +405,16 @@ namespace fcpp
             float percent_charge = node.storage(node_battery_charge{}) / 100.0;
             if(percent_charge > 0){
                 slaves = (int)count_hood(CALL) - 1;
-                // slave doesn't have slaves
                 if (nt == node_type::ROBOT_SLAVE) {
                     slaves = 0;
                 }
             }
 
-            // number of slaves, you propagate the number of slaves and save the maximum number of slaves
             field<int> identifierNumSlaves = nbr(CALL, 0, slaves);
             node.storage(node_numberOfSlave{}) = max_hood(CALL, identifierNumSlaves);
 
             field < tuple < bool, vec <3>>> identifierMaster = nbr(CALL, t);
-            // try to find the master(slaves have 0(false) for bool and master has something bigger(true))
             tuple<bool, vec<3>> identified = max_hood(CALL, identifierMaster);
-            // go in the block of code if the node has identified the master
             if (get<0>(identified)) {
                 node.storage(node_posMaster{}) = identified;
                 /**Quando un nodo identifica la posizione del master gli viene assegnato un indice che equivale
@@ -429,7 +422,6 @@ namespace fcpp
                 if (!(node.storage(node_secondReturn{}))) {
                     int maxIndex = nbr(CALL, 0, [&](field<int> indexes) {
                         int maxIndex = max_hood(CALL, indexes);
-                        // also checks if the robot is a slave, so that you don't mind the index of the master
                         if (get<1>(node.storage(node_indexSlave{})) == 0 && nt == node_type::ROBOT_SLAVE) {
                             return maxIndex + 1;
                         }
@@ -444,17 +436,14 @@ namespace fcpp
                 }
                 else {
                     if ((get<1>(node.storage(node_indexSlave{}))) == 0 && nt == node_type::ROBOT_SLAVE) {
-                        // set the index just to the amount of slaves there is
                         get<1>(node.storage(node_indexSlave{})) = node.storage(node_numberOfSlave{});
                     }
                 }
             }
             else{
-                // I think here the node_posMaster{} gets a(some) slave TODO: check this 
                 node.storage(node_posMaster{}) = identified;
             }
 
-            // propagete the maximum number of slaves, if current is bigger, than save it, otherwise take b
             node.storage(node_maxNumberOfSlave{}) = old(CALL, 0, [&](int b) {
                 return max(b, (node.storage(node_numberOfSlave{})));
             });
@@ -484,9 +473,6 @@ namespace fcpp
             }
 
             if (nt == node_type::ROBOT_SLAVE) {
-                // instead calculateMyCorner we should have the slave move to a
-                // position of interest based on something(maybe master, maybe goal from
-                // a user, ...)
                 calculateMyCorner(CALL);
                 //!Sistema di collision avoidance
                 collisionAvoidance(CALL, nt);
@@ -528,12 +514,6 @@ namespace fcpp
                 std::string robot_chosen = get_real_robot_name(CALL, node.uid);
 
             if (nt == node_type::ROBOT_MASTER) {
-                // here I think we should change the code so that it's not reading
-                // the goal directly from a file with a predetermined path, but
-                // instead it should get the goal from the slaves which exemined
-                // where the goal is
-                // TODO: check if the goal is the one from the file or is it from
-                // creating a new goal
                 std::cout << "Robot " << robot_chosen << " is chosen for goal " << common::get<goal_code>(g) << endl;
                 std::cout << endl;
 
@@ -554,8 +534,6 @@ namespace fcpp
                     .orient_w = common::get<goal_orient_w>(g)
                 };
                 action::manager::ActionManager::new_action(action_data);
-                // print the position of x
-                std::cout << "Position x: " << common::get<goal_pos_x>(g) << endl;
             }
             else{
                 action::ActionData action_data = {
@@ -604,7 +582,7 @@ namespace fcpp
                 // compute charge of battery in percent
                 float percent_charge = node.storage(node_battery_charge{}) / 100.0;
 
-                // if i'm terminating the current goal, i have to terminate goal for all nodes TODO: IS IT MEANT FOR ALL THE NODES IN THE PROCESS
+                // if i'm terminating the current goal, i have to terminate goal for all nodes
                 if (common::get<goal_code>(g) == node.storage(node_process_goal{}) && //i was running current goal in the process
                     common::get<goal_code>(g) == node.storage(node_external_goal{}) && //the robot was running current goal
                     ProcessingStatus::TERMINATING == node.storage(node_process_status{})) { //but now i'm terminating
@@ -622,10 +600,6 @@ namespace fcpp
                         int c = 0;
                         if(node.storage(node_process_status{}) == ProcessingStatus::IDLE && (c = counter(CALL)) == 1){
                             std::cout << "Process GOAL " << c;
-                            // I think here there should also be movement
-                            // calculated(in a function), since we don't have a
-                            // predetermined path, but get the end position from the
-                            // goal
                             send_action_to_selected_node(CALL, nt, p, g, s);
                         }
                     }
@@ -757,14 +731,11 @@ namespace fcpp
                 node.storage(node_external_name{}) = rname;
 
                 std::lock_guard lgr(RobotStatesMutex);
-                // if robot is in the map
                 if (RobotStatesMap.find(rname) != RobotStatesMap.end()) {
-                    // for each status of the robot
                     for (RobotStatus rs : RobotStatesMap[rname]) {
                         // add offset to match with background
                         real_t pos_x_offset = node.storage(node_offset_pos_x{});
                         real_t pos_y_offset = node.storage(node_offset_pos_y{});
-                        // set position
                         node.position() = make_vec(rs.pos_x + pos_x_offset, rs.pos_y + pos_y_offset, rs.pos_z);
 
                         // truncate percentage to simply the output: 98 -> 90; 92 -> 90; 85 -> 80
@@ -821,17 +792,17 @@ namespace fcpp
                             manage_battery_discharged_node(CALL);
                         }
                     }
-                    // delete element from map, because it's already used and if there are new feedbacks, they will be added
+                    // delete element from map
                     RobotStatesMap.erase(rname);
                 }
 
                 return ph;
-            });
+                });
         }
 
         // PROCESS MANAGEMENT
 
-        //! @brief Spawn process from goal list acquired, which you get from the feedback.
+        //! @brief Spawn process from goal list acquired.
         FUN spawn_result_type spawn_process(ARGS, node_type nt, ::vector<goal_tuple_type>& NewGoalsList, int n_round) {
             // process new goals, emptying NewGoalsList
             return coordination::spawn(CALL, [&](goal_tuple_type const& g) {
@@ -843,7 +814,6 @@ namespace fcpp
                 }
 
                 // ACTION: ABORT GOAL
-                // the two lines of check for process_goal and external_goal are because, we have simulation in AP and in gazebo(feedback)
                 if (ABORT_ACTION == common::get<goal_action>(g) &&
                     node.storage(node_process_goal{}) == common::get<goal_code>(g) &&
                     node.storage(node_external_goal{}) == common::get<goal_code>(g)) {
