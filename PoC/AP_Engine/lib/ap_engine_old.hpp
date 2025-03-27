@@ -1,8 +1,8 @@
 // Copyright © 2023 Gianluca Torta, Daniele Bortoluzzi. All Rights Reserved.
 
 /**
- * @file ap_engine_multi.hpp
- * @brief AP code for the engine with multiple workers.
+ * @file ap_engine.hpp
+ * @brief AP code for the engine.
  *
  * It's used for simulation and embedded deployment.
  */
@@ -38,11 +38,6 @@ namespace fcpp
         using spawn_result_type = std::unordered_map<goal_tuple_type, times_t, fcpp::common::hash<goal_tuple_type>>;
 
         // UTILS AP
-
-        FUN bool isWorker(ARGS)
-        {
-            return node.storage(node_isWorker{}) ? true : false;
-        }
 
         //! @brief Change color of node, passing in argument
         FUN void change_color(ARGS, fcpp::color color) {
@@ -404,13 +399,13 @@ namespace fcpp
             }
         }
 
-        FUN void initialization(ARGS) {
+        FUN void initialization(ARGS, node_type nt) {
             using namespace tags;
             int slaves = 0;
 
             // tuple of is_master and position
             tuple<bool, vec<3>> t = make_tuple(false, make_vec(0, 0, 0));
-            if (isWorker(CALL)) {
+            if (nt == node_type::ROBOT_MASTER) {
                 t = make_tuple(true, node.position());
             }
 
@@ -418,7 +413,7 @@ namespace fcpp
             if(percent_charge > 0){
                 slaves = (int)count_hood(CALL) - 1;
                 // slave doesn't have slaves
-                if (!isWorker(CALL)) {
+                if (nt == node_type::ROBOT_SLAVE) {
                     slaves = 0;
                 }
             }
@@ -439,7 +434,7 @@ namespace fcpp
                     int maxIndex = nbr(CALL, 0, [&](field<int> indexes) {
                         int maxIndex = max_hood(CALL, indexes);
                         // also checks if the robot is a slave, so that you don't mind the index of the master
-                        if (get<1>(node.storage(node_indexSlave{})) == 0 && !isWorker(CALL)) {
+                        if (get<1>(node.storage(node_indexSlave{})) == 0 && nt == node_type::ROBOT_SLAVE) {
                             return maxIndex + 1;
                         }
                         else {
@@ -447,12 +442,12 @@ namespace fcpp
                         }
                         });
 
-                    if ((get<1>(node.storage(node_indexSlave{}))) == 0 && !isWorker(CALL)) {
+                    if ((get<1>(node.storage(node_indexSlave{}))) == 0 && nt == node_type::ROBOT_SLAVE) {
                         node.storage(node_indexSlave{}) = make_tuple(node.uid, maxIndex);
                     }
                 }
                 else {
-                    if ((get<1>(node.storage(node_indexSlave{}))) == 0 && !isWorker(CALL)) {
+                    if ((get<1>(node.storage(node_indexSlave{}))) == 0 && nt == node_type::ROBOT_SLAVE) {
                         // set the index just to the amount of slaves there is
                         get<1>(node.storage(node_indexSlave{})) = node.storage(node_numberOfSlave{});
                     }
@@ -532,11 +527,10 @@ namespace fcpp
         }
 
         //! @brief Send a GOAL action to selected node and update the AP state machine of the robot to SELECTED
-        FUN void send_action_to_selected_node(ARGS, process_tuple_type& p, goal_tuple_type const& g, status* s) {
+        FUN void send_action_to_selected_node(ARGS, node_type nt, process_tuple_type& p, goal_tuple_type const& g, status* s) {
             CODE
                 std::string robot_chosen = get_real_robot_name(CALL, node.uid);
-
-            if (isWorker(CALL)) {
+            if (nt == node_type::ROBOT_MASTER) {
                 // std::cout << "Robot " << robot_chosen << " is chosen for goal " << common::get<goal_code>(g) << endl;
                 // print the goal_code_robot_id and node.uid
                 // std::cout << "Goal code robot id: " << goal_code_robot_id << " Node uid: " << node.uid << endl;
@@ -623,7 +617,7 @@ namespace fcpp
 
                 // Battery charged
                 else {
-                    if (isWorker(CALL)) {
+                    if (nt == node_type::ROBOT_MASTER) {
                         int c = 0;
                         int goal_code_robot_id = std::stoi(get_robot_id_from_goal_code(common::get<goal_code>(g)));
                         if(node.storage(node_process_status{}) == ProcessingStatus::IDLE && node.uid == goal_code_robot_id && (c = counter(CALL)) == 1){
@@ -632,13 +626,13 @@ namespace fcpp
                             // calculated(in a function), since we don't have a
                             // predetermined path, but get the end position from the
                             // goal
-                            send_action_to_selected_node(CALL, p, g, s);
+                            send_action_to_selected_node(CALL, nt, p, g, s);
                         }
                     }
 
-                    if (!isWorker(CALL)) {
+                    if (nt == node_type::ROBOT_SLAVE) {
                         run_flocking(CALL, nt);
-                        send_action_to_selected_node(CALL, p, g, s);
+                        send_action_to_selected_node(CALL, nt, p, g, s);
                     }
                 }
                 // blinking colors if not running
@@ -717,7 +711,7 @@ namespace fcpp
         }
 
         //! @brief Acquire new goals from storage, in according with node_type.
-        FUN void acquire_new_goals(ARGS, std::vector<goal_tuple_type>& NewGoalsList) { CODE
+        FUN void acquire_new_goals(ARGS, node_type nt, std::vector<goal_tuple_type>& NewGoalsList) { CODE
             read_new_goals(NewGoalsList, std::optional<string>(std::to_string(node.uid)));        
         }
 
@@ -725,8 +719,9 @@ namespace fcpp
 
         // MAIN FUNCTIONS
 
-        //! @brief Initialize MAIN function, selecting correct node_type, run only ONCE per simulation
-        FUN void init_main_fn(ARGS, int n_round, int number_of_masters) {
+        //! @brief Initialize MAIN function, selecting correct node_type
+        FUN node_type init_main_fn(ARGS, int n_round, int number_of_masters) {
+            node_type nt;
 
             // std::cout << "range: " << fcpp::coordination::comm << std::endl;
 
@@ -738,19 +733,18 @@ namespace fcpp
                         ).count() << endl;
             }
 
-            // set node type in the storage
             #if defined(RUN_SIMULATION)
                 if (node.uid < number_of_masters) {
-                    node.storage(node_isWorker{}) = true;
+                    nt = node_type::ROBOT_MASTER;
                 }
                 else if (node.uid <= ROBOTS.size()) {
-                    node.storage(node_isWorker{}) = false;
+                    nt = node_type::ROBOT_SLAVE;
                 }
             #elif defined(RUN_EMBEDDED)
-                node.storage(node_isWorker{}) = node.uid == 0 ? true : false;
+                nt = node.uid == 0 ? node_type::ROBOT_MASTER : node_type::ROBOT_SLAVE;
             #endif
             if (AP_ENGINE_DEBUG) {
-                std::cout << "MAIN FUNCTION in node " << node.uid << " of type " << (isWorker(CALL) ? "worker" : "scout") << endl;
+                std::cout << "MAIN FUNCTION in node " << node.uid << " of type " << nt << endl;
             }
 
             field<int> test_nbr = fcpp::coordination::nbr(CALL, n_round);
@@ -758,28 +752,24 @@ namespace fcpp
                 std::cout << "test_nbr_main_fn: " << test_nbr << "; nbr_uid: " << nbr_uid(CALL) << std::endl;
             }
 
-            // set parameters that will not change and mark that they have been initialised
-            node.storage(node_size{}) = NODE_SIZE;
-            node.storage(node_label_size{}) = LABEL_SIZE;
-            node.storage(node_shape{}) = shape::sphere;
-            node.storage(node_shadow_color{}) = fcpp::color(0x837E7CFF);
-            node.storage(node_shadow_shape{}) = shape::sphere;
-            node.storage(node_set{}) = true;
-
+            return nt;
         }
 
 
 
         //! @brief Initialize variables (storage, etc...) of a robot using feedback data.
-        FUN void init_robot(ARGS) {
-            if (isWorker(CALL)) {
-                node.storage(node_label_text{}) = "RM." + std::to_string(node.uid);
+        FUN void init_robot(ARGS, std::string prefix) {
+            // init settings
+            if (node.storage(node_size{}) == 0) {
+                node.storage(node_size{}) = NODE_SIZE;
             }
-            else
-            {
-                node.storage(node_label_text{}) = "RS." + std::to_string(node.uid);
+            if (node.storage(node_label_size{}) == 0) {
+                node.storage(node_label_size{}) = LABEL_SIZE;
             }
-            
+            node.storage(node_label_text{}) = prefix + std::to_string(node.uid);
+            node.storage(node_shape{}) = shape::sphere;
+            node.storage(node_shadow_color{}) = fcpp::color(0x837E7CFF);
+            node.storage(node_shadow_shape{}) = shape::sphere;
             // std::cout << "Robot " << prefix << node.uid << " initialized" << std::endl;
 
             old(CALL, robot_phase::IDLE, [&](robot_phase ph) {
@@ -952,31 +942,43 @@ namespace fcpp
         }
 
 
+
+
         //! @brief Main case study function.
         MAIN()
         {
 
             // for testing purposes
-            int nubmer_of_masters = 2; // TODO: this should be passed in from a user
+            int nubmer_of_masters = 2;
             // INITIALIZE VARS
             std::vector<goal_tuple_type> NewGoalsList{};
             int n_round = fcpp::coordination::counter(CALL); // maybe change so that it saves in the node storage, so you don't need to pass it as an argument
 
-            if (!node.storage(node_set{})) init_main_fn(CALL, n_round, nubmer_of_masters);
+            // we can change to make one initialization function that is ran only the first time
+            node_type nt = init_main_fn(CALL, n_round, nubmer_of_masters);
 
             // UPDATE DATA
-            acquire_new_goals(CALL, NewGoalsList);
+            acquire_new_goals(CALL, nt, NewGoalsList);
 
-            init_robot(CALL);
+            // INITIALIZE NODE AND STORAGE USING NEW DATA
+            if (nt == node_type::ROBOT_MASTER)
+            {
+                init_robot(CALL, "RM.");
+            }
+            else if (nt == node_type::ROBOT_SLAVE)
+            {
+                init_robot(CALL, "RS.");
+            }
+
 
             // Init Flocking
-            initialization(CALL);
+            initialization(CALL, nt);
 
 
             // PROCESS MANAGEMENT
-            // spawn_result_type r = spawn_process(CALL, nt, NewGoalsList, n_round);
+            spawn_result_type r = spawn_process(CALL, nt, NewGoalsList, n_round);
 
-            // manage_termination(CALL, nt, r);
+            manage_termination(CALL, nt, r);
 
         }
 

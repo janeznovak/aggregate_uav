@@ -168,6 +168,11 @@ namespace fcpp {
             struct node_startPosition {};
             // END
 
+            //! @brief Is the node initialised yet
+            struct node_set{};
+            //! @brief Is the node a worker
+            struct node_isWorker{};
+
         } // tags
 
 #ifndef AP_USE_CASE
@@ -355,6 +360,8 @@ namespace fcpp {
             tavg, real_t,
             tvar, real_t,
             nodes_by_goal_subcode, std::unordered_map<std::string, std::vector<device_t>>,
+            node_set, bool,
+            node_isWorker, bool,
 
             // START Flocking
             node_posMaster, tuple<bool, vec<3>>,
