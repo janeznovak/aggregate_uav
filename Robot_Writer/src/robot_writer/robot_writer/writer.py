@@ -16,7 +16,7 @@ ROBOT_PLACEHOLDER = "#ROBOT"
 ROBOT_INPUT_PATH_FROM_AP = "from_ap/to_robot/actions/#ROBOT/"
 DELIMITER = ";"
 TIMER_PERIOD = 0.1
-MASTER_PREFIX = "cf_0"
+MASTER_PREFIXES = ["cf_0", "cf_1"]
 
 
 class GoalPublisher(Node):
@@ -66,10 +66,10 @@ class GoalPublisher(Node):
 
             if act["action"] in ["GOAL"]:
                 self.goal_publisher_.publish(msg)
-                if self.robot_name == MASTER_PREFIX:
+                if self.robot_name == MASTER_PREFIXES:
                     self.get_logger().info('Publishing new GOAL: "%s"' % act["goal"])
 
-            if act["action"] == "ABORT" and self.robot_name == MASTER_PREFIX:
+            if act["action"] == "ABORT" and self.robot_name == MASTER_PREFIXES:
                 self.abort_publisher_.publish(msg)
                 self.get_logger().info('Publishing ABORT: "%s"' % act["goal"])
 
@@ -108,6 +108,7 @@ class GoalPublisher(Node):
         for f in files_sorted:
             with open(os.path.join(path, f), "r") as action_file:
                 reader = csv.reader(action_file, delimiter=DELIMITER)
+                # print the reader, do it with get_logger().debug
                 for row in reader:
                     x, y, z, qz, qw = coords.abs2rel(
                         float(row[3]),
@@ -120,9 +121,9 @@ class GoalPublisher(Node):
                         self.rotation,
                     )
 
-                    self.get_logger().debug(
-                        '"computed coordinates %s"' % str([x, y, z, qz, qw])
-                    )
+                    # self.get_logger().info(
+                    #     '"computed coordinates %s"' % str([x, y, z, qz, qw])
+                    # )
                     actions.append(
                         {
                             "action": row[0],

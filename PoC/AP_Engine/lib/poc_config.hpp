@@ -19,7 +19,7 @@ using namespace std;
 #define NULL_FLOAT_VALUE        -std::numeric_limits<float>::infinity() //TODO: think about other better empty values
 #define NULL_INT_VALUE          -std::numeric_limits<int>::infinity() //TODO: think about other better empty values
 #define AP_DEF_COMM_RANGE        5
-#define AP_DEF_RETAIN_SEC        2   
+#define AP_DEF_RETAIN_SEC        4   
 
 /* EXTERN */
 extern const int ROBOTS_START_INDEX;

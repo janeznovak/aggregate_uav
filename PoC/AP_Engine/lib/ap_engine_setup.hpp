@@ -316,9 +316,6 @@ namespace fcpp
             struct scout_battery_discharge_rate
             {
             };
-            struct node_posWorker
-            {
-            };
             struct node_active
             {
             };
@@ -401,7 +398,7 @@ namespace fcpp
 #endif
 
         //! @brief The maximum communication range between nodes; TODO: change this to test with different data, check which range is ok.
-        constexpr size_t communication_range = 100;
+        constexpr size_t communication_range = 10; // TODO: test with different data, also test with different retain time
 
         //! @brief Constant minimum number of nodes to form a circle
         constexpr int minNodesToFormCircle = 5;
@@ -440,6 +437,10 @@ namespace fcpp
     //! @brief Namespace for component options.
     namespace option
     {
+
+
+        //! @brief Dimensionality of the space.
+        constexpr size_t dim = 3;
 
         //! @brief Import tags to be used for component options.
         using namespace component::tags;
@@ -557,7 +558,6 @@ namespace fcpp
                             scout_battery_percentage, double,
                             scout_min_battery_percaentage, double,
                             scout_battery_discharge_rate, double,
-                            node_posWorker, tuple<bool, vec<3>>,
                             node_active, int,
 
                             // START Flocking
@@ -582,7 +582,7 @@ namespace fcpp
                         // data initialisation
                         init<
                             x, rectangle_d,
-                            node_active, n<0>,
+                            node_active, n<1>,
                             seed, functor::cast<distribution::interval_n<double, 0, seed_max>, uint_fast32_t>,
                             speed, functor::div<i<speed>, n<0>>,
                             devices, i<devices>,
@@ -591,9 +591,10 @@ namespace fcpp
                             node_offset_pos_x, i<node_offset_pos_x>,
                             node_offset_pos_y, i<node_offset_pos_y>,
                             nodes_by_goal_subcode, subcode_map_distr<nodes_by_goal_subcode>>,
-                        dimension<fcpp::coordination::dim>,                                                                   // dimensionality of the space
-                        connector<connect::radial<80, connect::fixed<fcpp::coordination::comm, 1, fcpp::coordination::dim>>>, // connection allowed within a radius comm range
-                                                                                                                              // connector<connect::fixed<fcpp::coordination::comm, 1, fcpp::coordination::dim>>, // connection allowed within a fixed comm range
+                        dimension<fcpp::coordination::dim>,                                             // dimensionality of the space
+                        connector<connect::fixed<fcpp::coordination::communication_range, 1, dim>>, // connection allowed within a radius comm range
+                        // connector<connect::radial<80, connect::fixed<fcpp::coordination::comm, 1, dim>>>,                                                                                                // connector<connect::fixed<fcpp::coordination::comm, 1, fcpp::coordination::dim>>, // connection allowed within a fixed comm range
+                        // connector<connect::radial<80, connect::fixed<fcpp::coordination::communication_range, 1, dim>>>,
                         shape_tag<node_shape>,                                                                                // the shape of a node is read from this tag in the store
                         size_tag<node_size>,                                                                                  // the size of a node is read from this tag in the store
                         color_tag<node_color, left_color, right_color>,                                                       // colors of a node are read from these

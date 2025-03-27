@@ -6,6 +6,7 @@ def abs2rel(x, y, z, angle, origin_x=0.0, origin_y=0.0, origin_z=0.0, rotation=0
     (origin_x, origin_y) rotated by rotation in radian.
     """
     max_rotation = 2 * pi
+    angle = 0.0
     new_qw = cos(((angle - rotation) % max_rotation)/2)
     new_qz = sin(((angle - rotation) % max_rotation)/2)
     new_x = x*cos(rotation)-y*sin(rotation)-(origin_x*cos(rotation)-origin_y*sin(rotation))

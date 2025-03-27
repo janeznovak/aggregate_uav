@@ -40,6 +40,8 @@ namespace fcpp
         using namespace std::chrono;
         using spawn_result_type = std::unordered_map<goal_tuple_type, times_t, fcpp::common::hash<goal_tuple_type>>;
 
+        constexpr int worker_requirements[5] = {0, 4, 0, 0, 0};
+
         // UTILS AP
 
         FUN bool isWorker(ARGS)
@@ -362,6 +364,7 @@ namespace fcpp
                 /**traslazione del cerchio attorno al master*/
                 vec<3> dist = get<1>(node.storage(node_posMaster{})) - node.position();
                 vec<3> versore = vecMyRadiant + dist;
+                // versore[2] = 0;
                 node.storage(node_vecMyVersor{}) = versore;
                 // this is my versore
                 // std::cout << "Calculating my vec_versore " << node.storage(node_vecMyVersor{}) << std::endl;
@@ -553,6 +556,12 @@ namespace fcpp
                 } else return acc;
             }, infoWorkerField, make_tagged_tuple<infoW_active, infoW_need, infoW_nodeDistance, infoW_position, infoW_velocity, infoW_nodeId>(false, INT_MIN, INT_MAX, make_vec(0, 0, 0), make_vec(0, 0, 0), node.uid));   
 
+            if (node.uid == 2)
+            {
+                std::cout << "My worker is: " << get<infoW_nodeId>(currWorker) << std::endl;
+            }
+            
+
             // Update the scout's info on the worker
             if(get<infoW_active>(currWorker)) {
                 node.storage(node_posMaster{}) = make_tuple(get<infoW_active>(currWorker), get<infoW_position>(currWorker));
@@ -570,7 +579,16 @@ namespace fcpp
             infoWorkerType newWorkerInfo = max_hood(CALL, updatedInfoWorkerField); // gets the worker with the smallest distance to the scout
             // smallest because, we negate the distance in the map_hood function, so the smallest distance is then the largest value
 
-            if (node.storage(node_countRound{}) > 400 && get<infoW_active>(newWorkerInfo)) // check with Gianluca if we need the roundcount
+            if (node.uid == 2)
+            {
+                std::cout << "The closest worker is: " << get<infoW_nodeId>(newWorkerInfo) << std::endl;
+            }
+            
+
+            // for testing purposes there is 250, can be changed
+            if (get<infoW_active>(newWorkerInfo)
+                && node.storage(node_countRound{}) > 250
+                ) // check with Gianluca if we need the roundcount
             {
             //     // only for scouts
                 if (!isWorker(CALL))
@@ -599,6 +617,8 @@ namespace fcpp
 
                         // change the worker for current scout
                         node.storage(node_posMaster{}) = make_tuple(get<infoW_active>(newWorkerInfo), get<infoW_position>(newWorkerInfo));
+                        // print out I am scout "scout" and I am assigned to worker "worker"
+                        std::cout << "I am scout " << node.uid << " and now I am assigned to worker " << get<infoW_nodeId>(newWorkerInfo) << std::endl;
                     } 
                 }
                 
@@ -609,6 +629,11 @@ namespace fcpp
         FUN void updateFollowersCount(ARGS) {
             if(isActive(CALL)) {
                 int num_scouts = count_hood(CALL) - 1;
+                // I am worker "worker" and I have "num_scouts" scouts
+                if (isWorker(CALL))
+                {
+                    std::cout << "I am worker " << node.uid << " and I have " << num_scouts << " scouts" << std::endl;
+                }
 
                 if(isWorker(CALL)) node.storage(scout_need{}) = node.storage(required_scouts{}) - num_scouts;
                 node.storage(node_numberOfSlave{}) = num_scouts;
@@ -750,6 +775,15 @@ namespace fcpp
             }
             else
             {
+                // print I am sending this action and then every part of the action
+                std::cout << "I am sending this action" << endl;
+                std::cout << "Goal action: " << get<goal_action>(goal) << endl;
+                std::cout << "Goal code: " << get<goal_code>(goal) << endl;
+                std::cout << "Robot chosen: " << robot_chosen << endl;
+                std::cout << "Position x: " << (float)node.storage(node_vecMyVersor{})[0] << endl;
+                std::cout << "Position y: " << (float)node.storage(node_vecMyVersor{})[1] << endl;
+                std::cout << "Position z: " << (float)node.storage(node_vecMyVersor{})[2] << endl;
+                std::cout << "Orientation w: " << get<goal_orient_w>(goal) << endl;
                 // send action to file a.k.a send the goal to the scout/slave
                 action::ActionData action_data = {
                     .action = get<goal_action>(goal),
@@ -833,12 +867,21 @@ namespace fcpp
                     if (!isWorker(CALL)) {
                         // std::cout << "I am running the flocking" << std::endl;
                         run_flocking(CALL);
+                        int goal_code_robot_id = std::stoi(get_robot_id_from_goal_code(get<goal_code>(goal)));
                         // print out what is sent to send_action_to_selected_node, so the goal and the process
                         std::cout << "Goal code: " << get<goal_code>(goal) << " Process: " << process << std::endl;
-                        if (std::stoi(get_robot_id_from_goal_code(get<goal_code>(goal))) == node.storage(scout_curr_worker{})) 
-                        {
-                            send_action_to_selected_node(CALL, goal);
-                        }
+                        // if (std::stoi(get_robot_id_from_goal_code(get<goal_code>(goal))) == node.storage(scout_curr_worker{})) 
+                        // {
+                            if (node.uid == 1)
+                            {
+                                std::cout << "I am sending the action" << std::endl;
+
+                            }
+                            if (node.storage(scout_curr_worker{}) == goal_code_robot_id)
+                            {
+                                send_action_to_selected_node(CALL, goal);
+                            }
+                        // }
                     }
                 }
                 // blinking colors if not running
@@ -949,10 +992,9 @@ namespace fcpp
                     node.storage(node_isWorker{}) = true;
                     node.storage(node_label_text{}) = "RM." + std::to_string(node.uid);
 
-                    // TODO: probably need the worker_needs so that different workers have different amount of workers
-                    node.storage(required_scouts{}) = 2; // FOR NOW IT'S JUST SET TO TO, BUT IT SHOULD BE CHANGED SO THAT A USER CAN SET THE INITIAL VALUE
-                    node.storage(scout_need{}) = 2 - nWorkerScout; // TODO: change this and original required scouts so they read from an array, where the index is the node.uid
-                    node.storage(original_required_scouts{}) = 2;
+                    node.storage(required_scouts{}) = worker_requirements[node.uid];
+                    node.storage(scout_need{}) = worker_requirements[node.uid] - nWorkerScout;
+                    node.storage(original_required_scouts{}) = worker_requirements[node.uid]; // TODO: if we won't use the dynamic change of the requirement, this is not needed
                     node.storage(scout_curr_worker{}) = -1; // the worker is not assigned to a scout
                     node.storage(node_numberOfSlave{}) = nWorkerScout; // number of scouts assigned to each worker
                 }
@@ -1137,7 +1179,7 @@ namespace fcpp
                 //     std::cout << "Goal code: " << get<goal_code>(goal) << " Goal action: " << get<goal_action>(goal) << " Round: " << n_round << endl;
                 //     std::cout << endl;
                 // }
-                node.storage(node_active{}) = 1;
+                // node.storage(node_active{}) = 1;
 
                 // assign index to the scout
                 assignScout(CALL);

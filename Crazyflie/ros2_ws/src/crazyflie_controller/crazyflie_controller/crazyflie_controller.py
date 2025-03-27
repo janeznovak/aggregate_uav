@@ -77,8 +77,8 @@ class CrazyflyController(Node):
         pose = msg.pose.position
         self.cf_position = np.array([pose.x, pose.y, pose.z])
 
-    def execute_trajectory(self, goal_vel, max_acceleration=1.0, max_speed=1.0):
-        final_pos = self.cf_position + goal_vel
+    def execute_trajectory(self, goal_pos, max_acceleration=1.0, max_speed=1.0):
+        final_pos = self.cf_position + goal_pos
 
         # Calcolo dell'accelerazione
         # time_to_reach_final_velocity = np.linalg.norm(goal_vel) / max_acceleration
@@ -88,9 +88,11 @@ class CrazyflyController(Node):
         # Angolo di beccheggio e accelerazione angolare (presumibilmente zero in questo caso)
         yaw_angle = 0.0
         angular_velocity = np.array([0.0, 0.0, 0.0])
+        
+        # self.cmdPosition(final_pos, yaw_angle)
 
         self.cmdFullState(
-            final_pos, goal_vel, acceleration, yaw_angle, angular_velocity
+            final_pos, goal_pos, acceleration, yaw_angle, angular_velocity
         )
 
     def execute_master_trajectory(self, msg: Goal):
@@ -216,7 +218,7 @@ class CrazyflyController(Node):
         self.cmdFullStateMsg.acc.x = acc[0]
         self.cmdFullStateMsg.acc.y = acc[1]
         self.cmdFullStateMsg.acc.z = acc[2]
-        q = rowan.from_euler(0, 0, yaw)
+        q = rowan.from_euler(0, yaw, 0)
         self.cmdFullStateMsg.pose.orientation.w = q[0]
         self.cmdFullStateMsg.pose.orientation.x = q[1]
         self.cmdFullStateMsg.pose.orientation.y = q[2]
@@ -225,6 +227,74 @@ class CrazyflyController(Node):
         self.cmdFullStateMsg.twist.angular.y = omega[1]
         self.cmdFullStateMsg.twist.angular.z = omega[2]
         self.cmdFullStatePublisher.publish(self.cmdFullStateMsg)
+        
+    def cmdPosition(self, pos, yaw=0.):
+        """
+        Send a streaming command of absolute position and yaw setpoint.
+
+        Useful for slow maneuvers where a high-level planner determines the
+        desired position, and the rest is left to the onboard controller.
+
+        For more information on streaming setpoint commands, see the
+        :meth:`cmdFullState()` documentation.
+
+        Args:
+        ----
+            pos (array-like of float[3]): Position. Meters.
+            yaw (float): Yaw angle. Radians.
+
+        """
+        self.cmdPositionMsg.header.stamp = self.get_clock().now().to_msg()
+        self.cmdPositionMsg.x = pos[0]
+        self.cmdPositionMsg.y = pos[1]
+        self.cmdPositionMsg.z = pos[2]
+        self.cmdPositionMsg.yaw = yaw
+        self.cmdPositionPublisher.publish(self.cmdPositionMsg)
+        
+        self.get_logger().info(f"Position: {pos} - Yaw: {yaw}")
+        
+    def goTo(self, goal, yaw, duration, relative=False, groupMask=0):
+        """
+        Move smoothly to the goal, then hover indefinitely.
+
+        Asynchronous command; returns immediately.
+
+        Plans a smooth trajectory from the current state to the goal position.
+        Will stop smoothly at the goal with minimal overshoot. If the current
+        state is at hover, the planned trajectory will be a straight line;
+        however, if the current velocity is nonzero, the planned trajectory
+        will be a smooth curve.
+
+        Plans the trajectory by solving for the unique degree-7 polynomial that
+        satisfies the initial conditions of the current position, velocity,
+        and acceleration, and ends at the goal position with zero velocity and
+        acceleration. The jerk (derivative of acceleration) is fixed at zero at
+        both boundary conditions.
+
+        Note: it is the user's responsibility to ensure that the goTo command
+        is feasible. If the duration is too short, the trajectory will require
+        impossible accelerations and velocities. The planner will not correct
+        this, and the failure to achieve the desired states will cause the
+        controller to become unstable.
+
+        Args:
+            goal (iterable of 3 floats): The goal position. Meters.
+            yaw (float): The goal yaw angle (heading). Radians.
+            duration (float): How long until the goal is reached. Seconds.
+            relative (bool): If true, the goal position is interpreted as a
+                relative offset from the current position. Otherwise, the goal
+                position is interpreted as absolute coordintates in the global
+                reference frame.
+            groupMask (int): Group mask bits. See :meth:`setGroupMask()` doc.
+
+        """
+        req = GoTo.Request()
+        req.group_mask = groupMask
+        req.relative = relative
+        req.goal = arrayToGeometryPoint(goal)
+        req.yaw = float(yaw)
+        req.duration = rclpy.duration.Duration(seconds=duration).to_msg()
+        self.goToService.call_async(req)
 
     def notifySetpointsStop(self, remainValidMillisecs=100, groupMask=0):
         """
