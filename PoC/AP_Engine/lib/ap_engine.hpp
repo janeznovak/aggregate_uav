@@ -834,8 +834,11 @@ namespace fcpp
                         // std::cout << "I am running the flocking" << std::endl;
                         run_flocking(CALL);
                         // print out what is sent to send_action_to_selected_node, so the goal and the process
-                        // std::cout << "Goal code: " << get<goal_code>(goal) << " Process: " << process << std::endl;
-                        send_action_to_selected_node(CALL, goal);
+                        std::cout << "Goal code: " << get<goal_code>(goal) << " Process: " << process << std::endl;
+                        if (std::stoi(get_robot_id_from_goal_code(get<goal_code>(goal))) == node.storage(scout_curr_worker{})) 
+                        {
+                            send_action_to_selected_node(CALL, goal);
+                        }
                     }
                 }
                 // blinking colors if not running
