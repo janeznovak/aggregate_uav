@@ -246,7 +246,7 @@ namespace fcpp
             struct node_vecMyVersor
             {
             };
-            struct node_checkIndex
+            struct node_fixIndex
             {
             };
             struct node_maxNumberOfSlave
@@ -567,7 +567,7 @@ namespace fcpp
                             node_myRadiant, double,
                             node_vecMyRadiant, vec<3>,
                             node_vecMyVersor, vec<3>,
-                            node_checkIndex, bool,
+                            node_fixIndex, bool,
                             node_maxNumberOfSlave, int,
                             node_secondReturn, bool,
                             node_flagDistance, bool,
@@ -582,7 +582,7 @@ namespace fcpp
                         // data initialisation
                         init<
                             x, rectangle_d,
-                            node_active, n<1>,
+                            node_active, n<0>,
                             seed, functor::cast<distribution::interval_n<double, 0, seed_max>, uint_fast32_t>,
                             speed, functor::div<i<speed>, n<0>>,
                             devices, i<devices>,

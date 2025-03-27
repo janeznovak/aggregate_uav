@@ -307,7 +307,7 @@ namespace fcpp
         // FLOCKING
 
         //! @brief controllo l'indice e nel caso non fosse valido lo riassegno...
-        FUN void checkIndex(ARGS)
+        FUN void fixIndex(ARGS)
         {
             using namespace tags;
             if (!isWorker(CALL))
@@ -318,7 +318,7 @@ namespace fcpp
                     tuple<int, int> check = max_hood(CALL, f);
                     if (get<1>(node.storage(node_indexSlave{})) == get<1>(check) && get<0>(node.storage(node_indexSlave{})) != get<0>(check))
                     {
-                        node.storage(node_checkIndex{}) = true;
+                        node.storage(node_fixIndex{}) = true;
                         // if (!(node.storage(node_secondReturn{})))
                         // {
                         //     get<1>(node.storage(node_indexSlave{})) += 1;
@@ -344,12 +344,12 @@ namespace fcpp
                 double myRadiant = (get<1>(node.storage(node_indexSlave{}))) * ((2 * pi) / node.storage(node_numberOfSlave{}));
                 node.storage(node_myRadiant{}) = myRadiant;
                 // my radiant
-                std::cout << "Calculating my radiant " << node.storage(node_myRadiant{}) << std::endl;
+                // std::cout << "Calculating my radiant " << node.storage(node_myRadiant{}) << std::endl;
                 double sine_value = std::sin(myRadiant);
                 double cosine_value = std::cos(myRadiant);
                 double x = sine_value * distanceMasterSlave;
                 double y = cosine_value * distanceMasterSlave;
-                if (node.storage(node_checkIndex{}))
+                if (node.storage(node_fixIndex{}))
                 {
                     x = sine_value * distanceCircularCrown;
                     y = cosine_value * distanceCircularCrown;
@@ -357,15 +357,15 @@ namespace fcpp
                 vec<3> vecMyRadiant = make_vec(x, y, 0);
                 node.storage(node_vecMyRadiant{}) = vecMyRadiant;
                 // this is my radiant
-                std::cout << "Calculating my vec_radiant " << node.storage(node_vecMyRadiant{}) << std::endl;
+                // std::cout << "Calculating my vec_radiant " << node.storage(node_vecMyRadiant{}) << std::endl;
 
                 /**traslazione del cerchio attorno al master*/
                 vec<3> dist = get<1>(node.storage(node_posMaster{})) - node.position();
                 vec<3> versore = vecMyRadiant + dist;
                 node.storage(node_vecMyVersor{}) = versore;
                 // this is my versore
-                std::cout << "Calculating my vec_versore " << node.storage(node_vecMyVersor{}) << std::endl;
-                std::cout << "My node_indexSlave " << get<1>(node.storage(node_indexSlave{})) << std::endl;
+                // std::cout << "Calculating my vec_versore " << node.storage(node_vecMyVersor{}) << std::endl;
+                // std::cout << "My node_indexSlave " << get<1>(node.storage(node_indexSlave{})) << std::endl;
                 // std::cout << "Calculating my corner after " << node.storage(node_vecMyVersor{}) << std::endl;
                 // if (!(isnan(versore[0]) && isnan(versore[1]))) {
                 // node.propulsion() = versore / norm(versore);
@@ -374,7 +374,7 @@ namespace fcpp
             }
         }
 
-        //! @brief se dei nodi slave escono dalla circonferenza "resetto" gli indici degli slave all'interno della circonferenza che superano il massimo indice...
+        //! @brief if slave nodes exit the circumference, reset the indices of the slaves within the circumference that exceed the maximum index...
         FUN bool decrementIndex(ARGS)
         {
             using namespace tags;
@@ -417,7 +417,7 @@ namespace fcpp
                     bool flag = compare(distance(get<1>(node.storage(node_posMaster{})), node.position()), minDistance);
                     vec<3> elasticMaster = make_vec(0, 0, 0);
                     vec<3> v = get<1>(node.storage(node_posMaster{})) - node.position();
-                    if (!node.storage(node_checkIndex{}))
+                    if (!node.storage(node_fixIndex{}))
                     {
                         elasticMaster = v * (1 - distanceMasterSlave / (norm(v))) * hardnessMasterSlave;
                     }
@@ -476,80 +476,6 @@ namespace fcpp
             }
         }
 
-        FUN void initialization(ARGS)
-        {
-            using namespace tags;
-            int slaves = 0;
-
-            // tuple of is_master and position
-            tuple<bool, vec<3>> t = make_tuple(false, make_vec(0, 0, 0));
-            if (isWorker(CALL))
-            {
-                t = make_tuple(true, node.position());
-            }
-
-            float percent_charge = node.storage(node_battery_charge{}) / 100.0;
-            if (percent_charge > 0)
-            {
-                slaves = (int)count_hood(CALL) - 1;
-                // slave doesn't have slaves
-                if (!isWorker(CALL))
-                {
-                    slaves = 0;
-                }
-            }
-
-            // number of slaves, you propagate the number of slaves and save the maximum number of slaves
-            field<int> identifierNumSlaves = nbr(CALL, 0, slaves);
-            node.storage(node_numberOfSlave{}) = max_hood(CALL, identifierNumSlaves);
-
-            field<tuple<bool, vec<3>>> identifierMaster = nbr(CALL, t);
-            // try to find the master(slaves have 0(false) for bool and master has something bigger(true))
-            tuple<bool, vec<3>> identified = max_hood(CALL, identifierMaster);
-            // go in the block of code if the node has identified the master, even if your master dies, you can get a new one with propagation
-            if (get<0>(identified))
-            {
-                node.storage(node_posMaster{}) = identified;
-                /**Quando un nodo identifica la posizione del master gli viene assegnato un indice che equivale
-                 * all'ordine di arrivo all'interno del cerchio...(servirà nella funzione myCorner)*/
-                if (!(node.storage(node_secondReturn{})))
-                {
-                    int maxIndex = nbr(CALL, 0, [&](field<int> indexes)
-                                       {
-                        int maxIndex = max_hood(CALL, indexes);
-                        // also checks if the robot is a slave, so that you don't mind the index of the master
-                        if (get<1>(node.storage(node_indexSlave{})) == 0 && !isWorker(CALL)) {
-                            return maxIndex + 1;
-                        }
-                        else {
-                            return maxIndex;
-                        } });
-
-                    if ((get<1>(node.storage(node_indexSlave{}))) == 0 && !isWorker(CALL))
-                    {
-                        node.storage(node_indexSlave{}) = make_tuple(node.uid, maxIndex);
-                    }
-                }
-                else
-                {
-                    if ((get<1>(node.storage(node_indexSlave{}))) == 0 && !isWorker(CALL))
-                    {
-                        // set the index just to the amount of slaves there is
-                        get<1>(node.storage(node_indexSlave{})) = node.storage(node_numberOfSlave{});
-                    }
-                }
-            }
-            else
-            {
-                // I think here the node_posMaster{} gets a(some) slave TODO: check this
-                node.storage(node_posMaster{}) = identified;
-            }
-
-            // propagete the maximum number of slaves, if current is bigger, than save it, otherwise take b
-            node.storage(node_maxNumberOfSlave{}) = old(CALL, 0, [&](int b)
-                                                        { return max(b, (node.storage(node_numberOfSlave{}))); });
-        }
-
         FUN void run_flocking(ARGS)
         {
             CODE
@@ -569,11 +495,11 @@ namespace fcpp
 
             // if (!(flagIndex && decrementIndex(CALL)))
             // {
-            //     checkIndex(CALL);
+            //     fixIndex(CALL);
             // }
             // else
             // {
-            //     node.storage(node_checkIndex{}) = false;
+            //     node.storage(node_fixIndex{}) = false;
             // }
 
             if (!isWorker(CALL))
@@ -693,6 +619,8 @@ namespace fcpp
             /**When a node identifies the position of the worker, it is assigned an index that corresponds
              * to the order of arrival within the circle.*/
             if (isActive(CALL)) {
+                std::cout << "For node: " << node.uid << " the current worker is: " << node.storage(scout_curr_worker{}) << std::endl;
+                std::cout << "My index before assign: " << get<1>(node.storage(node_indexSlave{})) << std::endl;
 
                 tuple<int, int> scoutVal = make_tuple(node.storage(scout_curr_worker{}), get<1>(node.storage(node_indexSlave{}))); // id of the scouts current worker and the index of the scout
                 field<tuple<int, int>> fieldScoutVal = nbr(CALL, scoutVal); // just a field of the scoutVal tuple of the neighbors
@@ -718,8 +646,10 @@ namespace fcpp
                 if ((get<1>(node.storage(node_indexSlave{}))) == 0 && !isWorker(CALL)) {
                     // I am setting the index of the scout to the max index
                     // std::cout << "Setting index to: " << maxIndex << "for node: " << node.uid << std::endl;
+                    std::cout << "Changing index for node: " << node.uid << " from: " << get<1>(node.storage(node_indexSlave{})) << " to: " << maxIndex << std::endl;
                     node.storage(node_indexSlave{}) = make_tuple(node.uid, maxIndex);
                 }
+                std::cout << "My index after assign: " << get<1>(node.storage(node_indexSlave{})) << std::endl;
             } 
         }
 
@@ -730,7 +660,7 @@ namespace fcpp
         FUN bool checkDuplicateIndex(ARGS) { CODE
             /**Check in case the indexes overlap*/
             bool duplicateExists = false;
-            if (!isWorker(CALL) && isActive(CALL)) {
+            if (!isWorker(CALL) && isActive(CALL)) { // TODO: could we remove the !isWorker(CALL) check, so that the master propagates the indexes of the slaves as well
                 field<tuple<int, int>> identifierWrongIndex = nbr(CALL, node.storage(node_indexSlave{}));
                 duplicateExists = any_hood(CALL, map_hood([](tuple<int, int> t, tuple<int, int> myValue) {
                     if (get<1>(myValue) == get<1>(t) && get<0>(myValue) != get<0>(t)) { // check if current node has the same index as the one from neighbour and that the node is not the same one, so you don't compare me to me
@@ -751,10 +681,11 @@ namespace fcpp
                 
                 if (duplicatedIndexes)
                 {
+                    std::cout << "Found duplicate indexes for node: " << node.uid << " with index: " << get<1>(node.storage(node_indexSlave{})) << std::endl;
                     // If there are duplicates, adjust the indexes accordingly
-                    split(CALL, node.storage(scout_curr_worker{}), [&]() {return checkIndex(CALL);}); // do for the network of the current worker
+                    split(CALL, node.storage(scout_curr_worker{}), [&]() {return fixIndex(CALL);}); // do for the network of the current worker
                 } else {
-                    node.storage(node_checkIndex{}) = false; // in the other code the name is node_fixIndex
+                    node.storage(node_fixIndex{}) = false;
                 }       
 
                 // Decrement indexes higher than the current number of scouts
@@ -1203,6 +1134,7 @@ namespace fcpp
                 //     std::cout << "Goal code: " << get<goal_code>(goal) << " Goal action: " << get<goal_action>(goal) << " Round: " << n_round << endl;
                 //     std::cout << endl;
                 // }
+                node.storage(node_active{}) = 1;
 
                 // assign index to the scout
                 assignScout(CALL);
@@ -1222,7 +1154,7 @@ namespace fcpp
                 }
 
                 // ACTION: REACH GOAL
-                else if (GOAL_ACTION == get<goal_action>(goal)) {
+                else if (GOAL_ACTION == get<goal_action>(goal) && isActive(CALL)) {
                     // std::cout << "Robot " << node.uid << " is in goal action" << endl;
                     // print the goal_action and goal_action
                     // std::cout << "Goal action: " << get<goal_action>(goal) << " Goal code: " << get<goal_code>(goal) << " for robot " << node.uid << endl;
