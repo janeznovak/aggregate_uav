@@ -558,7 +558,7 @@ namespace fcpp
                             scout_min_battery_percaentage, double,
                             scout_battery_discharge_rate, double,
                             node_posWorker, tuple<bool, vec<3>>,
-                            node_active, bool,
+                            node_active, int,
 
                             // START Flocking
                             node_posMaster, tuple<bool, vec<3>>,
@@ -582,6 +582,7 @@ namespace fcpp
                         // data initialisation
                         init<
                             x, rectangle_d,
+                            node_active, n<1>,
                             seed, functor::cast<distribution::interval_n<double, 0, seed_max>, uint_fast32_t>,
                             speed, functor::div<i<speed>, n<0>>,
                             devices, i<devices>,

@@ -337,11 +337,14 @@ namespace fcpp
         FUN void calculateMyCorner(ARGS)
         {
             using namespace tags;
+            // std::cout << "Calculating my corner before " << node.storage(node_vecMyVersor{}) << std::endl;
             // if it has a master
             if (get<0>(node.storage(node_posMaster{})))
             {
                 double myRadiant = (get<1>(node.storage(node_indexSlave{}))) * ((2 * pi) / node.storage(node_numberOfSlave{}));
                 node.storage(node_myRadiant{}) = myRadiant;
+                // my radiant
+                std::cout << "Calculating my radiant " << node.storage(node_myRadiant{}) << std::endl;
                 double sine_value = std::sin(myRadiant);
                 double cosine_value = std::cos(myRadiant);
                 double x = sine_value * distanceMasterSlave;
@@ -353,11 +356,17 @@ namespace fcpp
                 }
                 vec<3> vecMyRadiant = make_vec(x, y, 0);
                 node.storage(node_vecMyRadiant{}) = vecMyRadiant;
+                // this is my radiant
+                std::cout << "Calculating my vec_radiant " << node.storage(node_vecMyRadiant{}) << std::endl;
 
                 /**traslazione del cerchio attorno al master*/
                 vec<3> dist = get<1>(node.storage(node_posMaster{})) - node.position();
                 vec<3> versore = vecMyRadiant + dist;
                 node.storage(node_vecMyVersor{}) = versore;
+                // this is my versore
+                std::cout << "Calculating my vec_versore " << node.storage(node_vecMyVersor{}) << std::endl;
+                std::cout << "My node_indexSlave " << get<1>(node.storage(node_indexSlave{})) << std::endl;
+                // std::cout << "Calculating my corner after " << node.storage(node_vecMyVersor{}) << std::endl;
                 // if (!(isnan(versore[0]) && isnan(versore[1]))) {
                 // node.propulsion() = versore / norm(versore);
                 // }
@@ -620,7 +629,7 @@ namespace fcpp
 
             // Update the scout's info on the worker
             if(get<infoW_active>(currWorker)) {
-                node.storage(node_posWorker{}) = make_tuple(get<infoW_active>(currWorker), get<infoW_position>(currWorker));
+                node.storage(node_posMaster{}) = make_tuple(get<infoW_active>(currWorker), get<infoW_position>(currWorker));
             }
 
             // Update the distance of the scout to the workers(multiple, since we used nbr and we have multiple workers)
@@ -637,7 +646,7 @@ namespace fcpp
 
             if (node.storage(node_countRound{}) > 400 && get<infoW_active>(newWorkerInfo)) // check with Gianluca if we need the roundcount
             {
-                // only for scouts
+            //     // only for scouts
                 if (!isWorker(CALL))
                 {
                     // find the closest scout. If there is a need for a new scout, we will reassign one, otherwise nothing
@@ -663,7 +672,7 @@ namespace fcpp
                         if(!isWorker(CALL)) node.storage(scout_curr_worker{}) = get<infoW_nodeId>(newWorkerInfo);
 
                         // change the worker for current scout
-                        node.storage(node_posWorker{}) = make_tuple(get<infoW_active>(newWorkerInfo), get<infoW_position>(newWorkerInfo));
+                        node.storage(node_posMaster{}) = make_tuple(get<infoW_active>(newWorkerInfo), get<infoW_position>(newWorkerInfo));
                     } 
                 }
                 
@@ -676,7 +685,7 @@ namespace fcpp
                 int num_scouts = count_hood(CALL) - 1;
 
                 if(isWorker(CALL)) node.storage(scout_need{}) = node.storage(required_scouts{}) - num_scouts;
-                node.storage(node_numberOfScouts{}) = num_scouts;
+                node.storage(node_numberOfSlave{}) = num_scouts;
             }
         }
 
@@ -703,8 +712,12 @@ namespace fcpp
                         return maxIndex;
                     }
                 });
+                // the maxindex
+                // std::cout << "Max index: " << maxIndex << std::endl;
                 // Assign the found value, but just if the scout has no index
                 if ((get<1>(node.storage(node_indexSlave{}))) == 0 && !isWorker(CALL)) {
+                    // I am setting the index of the scout to the max index
+                    // std::cout << "Setting index to: " << maxIndex << "for node: " << node.uid << std::endl;
                     node.storage(node_indexSlave{}) = make_tuple(node.uid, maxIndex);
                 }
             } 
@@ -773,7 +786,7 @@ namespace fcpp
         }
 
         //! @brief Send a GOAL action to selected node and update the AP state machine of the robot to SELECTED
-        FUN void send_action_to_selected_node(ARGS, process_tuple_type &p, goal_tuple_type const &goal)
+        FUN void send_action_to_selected_node(ARGS, goal_tuple_type const &goal)
         {
             CODE
                 std::string robot_chosen = get_real_robot_name(CALL, node.uid);
@@ -882,13 +895,16 @@ namespace fcpp
                             // calculated(in a function), since we don't have a
                             // predetermined path, but get the end position from the
                             // goal
-                            send_action_to_selected_node(CALL, process, goal);
+                            send_action_to_selected_node(CALL, goal);
                         }
                     }
 
                     if (!isWorker(CALL)) {
+                        // std::cout << "I am running the flocking" << std::endl;
                         run_flocking(CALL);
-                        send_action_to_selected_node(CALL, process, goal);
+                        // print out what is sent to send_action_to_selected_node, so the goal and the process
+                        // std::cout << "Goal code: " << get<goal_code>(goal) << " Process: " << process << std::endl;
+                        send_action_to_selected_node(CALL, goal);
                     }
                 }
                 // blinking colors if not running
@@ -1004,7 +1020,7 @@ namespace fcpp
                     node.storage(scout_need{}) = 2 - nWorkerScout; // TODO: change this and original required scouts so they read from an array, where the index is the node.uid
                     node.storage(original_required_scouts{}) = 2;
                     node.storage(scout_curr_worker{}) = -1; // the worker is not assigned to a scout
-                    node.storage(node_numberOfScouts{}) = nWorkerScout; // number of scouts assigned to each worker
+                    node.storage(node_numberOfSlave{}) = nWorkerScout; // number of scouts assigned to each worker
                 }
                 else
                 {
@@ -1187,6 +1203,12 @@ namespace fcpp
                 //     std::cout << "Goal code: " << get<goal_code>(goal) << " Goal action: " << get<goal_action>(goal) << " Round: " << n_round << endl;
                 //     std::cout << endl;
                 // }
+
+                // assign index to the scout
+                assignScout(CALL);
+
+                // correct the indexes of scouts
+                correctIndexes(CALL);
                 
 
                 // ACTION: ABORT GOAL
@@ -1287,13 +1309,13 @@ namespace fcpp
             apply_feedback_to_ap(CALL);
 
             // call updateWorker so that the scouts get the correct worker. TODO: MOVE TO THE PROCESS. FOR NOW DECIDED TO NOT MOVE IT
-            // updateWorker(CALL);
+            updateWorker(CALL);
 
             // update the count of scouts
-            // split(CALL, (isWorker(CALL)) ? node.uid : node.storage(scout_curr_worker{}), [&]() {return updateFollowersCount(CALL);}); // split according to the uid if current node is worker, otherwise use the worker of the current scout
+            split(CALL, (isWorker(CALL)) ? node.uid : node.storage(scout_curr_worker{}), [&]() {return updateFollowersCount(CALL);}); // split according to the uid if current node is worker, otherwise use the worker of the current scout
 
             // Init Flocking
-            initialization(CALL); // I think we will not need this after the refactoring
+            // initialization(CALL); // I think we will not need this after the refactoring
 
             // Assign index to the scout, TODO: MOVE TO THE PROCESS
             // assignScout(CALL);
@@ -1329,7 +1351,8 @@ namespace fcpp
             tuple<int, int>,
             tuple<bool, double>,
             bool,
-            tuple<bool, bool>>;
+            tuple<bool, bool>,
+            tuple<vec<3>, int>>;
 
         //! @brief Export types used by the main function (update it when expanding the program).
         struct main_t : public export_list<
