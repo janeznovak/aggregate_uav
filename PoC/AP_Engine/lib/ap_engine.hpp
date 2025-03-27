@@ -1,7 +1,7 @@
 // Copyright © 2023 Gianluca Torta, Daniele Bortoluzzi. All Rights Reserved.
 
 /**
- * @file ap_engine_multi.hpp
+ * @file ap_engine.hpp
  * @brief AP code for the engine with multiple workers.
  *
  * It's used for simulation and embedded deployment.
@@ -558,14 +558,14 @@ namespace fcpp
                     return true;
                 } }, identifierWrongIndex, node.storage(node_indexSlave{})));
 
-            if (!(flagIndex && decrementIndex(CALL)))
-            {
-                checkIndex(CALL);
-            }
-            else
-            {
-                node.storage(node_checkIndex{}) = false;
-            }
+            // if (!(flagIndex && decrementIndex(CALL)))
+            // {
+            //     checkIndex(CALL);
+            // }
+            // else
+            // {
+            //     node.storage(node_checkIndex{}) = false;
+            // }
 
             if (!isWorker(CALL))
             {
@@ -1179,6 +1179,8 @@ namespace fcpp
                     std::cout << "test_nbr_in_process: " << test_nbr << std::endl;
                 }
 
+                // std::cout << "I am robot " << node.uid << " and my master is " << node.storage(scout_curr_worker{}) << std::endl;
+
                 // if (isWorker(CALL))
                 // {
                 //     // print the goal_code and goal_action and which round it is
@@ -1284,19 +1286,19 @@ namespace fcpp
             // multi_worker_doesn't have this, since it is applied directly in the AP itself, and it doesn't have ROS2
             apply_feedback_to_ap(CALL);
 
-            // call updateWorker so that the scouts get the correct worker
+            // call updateWorker so that the scouts get the correct worker. TODO: MOVE TO THE PROCESS. FOR NOT DECIDED TO NOT MOVE IT
             // updateWorker(CALL);
 
             // update the count of scouts
-            split(CALL, (isWorker(CALL)) ? node.uid : node.storage(scout_curr_worker{}), [&]() {return updateFollowersCount(CALL);}); // split according to the uid if current node is worker, otherwise use the worker of the current scout
+            // split(CALL, (isWorker(CALL)) ? node.uid : node.storage(scout_curr_worker{}), [&]() {return updateFollowersCount(CALL);}); // split according to the uid if current node is worker, otherwise use the worker of the current scout
 
             // Init Flocking
             initialization(CALL); // I think we will not need this after the refactoring
 
-            // Assign index to the scout
-            assignScout(CALL);
+            // Assign index to the scout, TODO: MOVE TO THE PROCESS
+            // assignScout(CALL);
 
-            correctIndexes(CALL);
+            // correctIndexes(CALL);
 
             // TODO: HERE IS WHERE I STOPPED. NOW THE INDEXES SHOULD BE CORRECT, THE SLAVES SHOULD BELONG TO CORRECT WORKERS
             // NOW THE GOAL NEEDS TO BE FOLLOWED(WORKER MOVED ACCORDING TO WHAT THE GOAL FROM ROS2 IS AND SLAVES SHOULD POSITIONED
