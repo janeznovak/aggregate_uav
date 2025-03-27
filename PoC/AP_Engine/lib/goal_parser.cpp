@@ -119,3 +119,19 @@ goal::GoalData goal::parser::GoalParser::parse_line(string line) {
   };
   return data;
 }
+
+// TODO: put the goal id in the structure of the goal
+
+string get_robot_id_from_goal_code(string goal_code) {
+  std::vector<std::string> tokens;
+  size_t start = 0;
+  size_t end = goal_code.find("-");
+  while (end != std::string::npos) {
+      tokens.push_back(goal_code.substr(start, end - start));
+      start = end + 1;
+      end = goal_code.find("-", start);
+  }
+  tokens.push_back(goal_code.substr(start, end));
+  
+  return tokens[2];
+}

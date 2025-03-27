@@ -24,6 +24,8 @@
 #include "lib/ap_engine_setup.hpp"
 #include "lib/action_writer.hpp"
 #include <cstdlib>
+#include <optional>
+#include "lib/goal_parser.h"
 
 namespace fcpp
 {
@@ -58,20 +60,6 @@ namespace fcpp
                 return get_robot_name(ROBOTS, static_cast<int>(node_uid));
         }
 
-        FUN string get_robot_id_from_goal_code(ARGS, string goal_code) {
-            CODE
-                std::vector<std::string> tokens;
-                size_t start = 0;
-                size_t end = goal_code.find("-");
-                while (end != std::string::npos) {
-                    tokens.push_back(goal_code.substr(start, end - start));
-                    start = end + 1;
-                    end = goal_code.find("-", start);
-                }
-                tokens.push_back(goal_code.substr(start, end));
-                
-                return tokens[2];
-        }
 
         //! @brief Update in the storage the tag "node_external_status_update_time"
         FUN void update_last_goal_update_time(ARGS) {
@@ -541,21 +529,11 @@ namespace fcpp
         //! @brief Send a GOAL action to selected node and update the AP state machine of the robot to SELECTED
         FUN void send_action_to_selected_node(ARGS, node_type nt, process_tuple_type& p, goal_tuple_type const& g, status* s) {
             CODE
-                std::string robot_chosen = get_real_robot_name(CALL, node.uid);
-                std::string goal_code_robot = get_real_robot_name(CALL, std::stoi(get_robot_id_from_goal_code(CALL, common::get<goal_code>(g))));
-                int goal_code_robot_id = std::stoi(get_robot_id_from_goal_code(CALL, common::get<goal_code>(g)));
-
-            if (nt == node_type::ROBOT_MASTER && node.uid == goal_code_robot_id) {
-                // here I think we should change the code so that it's not reading
-                // the goal directly from a file with a predetermined path, but
-                // instead it should get the goal from the slaves which exemined
-                // where the goal is
-                // TODO: check if the goal is the one from the file or is it from
-                // creating a new goal
-                std::cout << "Robot " << robot_chosen << " is chosen for goal " << common::get<goal_code>(g) << endl;
+            if (nt == node_type::ROBOT_MASTER) {
+                // std::cout << "Robot " << robot_chosen << " is chosen for goal " << common::get<goal_code>(g) << endl;
                 // print the goal_code_robot_id and node.uid
-                std::cout << "Goal code robot id: " << goal_code_robot_id << " Node uid: " << node.uid << endl;
-                std::cout << endl;
+                // std::cout << "Goal code robot id: " << goal_code_robot_id << " Node uid: " << node.uid << endl;
+                // std::cout << endl;
 
                 // set processing status to SELECTED
                 node.storage(node_process_status{}) = ProcessingStatus::SELECTED;
@@ -616,8 +594,7 @@ namespace fcpp
         FUN void manage_action_goal(ARGS, node_type nt, goal_tuple_type const& g, status* s, int n_round) {
             CODE
 
-                std::cout << "Process GOAL " << common::get<goal_code>(g) << ", action " << common::get<goal_action>(g) << " in node " << node.uid << endl;
-
+                // std::cout << "Process GOAL " << common::get<goal_code>(g) << ", action " << common::get<goal_action>(g) << " in node " << node.uid << endl;
             add_goal_to_computing_map(CALL, g);
 
             old(CALL, common::make_tagged_tuple<goal_code>(common::get<goal_code>(g)), [&](process_tuple_type p) {
@@ -641,7 +618,8 @@ namespace fcpp
                 else {
                     if (nt == node_type::ROBOT_MASTER) {
                         int c = 0;
-                        if(node.storage(node_process_status{}) == ProcessingStatus::IDLE && (c = counter(CALL)) == 1){
+                        int goal_code_robot_id = std::stoi(get_robot_id_from_goal_code(common::get<goal_code>(g)));
+                        if(node.storage(node_process_status{}) == ProcessingStatus::IDLE && node.uid == goal_code_robot_id && (c = counter(CALL)) == 1){
                             std::cout << "Process GOAL " << c;
                             // I think here there should also be movement
                             // calculated(in a function), since we don't have a
@@ -685,8 +663,20 @@ namespace fcpp
 
 
         //! @brief Read new goals from shared variable and insert them in NewGoalsList
-        // TODO: check performance of using std::transform 
-        FUN void read_new_goals(ARGS, std::vector<goal_tuple_type>& NewGoalsList) {
+        void read_new_goals(std::vector<goal_tuple_type>& NewGoalsList, std::optional<std::string> source) {
+            std::vector<InputGoal> InputGoalsBySource;
+
+            // if source is specified
+            if (source.has_value()) {
+                // keep only goals with source = node_ext_name
+                std::copy_if(InputGoalList.begin(), InputGoalList.end(), std::back_inserter(InputGoalsBySource), [&](InputGoal ig) {
+                    return get_robot_id_from_goal_code(ig.goal_code) == source.value();
+                });
+            } else {
+                // otherwise, copy all InputGoal
+                InputGoalsBySource = InputGoalList;
+            }
+            
             std::lock_guard lgg(GoalMutex);
             auto map_op = [](InputGoal ig) {
                 return common::make_tagged_tuple<goal_action, goal_code, goal_pos_x, goal_pos_y, goal_pos_z, goal_orient_w, goal_source, goal_priority, goal_subcode>(
@@ -700,10 +690,31 @@ namespace fcpp
                     ig.priority,
                     ig.subcode
                 );
-                };
-            std::transform(InputGoalList.begin(), InputGoalList.end(), std::back_inserter(NewGoalsList), map_op);
-            InputGoalList.clear();
+            };
+            std::transform(InputGoalsBySource.begin(), InputGoalsBySource.end(), std::back_inserter(NewGoalsList), map_op);
+
+            // delete only goals with source = node_ext_name
+            if (source.has_value()) {
+                std::cout << "I am erasing" << std::endl;
+                // std::cout << "This is the source value" << source.value() << std::endl;
+                InputGoalList.erase(
+                    std::remove_if(InputGoalList.begin(), InputGoalList.end(), [&](InputGoal ig) {
+                        return get_robot_id_from_goal_code(ig.goal_code) == source.value();
+                    }),
+                    InputGoalList.end()
+                );
+            } else {
+                std::cout << "I am clearing" << std::endl;
+                InputGoalList.clear();
+            }
         }
+
+        //! @brief Acquire new goals from storage, in according with node_type.
+        FUN void acquire_new_goals(ARGS, node_type nt, std::vector<goal_tuple_type>& NewGoalsList) { CODE
+            read_new_goals(NewGoalsList, std::optional<string>(std::to_string(node.uid)));        
+        }
+
+        
 
         // MAIN FUNCTIONS
 
@@ -744,19 +755,6 @@ namespace fcpp
         }
 
 
-        //! @brief Acquire new goals from storage, in according with node_type.
-        FUN void acquire_new_goals(ARGS, node_type nt, std::vector<goal_tuple_type>& NewGoalsList) {
-            #if FCPP_SYSTEM == FCPP_SYSTEM_GENERAL
-                if (nt == node_type::ROBOT_MASTER) {
-                    // Guardare stato (running/selected) per decidere se prendere in carico goal 
-                    read_new_goals(CALL, NewGoalsList);
-                }
-            #else
-                if (nt == node_type::ROBOT_MASTER && EMBEDDED_NODE_KIOSK == node.uid) {
-                    read_new_goals(CALL, NewGoalsList);
-                }
-            #endif
-        }
 
         //! @brief Initialize variables (storage, etc...) of a robot using feedback data.
         FUN void init_robot(ARGS, std::string prefix) {
@@ -778,6 +776,7 @@ namespace fcpp
             }
             node.storage(node_shadow_color{}) = fcpp::color(0x837E7CFF);
             node.storage(node_shadow_shape{}) = shape::sphere;
+            // std::cout << "Robot " << prefix << node.uid << " initialized" << std::endl;
 
             old(CALL, robot_phase::IDLE, [&](robot_phase ph) {
                 std::string rname = ROBOT_PREFIX + std::to_string(node.uid); // name is obtained from node ID
@@ -810,26 +809,33 @@ namespace fcpp
                         fcpp::color new_color = fcpp::color(fcpp::coordination::idle_color);
                         // if new state is RUNNING: change to "running color"
                         if (feedback::GoalStatus::RUNNING == rs.goal_status) {
+                            // print that the robot is running
+                            // std::cout << "Robot " << rname << " is in running" << endl;
                             manage_running_goal_status(CALL);
                         }
                         // if new state is REACHED:
                         else if (feedback::GoalStatus::REACHED == rs.goal_status) {
+                            // std::cout << "Robot " << rname << " is in reached" << endl;
                             manage_reached_goal_status(CALL);
                         }
                         // if new state is UNKNOWN: new color is idle    
                         else if (feedback::GoalStatus::UNKNOWN == rs.goal_status) {
+                            // std::cout << "Robot " << rname << " is in unknown" << endl;
                             manage_unknown_goal_status(CALL);
                         }
                         // if new state is FAILED: new color is failed        
                         else if (feedback::GoalStatus::FAILED == rs.goal_status) {
+                            // std::cout << "Robot " << rname << " is in failed" << endl;
                             manage_failed_goal_status(CALL);
                         }
                         // if new state is ABORTED: new color is aborted        
                         else if (feedback::GoalStatus::ABORTED == rs.goal_status) {
+                            // std::cout << "Robot " << rname << " is in aborted" << endl;
                             manage_aborted_goal_status(CALL);
                         }
                         // if new state is NO GOAL: new color is idle        
                         else if (feedback::GoalStatus::NO_GOAL == rs.goal_status) {
+                            // std::cout << "Robot " << rname << " is in no goal" << endl;
                             manage_no_goal_status(CALL);
                         }
                         // otherwise: maintain previous
@@ -874,11 +880,17 @@ namespace fcpp
                 if (ABORT_ACTION == common::get<goal_action>(g) &&
                     node.storage(node_process_goal{}) == common::get<goal_code>(g) &&
                     node.storage(node_external_goal{}) == common::get<goal_code>(g)) {
+                    std::cout << "Robot " << node.uid << " is in abort action" << endl;
+
                     manage_action_abort(CALL, g, &s);
                 }
 
                 // ACTION: REACH GOAL
                 else if (GOAL_ACTION == common::get<goal_action>(g)) {
+                    std::cout << "Robot " << node.uid << " is in goal action" << endl;
+                    // print the goal_action and goal_action
+                    // std::cout << "Goal action: " << common::get<goal_action>(g) << " Goal code: " << common::get<goal_code>(g) << " for robot " << node.uid << endl;
+
                     manage_action_goal(CALL, nt, g, &s, n_round);
                 }
 

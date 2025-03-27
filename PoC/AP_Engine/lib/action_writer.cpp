@@ -12,7 +12,7 @@
 
  /**** PUBLIC ****/
 void action::manager::ActionManager::new_action(action::ActionData data) {
-	std::cout << "Action sent to robots and to web: " << data.robot << endl;
+	// std::cout << "Action sent to robots and to web: " << data.robot << endl;
 	std::string output_folder_action_to_robots = string(OUTPUT_FOLDER_BASE_PATH) + std::regex_replace(OUTPUT_FOLDER_TO_ROBOTS_ACTION, std::regex(ROBOTS_PLACEHOLDER), data.robot);
 	std::string output_folder_action_to_web = string(OUTPUT_FOLDER_BASE_PATH) + std::regex_replace(OUTPUT_FOLDER_TO_WEB_ACTION, std::regex(ROBOTS_PLACEHOLDER), data.robot);
 

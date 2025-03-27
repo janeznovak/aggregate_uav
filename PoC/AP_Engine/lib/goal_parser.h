@@ -68,4 +68,5 @@ namespace goal
   }
 }
 
+string get_robot_id_from_goal_code(string goal_code);
 #endif
