@@ -134,4 +134,5 @@ fi
 trap "cleanup" SIGINT SIGTERM EXIT
 
 echo "Starting gazebo gui"
-gz sim -g
+# gz sim -g
+gz sim -s

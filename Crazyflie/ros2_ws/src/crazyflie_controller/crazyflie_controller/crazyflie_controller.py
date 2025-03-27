@@ -106,11 +106,11 @@ class CrazyflyController(Node):
         master_id = msg.goal_id.split("-")[2]
         robot_real_id = self.cfname.split("_")[1]
         
-        # if master_id == robot_real_id:
-        # self.get_logger().info(f"The master id is: {master_id} and the robot real name is: {robot_real_id}")
-        traj.loadcsv(
-            f"{share_folder}/trajectory_data/{traj_name}.csv"
-        )
+        if master_id == robot_real_id:
+            self.get_logger().info(f"The master id is: {master_id} and the robot real name is: {robot_real_id}")
+            traj.loadcsv(
+                f"{share_folder}/trajectory_data/{traj_name}.csv"
+            )
 
         start_time = timeHelper.time()
         while not timeHelper.isShutdown() and not self.abort_flag:

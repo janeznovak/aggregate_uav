@@ -60,6 +60,7 @@ void watch_file_fn(string path, string str_expr, void (*callback)(std::string)) 
     });
 }
 
+// reads the content of the file and calls the callback for each line
 void new_file_callback(std::string file_path, void (*line_cb)(std::string)) {
   std::ifstream file_stream;
   file_stream.open(file_path);

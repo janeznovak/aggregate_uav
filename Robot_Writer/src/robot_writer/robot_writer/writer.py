@@ -58,6 +58,11 @@ class GoalPublisher(Node):
             msg.y = act["pos_y"]
             msg.qz = act["pos_z"]  # N.B. qz per semplicitá diventa la coordinata z
             msg.qw = act["orientation_w"]
+            # write the whole msg in a file called arguments.txt
+            with open("arguments.txt", "a") as f:
+                f.write("%s\n" % msg)
+                # write the robot name
+                f.write("%s\n" % self.robot_name)
 
             if act["action"] in ["GOAL"]:
                 self.goal_publisher_.publish(msg)

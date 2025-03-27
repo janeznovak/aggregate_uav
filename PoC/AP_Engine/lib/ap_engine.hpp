@@ -23,6 +23,7 @@
 #include "lib/common_data.hpp"
 #include "lib/ap_engine_setup.hpp"
 #include "lib/action_writer.hpp"
+#include <cstdlib>
 
 namespace fcpp
 {
@@ -55,6 +56,21 @@ namespace fcpp
         FUN string get_real_robot_name(ARGS, device_t node_uid) {
             CODE
                 return get_robot_name(ROBOTS, static_cast<int>(node_uid));
+        }
+
+        FUN string get_robot_id_from_goal_code(ARGS, string goal_code) {
+            CODE
+                std::vector<std::string> tokens;
+                size_t start = 0;
+                size_t end = goal_code.find("-");
+                while (end != std::string::npos) {
+                    tokens.push_back(goal_code.substr(start, end - start));
+                    start = end + 1;
+                    end = goal_code.find("-", start);
+                }
+                tokens.push_back(goal_code.substr(start, end));
+                
+                return tokens[2];
         }
 
         //! @brief Update in the storage the tag "node_external_status_update_time"
@@ -421,7 +437,7 @@ namespace fcpp
             field < tuple < bool, vec <3>>> identifierMaster = nbr(CALL, t);
             // try to find the master(slaves have 0(false) for bool and master has something bigger(true))
             tuple<bool, vec<3>> identified = max_hood(CALL, identifierMaster);
-            // go in the block of code if the node has identified the master
+            // go in the block of code if the node has identified the master, even if your master dies, you can get a new one with propagation
             if (get<0>(identified)) {
                 node.storage(node_posMaster{}) = identified;
                 /**Quando un nodo identifica la posizione del master gli viene assegnato un indice che equivale
@@ -526,8 +542,10 @@ namespace fcpp
         FUN void send_action_to_selected_node(ARGS, node_type nt, process_tuple_type& p, goal_tuple_type const& g, status* s) {
             CODE
                 std::string robot_chosen = get_real_robot_name(CALL, node.uid);
+                std::string goal_code_robot = get_real_robot_name(CALL, std::stoi(get_robot_id_from_goal_code(CALL, common::get<goal_code>(g))));
+                int goal_code_robot_id = std::stoi(get_robot_id_from_goal_code(CALL, common::get<goal_code>(g)));
 
-            if (nt == node_type::ROBOT_MASTER) {
+            if (nt == node_type::ROBOT_MASTER && node.uid == goal_code_robot_id) {
                 // here I think we should change the code so that it's not reading
                 // the goal directly from a file with a predetermined path, but
                 // instead it should get the goal from the slaves which exemined
@@ -535,6 +553,8 @@ namespace fcpp
                 // TODO: check if the goal is the one from the file or is it from
                 // creating a new goal
                 std::cout << "Robot " << robot_chosen << " is chosen for goal " << common::get<goal_code>(g) << endl;
+                // print the goal_code_robot_id and node.uid
+                std::cout << "Goal code robot id: " << goal_code_robot_id << " Node uid: " << node.uid << endl;
                 std::cout << endl;
 
                 // set processing status to SELECTED
@@ -558,6 +578,7 @@ namespace fcpp
                 std::cout << "Position x: " << common::get<goal_pos_x>(g) << endl;
             }
             else{
+                // send action to file a.k.a send the goal to the scout/slave
                 action::ActionData action_data = {
                     .action = common::get<goal_action>(g),
                     .goal_code = common::get<goal_code>(g),

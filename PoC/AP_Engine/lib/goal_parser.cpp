@@ -22,10 +22,12 @@ void add_to_input_goal_list(goal::GoalData data) {
 }
 
 /**** PUBLIC ****/
+// gets a line and parse it. It gets the content from the new_file_callback in poc_file_watcher.cpp
 void goal::manager::GoalManager::new_line_goal(std::string content) {
   std::cout << content << endl;
   auto data = goal::parser::GoalParser::parse_line(content);
   std::cout << "action:" << data.action << endl;
+  // in the goal code there is the trajectory-code, now there is also the robot id, seperated by a -
   std::cout << "goal_code:" << data.goal_code << endl;
   if (data.pos_x != NULL_FLOAT_VALUE)
     std::cout << "pos_x:" << data.pos_x << endl;
