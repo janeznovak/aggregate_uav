@@ -103,7 +103,11 @@ class CrazyflyController(Node):
         timeHelper = crazyflie.TimeHelper(self)
         share_folder = Path(__file__).parent
         traj_name = msg.goal_id.split("-")[0]
-
+        master_id = msg.goal_id.split("-")[2]
+        robot_real_id = self.cfname.split("_")[1]
+        
+        # if master_id == robot_real_id:
+        # self.get_logger().info(f"The master id is: {master_id} and the robot real name is: {robot_real_id}")
         traj.loadcsv(
             f"{share_folder}/trajectory_data/{traj_name}.csv"
         )
@@ -140,7 +144,11 @@ class CrazyflyController(Node):
 
     def ap_goal_callback(self, msg: Goal):
         if self.isMaster:
-            if msg.type == "GOAL":
+            master_id = msg.goal_id.split("-")[2]
+            robot_real_id = self.cfname.split("_")[1]
+            self.get_logger().info(f"The master id is: {master_id} and the robot real name is: {robot_real_id}")
+            if msg.type == "GOAL" and master_id == robot_real_id:
+                self.get_logger().info(f"This is the message: {msg}")
                 self.abort_flag = False
                 self.get_logger().info(f"Received GOAL Msg")
                 thread = threading.Thread(target=self.execute_master_trajectory, args=(msg,))
