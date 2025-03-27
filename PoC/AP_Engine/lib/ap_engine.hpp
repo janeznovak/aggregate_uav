@@ -687,7 +687,7 @@ namespace fcpp
         // MAIN FUNCTIONS
 
         //! @brief Initialize MAIN function, selecting correct node_type
-        FUN node_type init_main_fn(ARGS, int n_round) {
+        FUN node_type init_main_fn(ARGS, int n_round, int number_of_masters) {
             node_type nt;
 
             // std::cout << "range: " << fcpp::coordination::comm << std::endl;
@@ -700,8 +700,8 @@ namespace fcpp
                         ).count() << endl;
             }
 
-            #if   defined(RUN_SIMULATION)
-                if (node.uid == 0) {
+            #if defined(RUN_SIMULATION)
+                if (node.uid < number_of_masters) {
                     nt = node_type::ROBOT_MASTER;
                 }
                 else if (node.uid <= ROBOTS.size()) {
@@ -748,7 +748,13 @@ namespace fcpp
             }
             node.storage(node_label_text{}) = prefix + std::to_string(node.uid);
             node.storage(node_shape{}) = shape::sphere;
-            node.storage(node_label_color{}) = fcpp::color(fcpp::BLACK);
+            if (prefix == "RM")
+            {
+                node.storage(node_label_color{}) = fcpp::color(fcpp::GREEN);
+            }
+            else{
+                node.storage(node_label_color{}) = fcpp::color(fcpp::BLACK);
+            }
             node.storage(node_shadow_color{}) = fcpp::color(0x837E7CFF);
             node.storage(node_shadow_shape{}) = shape::sphere;
 
@@ -914,11 +920,14 @@ namespace fcpp
         //! @brief Main case study function.
         MAIN()
         {
+
+            // for testing purposes
+            int nubmer_of_masters = 2;
             // INITIALIZE VARS
             std::vector<goal_tuple_type> NewGoalsList{};
             int n_round = fcpp::coordination::counter(CALL);
 
-            node_type nt = init_main_fn(CALL, n_round);
+            node_type nt = init_main_fn(CALL, n_round, nubmer_of_masters);
 
             // UPDATE DATA
             acquire_new_goals(CALL, nt, NewGoalsList);

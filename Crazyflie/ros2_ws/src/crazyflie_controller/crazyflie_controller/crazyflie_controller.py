@@ -17,7 +17,7 @@ from crazyflie_py.uav_trajectory import Trajectory
 from crazyflie_py import crazyflie
 from rclpy.qos import qos_profile_services_default
 
-MASTER_PREFIX = "cf_0"
+MASTER_PREFIXES = ["cf_0", "cf_1"]
 GOAL_REACHED: int = 0
 GOAL_ABORTED: int = 1
 GOAL_FAILED: int = 2
@@ -35,7 +35,8 @@ class CrazyflyController(Node):
         self.cfname = cfname
         self.prefix = prefix
 
-        self.isMaster = cfname == MASTER_PREFIX
+        # self.isMaster = cfname == MASTER_PREFIX
+        self.isMaster = cfname in MASTER_PREFIXES
         self.cf_position = np.array([0.0, 0.0, 0.0])
 
         self.takeoffService = self.create_client(Takeoff, prefix + "/takeoff")
