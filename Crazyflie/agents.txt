@@ -1,6 +1,6 @@
 5.0, 5.0, crazyflie
 22.0, 22.0, crazyflie
 7.0, 7.0, crazyflie
-24.0, 24.0, crazyflie
 3.0, 7.0, crazyflie
+24.0, 24.0, crazyflie
 20.0, 20.0, crazyflie

@@ -35,6 +35,9 @@ namespace fcpp
 
         using namespace fcpp::coordination::tags;
         using namespace fcpp::option::data;
+        using namespace fcpp::option;
+        using namespace common;
+        using namespace std::chrono;
         using spawn_result_type = std::unordered_map<goal_tuple_type, times_t, fcpp::common::hash<goal_tuple_type>>;
 
         // UTILS AP
@@ -81,18 +84,18 @@ namespace fcpp
         {
             CODE
                 std::time_t now = std::time(nullptr);
-            std::chrono::milliseconds millis_to_check(diff_time_ms);
+            milliseconds millis_to_check(diff_time_ms);
             std::time_t stored_time = node.storage(node_external_status_update_time{});
 
-            std::chrono::milliseconds millis_computed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::from_time_t(now) - std::chrono::system_clock::from_time_t(stored_time));
+            milliseconds millis_computed = duration_cast<milliseconds>(system_clock::from_time_t(now) - system_clock::from_time_t(stored_time));
             return millis_computed >= millis_to_check;
         }
 
         //! @brief Add current goal to computing map
-        FUN void add_goal_to_computing_map(ARGS, goal_tuple_type const &g)
+        FUN void add_goal_to_computing_map(ARGS, goal_tuple_type const &goal)
         {
             CODE
-                node.storage(node_process_computing_goals{})[common::get<goal_code>(g)] = g;
+                node.storage(node_process_computing_goals{})[get<goal_code>(goal)] = goal;
         }
 
         //! @brief Remove current goal to computing map
@@ -104,21 +107,21 @@ namespace fcpp
         }
 
         //! @brief Send "stop" command to robot and change "node_process_status" after it
-        FUN void send_stop_command_to_robot(ARGS, string action, device_t node_uid, goal_tuple_type const &g, ProcessingStatus ps)
+        FUN void send_stop_command_to_robot(ARGS, string action, device_t node_uid, goal_tuple_type const &goal, ProcessingStatus ps)
         {
             CODE
                 std::string robot_chosen = get_real_robot_name(CALL, node_uid);
-            std::cout << "ROBOT_MASTER " << robot_chosen << " is chosen for receiving ABORT command for goal " << common::get<goal_code>(g) << endl;
+            std::cout << "ROBOT_MASTER " << robot_chosen << " is chosen for receiving ABORT command for goal " << get<goal_code>(goal) << endl;
             std::cout << endl;
 
             action::ActionData action_data = {
                 .action = action,
-                .goal_code = common::get<goal_code>(g),
+                .goal_code = get<goal_code>(goal),
                 .robot = robot_chosen,
-                .pos_x = common::get<goal_pos_x>(g),
-                .pos_y = common::get<goal_pos_y>(g),
-                .pos_z = common::get<goal_pos_z>(g),
-                .orient_w = common::get<goal_orient_w>(g)};
+                .pos_x = get<goal_pos_x>(goal),
+                .pos_y = get<goal_pos_y>(goal),
+                .pos_z = get<goal_pos_z>(goal),
+                .orient_w = get<goal_orient_w>(goal)};
 
             action::manager::ActionManager::new_action(action_data);
 
@@ -379,7 +382,7 @@ namespace fcpp
                 node.storage(position_error{}) = error;
                 log_error(
                     std::to_string(node.uid),
-                    std::to_string(std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now()).time_since_epoch().count()),
+                    std::to_string(time_point_cast<milliseconds>(system_clock::now()).time_since_epoch().count()),
                     error);
             }
         }
@@ -577,37 +580,56 @@ namespace fcpp
             }
         }
 
+        FUN void updateWorker(ARGS)
+        {
+            CODE
+                infoWorkerType infoWorker = make_tagged_tuple<infoW_active, infoW_need, infoW_nodeDistance, infoW_position, infoW_nodeId>(false, INT_MIN, INT_MAX, make_vec(0, 0, 0), node.uid);
+            if (isWorker(CALL))
+            {
+                infoWorker = make_tagged_tuple<infoW_active, infoW_need, infoW_nodeDistance, infoW_position, infoW_nodeId>(true, node.storage(scout_need{}), INT_MAX, node.position(), node.uid);
+            }
+            else
+            {
+                // TODO: maybe have a use case for extra scouts
+            }
+            node.storage(expected_dist_worker_scout{}) = distanceMasterSlave;
+
+            // TODO: maybe do a out of order simulation
+
+            int workerId = node.storage(scout_curr_worker{});
+        }
+
         // AP PROCESS
 
         //! @brief A robot has reached a goal and now try to terminate the process
-        FUN process_tuple_type ends_processed_goal(ARGS, process_tuple_type &p, goal_tuple_type const &g, status *s)
+        FUN process_tuple_type ends_processed_goal(ARGS, process_tuple_type &p, goal_tuple_type const &goal, status *status_end)
         {
             CODE
 
                     std::cout
-                << "Robot " << node.uid << " is trying to terminate goal " << common::get<goal_code>(g) << endl;
+                << "Robot " << node.uid << " is trying to terminate goal " << get<goal_code>(goal) << endl;
             std::cout << endl;
 
-            *s = status::terminated_output; // stop propagation
+            *status_end = status::terminated_output; // stop propagation
             return p;
         }
 
         //! @brief A robot has discharged the battery, so AP send a stop command
-        FUN void battery_discharged_when_it_is_running(ARGS, process_tuple_type &p, goal_tuple_type const &g, status *s)
+        FUN void battery_discharged_when_it_is_running(ARGS, process_tuple_type &p, status *status_discharged)
         {
             CODE
-                *s = status::border; // listen neighbours, but not send messages
+                *status_discharged = status::border; // listen neighbours, but not send messages
         }
 
         //! @brief Send a GOAL action to selected node and update the AP state machine of the robot to SELECTED
-        FUN void send_action_to_selected_node(ARGS, process_tuple_type &p, goal_tuple_type const &g, status *s)
+        FUN void send_action_to_selected_node(ARGS, process_tuple_type &p, goal_tuple_type const &goal)
         {
             CODE
                 std::string robot_chosen = get_real_robot_name(CALL, node.uid);
 
             if (isWorker(CALL))
             {
-                // std::cout << "Robot " << robot_chosen << " is chosen for goal " << common::get<goal_code>(g) << endl;
+                // std::cout << "Robot " << robot_chosen << " is chosen for goal " << get<goal_code>(goal) << endl;
                 // print the goal_code_robot_id and node.uid
                 // std::cout << "Goal code robot id: " << goal_code_robot_id << " Node uid: " << node.uid << endl;
                 // std::cout << endl;
@@ -616,27 +638,27 @@ namespace fcpp
                 node.storage(node_process_status{}) = ProcessingStatus::SELECTED;
 
                 // save goal
-                node.storage(node_process_goal{}) = common::get<goal_code>(g);
+                node.storage(node_process_goal{}) = get<goal_code>(goal);
 
                 // send action to file
                 action::ActionData action_data = {
-                    .action = common::get<goal_action>(g),
-                    .goal_code = common::get<goal_code>(g),
+                    .action = get<goal_action>(goal),
+                    .goal_code = get<goal_code>(goal),
                     .robot = robot_chosen,
-                    .pos_x = common::get<goal_pos_x>(g),
-                    .pos_y = common::get<goal_pos_y>(g),
-                    .pos_z = common::get<goal_pos_z>(g),
-                    .orient_w = common::get<goal_orient_w>(g)};
+                    .pos_x = get<goal_pos_x>(goal),
+                    .pos_y = get<goal_pos_y>(goal),
+                    .pos_z = get<goal_pos_z>(goal),
+                    .orient_w = get<goal_orient_w>(goal)};
                 action::manager::ActionManager::new_action(action_data);
                 // print the position of x
-                // std::cout << "Position x: " << common::get<goal_pos_x>(g) << endl;
+                // std::cout << "Position x: " << get<goal_pos_x>(goal) << endl;
             }
             else
             {
                 // send action to file a.k.a send the goal to the scout/slave
                 action::ActionData action_data = {
-                    .action = common::get<goal_action>(g),
-                    .goal_code = common::get<goal_code>(g),
+                    .action = get<goal_action>(goal),
+                    .goal_code = get<goal_code>(goal),
                     .robot = robot_chosen,
                     .pos_x = (float)node.storage(node_vecMyVersor{})[0],
                     .pos_y = (float)node.storage(node_vecMyVersor{})[1],
@@ -649,76 +671,77 @@ namespace fcpp
         // ACTION
 
         //! @brief Manage when the user has requested an ABORT of a goal
-        FUN void manage_action_abort(ARGS, goal_tuple_type const &g, status *s)
+        FUN void manage_action_abort(ARGS, goal_tuple_type const &goal, status *status_abort)
         {
             CODE
                     std::cout
-                << "Process ABORT " << common::get<goal_code>(g) << " in node " << node.uid << " with status " << node.storage(node_process_status{}) << endl;
+                << "Process ABORT " << get<goal_code>(goal) << " in node " << node.uid << " with status "
+                << node.storage(node_process_status{}) << endl;
             // if and only if robot is in status RUNNING, sends stop command to robot
             if (node.storage(node_process_status{}) == ProcessingStatus::SELECTED)
             {
-                send_stop_command_to_robot(CALL, "ABORT", node.uid, g, ProcessingStatus::TERMINATING);
+                send_stop_command_to_robot(CALL, "ABORT", node.uid, goal, ProcessingStatus::TERMINATING);
 
-                std::cout << "Robot " << node.uid << " is trying to terminate ABORT " << common::get<goal_code>(g) << endl;
+                std::cout << "Robot " << node.uid << " is trying to terminate ABORT " << get<goal_code>(goal) << endl;
             }
             else
             {
                 if (AP_ENGINE_DEBUG)
                 {
-                    std::cout << "Robot " << node.uid << " is waiting to terminate ABORT " << common::get<goal_code>(g) << endl;
+                    std::cout << "Robot " << node.uid << " is waiting to terminate ABORT " << get<goal_code>(goal) << endl;
                 }
             }
-            *s = status::terminated_output; // stop propagation
+            *status_abort = status::terminated_output; // stop propagation
         }
 
         //! @brief Manage when the user has requested a new GOAL
-        FUN void manage_action_goal(ARGS, goal_tuple_type const &g, status *s, int n_round)
+        FUN void manage_action_goal(ARGS, goal_tuple_type const &goal, status *status_goal, int n_round)
         {
             CODE
 
-                // std::cout << "Process GOAL " << common::get<goal_code>(g) << ", action " << common::get<goal_action>(g) << " in node " << node.uid << endl;
-                add_goal_to_computing_map(CALL, g);
+                // std::cout << "Process GOAL " << get<goal_code>(goal) << ", action " << get<goal_action>(goal) << " in node " << node.uid << endl;
+                add_goal_to_computing_map(CALL, goal);
 
-            old(CALL, common::make_tagged_tuple<goal_code>(common::get<goal_code>(g)), [&](process_tuple_type p)
+            old(CALL, make_tagged_tuple<goal_code>(get<goal_code>(goal)), [&](process_tuple_type p)
                 {
 
                 // compute charge of battery in percent
                 float percent_charge = node.storage(node_battery_charge{}) / 100.0;
 
                 // if i'm terminating the current goal, i have to terminate goal for all nodes TODO: IS IT MEANT FOR ALL THE NODES IN THE PROCESS
-                if (common::get<goal_code>(g) == node.storage(node_process_goal{}) && //i was running current goal in the process
-                    common::get<goal_code>(g) == node.storage(node_external_goal{}) && //the robot was running current goal
+                if (get<goal_code>(goal) == node.storage(node_process_goal{}) && //i was running current goal in the process
+                    get<goal_code>(goal) == node.storage(node_external_goal{}) && //the robot was running current goal
                     ProcessingStatus::TERMINATING == node.storage(node_process_status{})) { //but now i'm terminating
-                    return ends_processed_goal(CALL, p, g, s);
+                    return ends_processed_goal(CALL, p, goal, status_goal);
                 }
 
                 // if battery is empty, then stop at current position
                 if (percent_charge <= 0.0) { //the battery is full discharged
-                    battery_discharged_when_it_is_running(CALL, p, g, s);
+                    battery_discharged_when_it_is_running(CALL, p, status_goal);
                 }
 
                 // Battery charged
                 else {
                     if (isWorker(CALL)) {
                         int c = 0;
-                        int goal_code_robot_id = std::stoi(get_robot_id_from_goal_code(common::get<goal_code>(g)));
+                        int goal_code_robot_id = std::stoi(get_robot_id_from_goal_code(get<goal_code>(goal)));
                         if(node.storage(node_process_status{}) == ProcessingStatus::IDLE && node.uid == goal_code_robot_id && (c = counter(CALL)) == 1){
                             std::cout << "Process GOAL " << c;
                             // I think here there should also be movement
                             // calculated(in a function), since we don't have a
                             // predetermined path, but get the end position from the
                             // goal
-                            send_action_to_selected_node(CALL, p, g, s);
+                            send_action_to_selected_node(CALL, p, goal);
                         }
                     }
 
                     if (!isWorker(CALL)) {
                         run_flocking(CALL);
-                        send_action_to_selected_node(CALL, p, g, s);
+                        send_action_to_selected_node(CALL, p, goal);
                     }
                 }
                 // blinking colors if not running
-                if (common::get<goal_code>(g) != node.storage(node_process_goal{}) &&
+                if (get<goal_code>(goal) != node.storage(node_process_goal{}) &&
                     node.storage(node_process_status{}) != ProcessingStatus::SELECTED) {
                     blink_computing_color(CALL, n_round);
                 }
@@ -728,20 +751,20 @@ namespace fcpp
         }
 
         //! @brief Termination logic using share (see SHARE termination in ACSOS22 paper)
-        FUN void termination_logic(ARGS, status &s, goal_tuple_type const &)
+        FUN void termination_logic(ARGS, status &status_terminate, goal_tuple_type const &)
         {
-            bool terminatingMyself = s == status::terminated_output;
+            bool terminatingMyself = status_terminate == status::terminated_output;
             bool terminatingNeigh = nbr(CALL, terminatingMyself, [&](field<bool> nt)
                                         { return any_hood(CALL, nt) or terminatingMyself; });
             bool exiting = all_hood(CALL, nbr(CALL, terminatingNeigh), terminatingNeigh);
 
             if (exiting)
             {
-                s = status::border;
+                status_terminate = status::border;
             }
             else if (terminatingMyself)
             {
-                s = status::internal_output;
+                status_terminate = status::internal_output;
             }
         }
 
@@ -766,7 +789,7 @@ namespace fcpp
             std::lock_guard lgg(GoalMutex);
             auto map_op = [](InputGoal ig)
             {
-                return common::make_tagged_tuple<goal_action, goal_code, goal_pos_x, goal_pos_y, goal_pos_z, goal_orient_w, goal_source, goal_priority, goal_subcode>(
+                return make_tagged_tuple<goal_action, goal_code, goal_pos_x, goal_pos_y, goal_pos_z, goal_orient_w, goal_source, goal_priority, goal_subcode>(
                     ig.action,
                     ig.goal_code,
                     ig.pos_x,
@@ -808,29 +831,54 @@ namespace fcpp
         //! @brief Initialize MAIN function, selecting correct node_type, run only ONCE per simulation
         FUN void init_main_fn(ARGS, int n_round, int number_of_masters)
         {
-            CODE
-                // std::cout << "range: " << fcpp::coordination::comm << std::endl;
+            // std::cout << "range: " << fcpp::coordination::comm << std::endl;
 
-                if (AP_ENGINE_DEBUG)
-            {
-                std::cout << std::endl
-                          << std::endl;
-                std::cout << "[node-" << node.uid << "] Time: " << std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now()).time_since_epoch().count() << endl;
+            if (AP_ENGINE_DEBUG) {
+                std::cout << std::endl << std::endl;
+                std::cout << "[node-" << node.uid << "] Time: " <<
+                    std::chrono::time_point_cast<std::chrono::milliseconds>(
+                        std::chrono::system_clock::now()).time_since_epoch(
+                        ).count() << endl;
             }
 
-// set node type in the storage
-#if defined(RUN_SIMULATION)
-            if (node.uid < number_of_masters)
-            {
-                node.storage(node_isWorker{}) = true;
-            }
-            else if (node.uid <= ROBOTS.size())
-            {
-                node.storage(node_isWorker{}) = false;
-            }
-#elif defined(RUN_EMBEDDED)
-            node.storage(node_isWorker{}) = node.uid == 0 ? true : false;
-#endif
+            // set node type in the storage
+            #if defined(RUN_SIMULATION)
+                if (node.uid < number_of_masters)
+                {
+                    node.storage(node_isWorker{}) = true;
+                    node.storage(node_label_text{}) = "RM." + std::to_string(node.uid);
+
+                    // TODO: probably need the worker_needs so that different workers have different amount of workers
+                    node.storage(required_scouts{}) = 2; // FOR NOW IT'S JUST SET TO TO, BUT IT SHOULD BE CHANGED SO THAT A USER CAN SET THE INITIAL VALUE
+                    node.storage(scout_need{}) = 2 - nWorkerScout; // TODO: change this and original required scouts so they read from an array, where the index is the node.uid
+                    node.storage(original_required_scouts{}) = 2;
+                    node.storage(scout_curr_worker{}) = -1; // the worker is not assigned to a scout
+                    node.storage(expected_dist_worker_scout{}) = distanceMasterSlave;
+                    node.storage(node_numberOfScouts{}) = nWorkerScout; // number of scouts assigned to each worker
+                }
+                else
+                {
+                    node.storage(node_isWorker{}) = false;
+                    node.storage(node_label_text{}) = "RS." + std::to_string(node.uid);
+
+                    for (int i = 1; i <= number_of_masters; i++)
+                    {
+                        int val = (node.uid - (number_of_masters - 1)) / (nWorkerScout * i);
+
+                        // Assign the scout to the worker(to it's worker, since this function is run only once and each worker has it's own scouts)
+                        if(val == 0 || (node.uid - (number_of_masters - 1)) == nWorkerScout * i)
+                        {
+                            node.storage(scout_curr_worker{}) = i - 1;
+                            // print the scout_curr_worker with my worker is: scout_curr_worker
+                            std::cout << "Scout " << node.uid << "assigned to worker " << node.storage(scout_curr_worker{}) << std::endl;
+                            break;
+                        }
+                    }
+                    
+                }
+            #elif defined(RUN_EMBEDDED)
+                node.storage(node_isWorker{}) = node.uid == 0 ? true : false;
+            #endif
             if (AP_ENGINE_DEBUG)
             {
                 std::cout << "MAIN FUNCTION in node " << node.uid << " of type " << (isWorker(CALL) ? "worker" : "scout") << endl;
@@ -850,31 +898,15 @@ namespace fcpp
             node.storage(node_shadow_color{}) = fcpp::color(0x837E7CFF);
             node.storage(node_shadow_shape{}) = shape::sphere;
 
-            if (isWorker(CALL))
-            {
-                node.storage(node_isWorker{}) = true;
-                // TODO: probably need the worker_needs so that different workers have different amount of workers
-                node.storage(required_scouts{}) = 2; // FOR NOW IT'S JUST SET TO TO, BUT IT SHOULD BE CHANGED SO THAT A USER CAN SET THE INITIAL VALUE
-                node.storage(scout_need{}) = 2 - nWorkerScout;
-            }
-
             node.storage(node_set{}) = true;
         }
 
         //! @brief Initialize variables (storage, etc...) of a robot using feedback data.
-        FUN void init_robot(ARGS)
+        FUN void apply_feedback_to_ap(ARGS)
         {
-            if (isWorker(CALL))
-            {
-                node.storage(node_label_text{}) = "RM." + std::to_string(node.uid);
-            }
-            else
-            {
-                node.storage(node_label_text{}) = "RS." + std::to_string(node.uid);
-            }
-
             // std::cout << "Robot " << prefix << node.uid << " initialized" << std::endl;
 
+            // set position in AP(based on data from ROS2) and change color according with goal_status
             old(CALL, robot_phase::IDLE, [&](robot_phase ph)
                 {
                 std::string rname = ROBOT_PREFIX + std::to_string(node.uid); // name is obtained from node ID
@@ -974,38 +1006,46 @@ namespace fcpp
         FUN spawn_result_type spawn_process(ARGS, ::vector<goal_tuple_type> &NewGoalsList, int n_round)
         {
             // process new goals, emptying NewGoalsList
-            return coordination::spawn(CALL, [&](goal_tuple_type const &g)
+            return coordination::spawn(CALL, [&](goal_tuple_type const &goal)
                                        {
-                status s = status::internal_output;
+                status st = status::internal_output;
 
                 field<int> test_nbr = fcpp::coordination::nbr(CALL, n_round);
                 if (AP_ENGINE_DEBUG) {
                     std::cout << "test_nbr_in_process: " << test_nbr << std::endl;
                 }
 
+                if (isWorker(CALL))
+                {
+                    // print the goal_code and goal_action and which round it is
+                    std::cout << "Goal code: " << get<goal_code>(goal) << " Goal action: " << get<goal_action>(goal) << " Round: " << n_round << endl;
+                    std::cout << endl;
+                }
+                
+
                 // ACTION: ABORT GOAL
                 // the two lines of check for process_goal and external_goal are because, we have simulation in AP and in gazebo(feedback)
-                if (ABORT_ACTION == common::get<goal_action>(g) &&
-                    node.storage(node_process_goal{}) == common::get<goal_code>(g) &&
-                    node.storage(node_external_goal{}) == common::get<goal_code>(g)) {
+                if (ABORT_ACTION == get<goal_action>(goal) &&
+                    node.storage(node_process_goal{}) == get<goal_code>(goal) &&
+                    node.storage(node_external_goal{}) == get<goal_code>(goal)) {
                     // std::cout << "Robot " << node.uid << " is in abort action" << endl;
 
-                    manage_action_abort(CALL, g, &s);
+                    manage_action_abort(CALL, goal, &st);
                 }
 
                 // ACTION: REACH GOAL
-                else if (GOAL_ACTION == common::get<goal_action>(g)) {
+                else if (GOAL_ACTION == get<goal_action>(goal)) {
                     // std::cout << "Robot " << node.uid << " is in goal action" << endl;
                     // print the goal_action and goal_action
-                    // std::cout << "Goal action: " << common::get<goal_action>(g) << " Goal code: " << common::get<goal_code>(g) << " for robot " << node.uid << endl;
+                    // std::cout << "Goal action: " << get<goal_action>(goal) << " Goal code: " << get<goal_code>(goal) << " for robot " << node.uid << endl;
 
-                    manage_action_goal(CALL, g, &s, n_round);
+                    manage_action_goal(CALL, goal, &st, n_round);
                 }
 
-                termination_logic(CALL, s, g);
+                termination_logic(CALL, st, goal);
 
                 // Landing if status == border and pos_z > 0 
-                if (!isWorker(CALL) && s == status::border && counter(CALL) == 1) {
+                if (!isWorker(CALL) && st == status::border && counter(CALL) == 1) {
                     action::ActionData action_data = {
                         .action = "LAND",
                         .goal_code = node.storage(node_process_goal{}),
@@ -1017,7 +1057,7 @@ namespace fcpp
                     };
                     action::manager::ActionManager::new_action(action_data);
                 }
-            return make_tuple(node.current_time(), s); }, NewGoalsList);
+            return make_tuple(node.current_time(), st); }, NewGoalsList);
         }
 
         //! @brief Manage termination of the spawn processes.
@@ -1030,8 +1070,8 @@ namespace fcpp
                 bool process_found = false;
                 for (auto const &x : r)
                 {
-                    auto g = x.first;
-                    if (common::get<goal_code>(g) == node.storage(node_process_goal{}))
+                    auto goal = x.first;
+                    if (get<goal_code>(goal) == node.storage(node_process_goal{}))
                     {
                         process_found = true;
                     }
@@ -1048,11 +1088,11 @@ namespace fcpp
             std::vector<std::string> goals_to_remove = {};
             for (auto const &x : node.storage(node_process_computing_goals{}))
             {
-                auto g = x.second;
-                if (r.find(g) == r.end())
+                auto goal = x.second;
+                if (r.find(goal) == r.end())
                 {
-                    std::cout << "Remove process with code " << common::get<goal_code>(g) << endl;
-                    goals_to_remove.push_back(common::get<goal_code>(g));
+                    std::cout << "Remove process with code " << get<goal_code>(goal) << endl;
+                    goals_to_remove.push_back(get<goal_code>(goal));
                 }
             }
             for (auto const &gc : goals_to_remove)
@@ -1077,7 +1117,8 @@ namespace fcpp
             // UPDATE DATA
             acquire_new_goals(CALL, NewGoalsList);
 
-            init_robot(CALL);
+            // multi_worker_doesn't have this, since it is applied directly in the AP itself, and it doesn't have ROS2
+            apply_feedback_to_ap(CALL);
 
             // Init Flocking
             initialization(CALL);
@@ -1094,7 +1135,8 @@ namespace fcpp
             bool,
             goal_tuple_type,
             robot_phase,
-            process_tuple_type>;
+            process_tuple_type,
+            infoWorkerType>;
 
         // TODO: refactor (cancellare le funzioni da togliere)
         FUN_EXPORT flocking_t = export_list<
@@ -1114,6 +1156,7 @@ namespace fcpp
                             flocking_t,
                             spawn_t<goal_tuple_type, status>,
                             diameter_election_t<tuple<real_t, device_t>>>
+
         {
         };
 
