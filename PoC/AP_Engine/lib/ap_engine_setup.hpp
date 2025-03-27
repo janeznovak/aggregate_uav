@@ -172,6 +172,12 @@ namespace fcpp {
             struct node_set{};
             //! @brief Is the node a worker
             struct node_isWorker{};
+            //! @brief Number of the round
+            struct node_countRound{};
+
+            struct required_scouts{};
+
+            struct scout_need{};
 
         } // tags
 
@@ -257,6 +263,11 @@ namespace fcpp {
         constexpr fcpp::packed_color failed_goal_color = TOMATO;
         constexpr fcpp::packed_color aborted_goal_color = RED;
         constexpr fcpp::packed_color discharged_color = MAROON;
+
+
+        constexpr int nWorker = 2;
+        constexpr int nScout = 2;
+        constexpr int nWorkerScout = nScout / nWorker;
     }
 
     //! @brief Namespace for component options.
@@ -362,6 +373,9 @@ namespace fcpp {
             nodes_by_goal_subcode, std::unordered_map<std::string, std::vector<device_t>>,
             node_set, bool,
             node_isWorker, bool,
+            node_countRound, int,
+            required_scouts, int,
+            scout_need, int,
 
             // START Flocking
             node_posMaster, tuple<bool, vec<3>>,

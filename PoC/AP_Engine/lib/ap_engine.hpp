@@ -45,7 +45,8 @@ namespace fcpp
         }
 
         //! @brief Change color of node, passing in argument
-        FUN void change_color(ARGS, fcpp::color color) {
+        FUN void change_color(ARGS, fcpp::color color)
+        {
             CODE
                 node.storage(left_color{}) = fcpp::color(color);
             node.storage(right_color{}) = fcpp::color(color);
@@ -53,21 +54,22 @@ namespace fcpp
         }
 
         //! @brief Blink color of node
-        FUN void blink_computing_color(ARGS, int n_round) {
+        FUN void blink_computing_color(ARGS, int n_round)
+        {
             CODE
                 fcpp::color computing_color = fcpp::color(fcpp::coordination::computing_colors[n_round % 2]);
             change_color(CALL, computing_color);
         }
 
         //! @brief Get robot name from AP node_uid
-        FUN string get_real_robot_name(ARGS, device_t node_uid) {
-            CODE
-                return get_robot_name(ROBOTS, static_cast<int>(node_uid));
+        FUN string get_real_robot_name(ARGS, device_t node_uid)
+        {
+            CODE return get_robot_name(ROBOTS, static_cast<int>(node_uid));
         }
 
-
         //! @brief Update in the storage the tag "node_external_status_update_time"
-        FUN void update_last_goal_update_time(ARGS) {
+        FUN void update_last_goal_update_time(ARGS)
+        {
             CODE
                 std::time_t now = std::time(nullptr);
             std::asctime(std::localtime(&now));
@@ -75,7 +77,8 @@ namespace fcpp
         }
 
         //! @brief Check if is passed "diff_time_ms" milliseconds from last REACHED change status
-        FUN bool has_ms_passed_from_last_goal_update(ARGS, long diff_time_ms) {
+        FUN bool has_ms_passed_from_last_goal_update(ARGS, long diff_time_ms)
+        {
             CODE
                 std::time_t now = std::time(nullptr);
             std::chrono::milliseconds millis_to_check(diff_time_ms);
@@ -86,19 +89,23 @@ namespace fcpp
         }
 
         //! @brief Add current goal to computing map
-        FUN void add_goal_to_computing_map(ARGS, goal_tuple_type const& g) {
+        FUN void add_goal_to_computing_map(ARGS, goal_tuple_type const &g)
+        {
             CODE
                 node.storage(node_process_computing_goals{})[common::get<goal_code>(g)] = g;
         }
 
         //! @brief Remove current goal to computing map
-        FUN void remove_goal_from_computing_map(ARGS, std::string goal_code) {
+        FUN void remove_goal_from_computing_map(ARGS, std::string goal_code)
+        {
             CODE
-                node.storage(node_process_computing_goals{}).erase(goal_code);
+                node.storage(node_process_computing_goals{})
+                    .erase(goal_code);
         }
 
         //! @brief Send "stop" command to robot and change "node_process_status" after it
-        FUN void send_stop_command_to_robot(ARGS, string action, device_t node_uid, goal_tuple_type const& g, ProcessingStatus ps) {
+        FUN void send_stop_command_to_robot(ARGS, string action, device_t node_uid, goal_tuple_type const &g, ProcessingStatus ps)
+        {
             CODE
                 std::string robot_chosen = get_real_robot_name(CALL, node_uid);
             std::cout << "ROBOT_MASTER " << robot_chosen << " is chosen for receiving ABORT command for goal " << common::get<goal_code>(g) << endl;
@@ -111,13 +118,13 @@ namespace fcpp
                 .pos_x = common::get<goal_pos_x>(g),
                 .pos_y = common::get<goal_pos_y>(g),
                 .pos_z = common::get<goal_pos_z>(g),
-                .orient_w = common::get<goal_orient_w>(g)
-            };
+                .orient_w = common::get<goal_orient_w>(g)};
 
             action::manager::ActionManager::new_action(action_data);
 
             // clear goal info if in idle
-            if (ProcessingStatus::IDLE == ps) {
+            if (ProcessingStatus::IDLE == ps)
+            {
                 node.storage(node_process_goal{}) = "";
             }
 
@@ -127,123 +134,140 @@ namespace fcpp
 
         // Flocking Utils
 
-
-
-        bool compare(double a, double b) {
+        bool compare(double a, double b)
+        {
             return a < b;
         }
 
-        void log_error(string uid, string time, double error){
+        void log_error(string uid, string time, double error)
+        {
             std::string out_path = string(OUTPUT_FOLDER_BASE_PATH) + string("from_ap/to_log/");
             create_folder_if_not_exists(out_path);
 
             std::ofstream file;
-            std::string uniqueFilename = out_path + "/" + uid+"_error_log.txt";
+            std::string uniqueFilename = out_path + "/" + uid + "_error_log.txt";
 
             file.open(uniqueFilename, std::ios::app);
 
-            if (file.is_open()) {
+            if (file.is_open())
+            {
                 file << time << "," << std::to_string(error) << std::endl;
                 file.close();
             }
-            else {
+            else
+            {
                 std::cout << "Error log file." << std::endl;
             }
         }
 
-
-
         // STATE MACHINE
 
         //! @brief Manage state machine when battery is discharged
-        FUN void manage_battery_discharged_node(ARGS) {
+        FUN void manage_battery_discharged_node(ARGS)
+        {
             CODE
                 change_color(CALL, fcpp::color(fcpp::coordination::discharged_color));
         }
 
         //! @brief Manage state machine when robot is running a goal
-        FUN void manage_running_goal_status(ARGS) {
+        FUN void manage_running_goal_status(ARGS)
+        {
             CODE
                 change_color(CALL, fcpp::color(fcpp::coordination::running_color));
         }
 
         //! @brief Manage state machine when robot has reached the goal
-        FUN void manage_reached_goal_status(ARGS) {
+        FUN void manage_reached_goal_status(ARGS)
+        {
             CODE
                 fcpp::color new_color;
             // and previous state is NOT REACHED: new color is "reached" and deletes goal storage
-            if (feedback::GoalStatus::REACHED != node.storage(node_external_status{})) {
+            if (feedback::GoalStatus::REACHED != node.storage(node_external_status{}))
+            {
                 new_color = fcpp::color(fcpp::coordination::reached_goal_color);
                 // set to terminating processing status
                 node.storage(node_process_status{}) = ProcessingStatus::TERMINATING;
-                // update time 
+                // update time
                 update_last_goal_update_time(CALL);
 
-                // and if process node is SELECTED, then AP has selected new node and simulation is ready to start    
+                // and if process node is SELECTED, then AP has selected new node and simulation is ready to start
             }
-            else if (node.storage(node_process_status{}) == ProcessingStatus::SELECTED) {
+            else if (node.storage(node_process_status{}) == ProcessingStatus::SELECTED)
+            {
                 new_color = fcpp::color(fcpp::coordination::running_color);
 
                 // otherwise: new color is "reached"
             }
-            else {
+            else
+            {
                 new_color = fcpp::color(fcpp::coordination::reached_goal_color);
             }
             change_color(CALL, new_color);
         }
 
         //! @brief Manage state machine when robot reported an UNKNOWN error
-        FUN void manage_unknown_goal_status(ARGS) {
+        FUN void manage_unknown_goal_status(ARGS)
+        {
             CODE
                 fcpp::color new_color;
-            // and if process node is SELECTED, then AP has selected new node and simulation is ready to start    
-            if (node.storage(node_process_status{}) == ProcessingStatus::SELECTED) {
+            // and if process node is SELECTED, then AP has selected new node and simulation is ready to start
+            if (node.storage(node_process_status{}) == ProcessingStatus::SELECTED)
+            {
                 new_color = fcpp::color(fcpp::coordination::running_color);
             }
-            else {
+            else
+            {
                 new_color = fcpp::color(fcpp::coordination::idle_color);
-                // update time 
+                // update time
                 update_last_goal_update_time(CALL);
             }
             change_color(CALL, new_color);
         }
 
         //! @brief Manage state machine when robot reported an abort of the current goal
-        FUN void manage_aborted_goal_status(ARGS) {
+        FUN void manage_aborted_goal_status(ARGS)
+        {
             CODE
                 fcpp::color new_color;
-            // and if process node is SELECTED, then AP has selected new node and simulation is ready to start    
-            if (node.storage(node_process_status{}) == ProcessingStatus::SELECTED) {
+            // and if process node is SELECTED, then AP has selected new node and simulation is ready to start
+            if (node.storage(node_process_status{}) == ProcessingStatus::SELECTED)
+            {
                 new_color = fcpp::color(fcpp::coordination::running_color);
             }
-            else {
+            else
+            {
                 new_color = fcpp::color(fcpp::coordination::aborted_goal_color);
-                // update time 
+                // update time
                 update_last_goal_update_time(CALL);
             }
             change_color(CALL, new_color);
         }
 
         //! @brief Manage state machine when robot reported a FAILED error
-        FUN void manage_failed_goal_status(ARGS) {
+        FUN void manage_failed_goal_status(ARGS)
+        {
             CODE
                 fcpp::color new_color;
             // and previous state is not FAILED (first time of FAILED status): change internal status to IDLE
-            if (feedback::GoalStatus::FAILED != node.storage(node_external_status{})) {
+            if (feedback::GoalStatus::FAILED != node.storage(node_external_status{}))
+            {
                 new_color = fcpp::color(fcpp::coordination::failed_goal_color);
                 // resetting processing status
                 node.storage(node_process_status{}) = ProcessingStatus::IDLE;
-                // update time  
+                // update time
                 update_last_goal_update_time(CALL);
 
                 // or previous state is FAILED (it's NOT the first time of FAILED status)
             }
-            else {
-                // and if process node is SELECTED, then AP has selected new node and simulation is ready to start    
-                if (node.storage(node_process_status{}) == ProcessingStatus::SELECTED) {
+            else
+            {
+                // and if process node is SELECTED, then AP has selected new node and simulation is ready to start
+                if (node.storage(node_process_status{}) == ProcessingStatus::SELECTED)
+                {
                     new_color = fcpp::color(fcpp::coordination::running_color);
                 }
-                else {
+                else
+                {
                     new_color = fcpp::color(fcpp::coordination::failed_goal_color);
                 }
             }
@@ -251,14 +275,17 @@ namespace fcpp
         }
 
         //! @brief Manage state machine when robot has not yet executed a goal
-        FUN void manage_no_goal_status(ARGS) {
+        FUN void manage_no_goal_status(ARGS)
+        {
             CODE
                 fcpp::color new_color;
-            // and if process node is SELECTED, then AP has selected new node and simulation is ready to start    
-            if (node.storage(node_process_status{}) == ProcessingStatus::SELECTED) {
+            // and if process node is SELECTED, then AP has selected new node and simulation is ready to start
+            if (node.storage(node_process_status{}) == ProcessingStatus::SELECTED)
+            {
                 new_color = fcpp::color(fcpp::coordination::running_color);
             }
-            else {
+            else
+            {
                 new_color = fcpp::color(fcpp::coordination::idle_color);
             }
             change_color(CALL, new_color);
@@ -267,18 +294,24 @@ namespace fcpp
         // FLOCKING
 
         //! @brief controllo l'indice e nel caso non fosse valido lo riassegno...
-        FUN void checkIndex(ARGS, node_type nt) {
+        FUN void checkIndex(ARGS)
+        {
             using namespace tags;
-            if (nt == node_type::ROBOT_SLAVE) {
-                if ((get<1>(node.storage(node_indexSlave{}))) > 0) {
-                    field <tuple<int, int>> f = nbr(CALL, node.storage(node_indexSlave{}));
+            if (!isWorker(CALL))
+            {
+                if ((get<1>(node.storage(node_indexSlave{}))) > 0)
+                {
+                    field<tuple<int, int>> f = nbr(CALL, node.storage(node_indexSlave{}));
                     tuple<int, int> check = max_hood(CALL, f);
-                    if (get<1>(node.storage(node_indexSlave{})) == get<1>(check) && get<0>(node.storage(node_indexSlave{})) != get<0>(check)) {
+                    if (get<1>(node.storage(node_indexSlave{})) == get<1>(check) && get<0>(node.storage(node_indexSlave{})) != get<0>(check))
+                    {
                         node.storage(node_checkIndex{}) = true;
-                        if (!(node.storage(node_secondReturn{}))) {
+                        if (!(node.storage(node_secondReturn{})))
+                        {
                             get<1>(node.storage(node_indexSlave{})) += 1;
                         }
-                        else {
+                        else
+                        {
                             get<1>(node.storage(node_indexSlave{})) -= 1;
                         }
                     }
@@ -286,23 +319,25 @@ namespace fcpp
             }
         }
 
-
         // to calculate where in the circumference the slave is
-        FUN void calculateMyCorner(ARGS) {
+        FUN void calculateMyCorner(ARGS)
+        {
             using namespace tags;
             // if it has a master
-            if (get<0>(node.storage(node_posMaster{}))) {
+            if (get<0>(node.storage(node_posMaster{})))
+            {
                 double myRadiant = (get<1>(node.storage(node_indexSlave{}))) * ((2 * pi) / node.storage(node_numberOfSlave{}));
                 node.storage(node_myRadiant{}) = myRadiant;
                 double sine_value = std::sin(myRadiant);
                 double cosine_value = std::cos(myRadiant);
                 double x = sine_value * distanceMasterSlave;
                 double y = cosine_value * distanceMasterSlave;
-                if (node.storage(node_checkIndex{})) {
+                if (node.storage(node_checkIndex{}))
+                {
                     x = sine_value * distanceCircularCrown;
                     y = cosine_value * distanceCircularCrown;
                 }
-                vec<3> vecMyRadiant = make_vec(x, y, 0); 
+                vec<3> vecMyRadiant = make_vec(x, y, 0);
                 node.storage(node_vecMyRadiant{}) = vecMyRadiant;
 
                 /**traslazione del cerchio attorno al master*/
@@ -310,56 +345,65 @@ namespace fcpp
                 vec<3> versore = vecMyRadiant + dist;
                 node.storage(node_vecMyVersor{}) = versore;
                 // if (!(isnan(versore[0]) && isnan(versore[1]))) {
-                    // node.propulsion() = versore / norm(versore);
+                // node.propulsion() = versore / norm(versore);
                 // }
                 // node.propulsion() += node.propulsion() * incrementAcceleration;
             }
         }
 
         //! @brief se dei nodi slave escono dalla circonferenza "resetto" gli indici degli slave all'interno della circonferenza che superano il massimo indice...
-        FUN bool decrementIndex(ARGS) {
+        FUN bool decrementIndex(ARGS)
+        {
             using namespace tags;
             int difference = node.storage(node_maxNumberOfSlave{}) - node.storage(node_numberOfSlave{});
-            if (difference > 0 && get<1>(node.storage(node_indexSlave{})) > node.storage(node_numberOfSlave{})) {
+            if (difference > 0 && get<1>(node.storage(node_indexSlave{})) > node.storage(node_numberOfSlave{}))
+            {
                 get<1>(node.storage(node_indexSlave{})) = 1;
                 return false;
             }
             return true;
         }
 
-
-        FUN void errorCalculator(ARGS) {
+        FUN void errorCalculator(ARGS)
+        {
             using namespace tags;
-            if (get<0>(node.storage(node_posMaster{}))) {
+            if (get<0>(node.storage(node_posMaster{})))
+            {
                 double theta = (get<1>(node.storage(node_indexSlave{}))) * ((2 * pi) / node.storage(node_numberOfSlave{}));
                 double x = std::sin(theta) * distanceMasterSlave;
                 double y = std::cos(theta) * distanceMasterSlave;
                 vec<3> vecTheta = make_vec(x, y, 0);
                 vec<3> exactPosition = vecTheta + get<1>(node.storage(node_posMaster{}));
                 double error = distance(exactPosition, node.position());
-                double normalizedError = error / distanceMasterSlave;  // Normalizzazione dell'errore
+                double normalizedError = error / distanceMasterSlave; // Normalizzazione dell'errore
                 node.storage(position_error{}) = error;
                 log_error(
-                    std::to_string(node.uid), 
-                    std::to_string(std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now()).time_since_epoch().count()), 
+                    std::to_string(node.uid),
+                    std::to_string(std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now()).time_since_epoch().count()),
                     error);
             }
         }
 
-        FUN void collisionAvoidance(ARGS, node_type nt) {
+        FUN void collisionAvoidance(ARGS)
+        {
             using namespace tags;
-            if (nt == node_type::ROBOT_SLAVE) {
-                if (get<0>(node.storage(node_posMaster{}))) {
+            if (!isWorker(CALL))
+            {
+                if (get<0>(node.storage(node_posMaster{})))
+                {
                     bool flag = compare(distance(get<1>(node.storage(node_posMaster{})), node.position()), minDistance);
                     vec<3> elasticMaster = make_vec(0, 0, 0);
                     vec<3> v = get<1>(node.storage(node_posMaster{})) - node.position();
-                    if (!node.storage(node_checkIndex{})) {
+                    if (!node.storage(node_checkIndex{}))
+                    {
                         elasticMaster = v * (1 - distanceMasterSlave / (norm(v))) * hardnessMasterSlave;
                     }
-                    else {
+                    else
+                    {
                         elasticMaster = v * ((1 - distanceCircularCrown / (norm(v)))) * hardnessCircularCrown;
                     }
-                    if (flag) {
+                    if (flag)
+                    {
                         //! Viene considerata come limite critico di livello 2 la distanza minima consentita
                         elasticMaster += elasticMaster * incrementForce;
                     }
@@ -369,7 +413,8 @@ namespace fcpp
                     //! un margine d'errore del 10%
                     double distanceSlaveSlave = (2 * distanceMasterSlave * pi) / node.storage(node_numberOfSlave{});
 
-                    tuple<bool, vec<3>> elasticSlave = sum_hood(CALL, map_hood([](vec<3> v, double d, double l, double constAvoid) {
+                    tuple<bool, vec<3>> elasticSlave = sum_hood(CALL, map_hood([](vec<3> v, double d, double l, double constAvoid)
+                                                                               {
                         tuple<bool, vec<3>> t = make_tuple(false, make_vec(0, 0, 0));
                         double criticalLimit = l * 0.9;
                         if (d < criticalLimit) {
@@ -379,23 +424,27 @@ namespace fcpp
                                 get<1>(t) += get<1>(t) * incrementForce;
                             }
                         }
-                        return t;
-                        }, node.nbr_vec(), node.nbr_dist(), distanceSlaveSlave, minDistance), tuple<bool, vec<3>>{});
+                        return t; }, node.nbr_vec(), node.nbr_dist(), distanceSlaveSlave, minDistance),
+                                                                tuple<bool, vec<3>>{});
                     node.storage(node_collisionAvoidanceSlaves{}) = get<1>(elasticSlave);
-                    if (node.storage(node_collisionAvoidanceSlaves{}) != make_vec(0, 0, 0)) {
+                    if (node.storage(node_collisionAvoidanceSlaves{}) != make_vec(0, 0, 0))
+                    {
                         node.storage(node_flagDistance{}) = true;
                     }
-                    else {
+                    else
+                    {
                         node.storage(node_flagDistance{}) = false;
                     }
 
                     //! Viene semplicemente controllato che i valori calcolati siano assegnabili, ovvero !NaN || !inf
                     if ((!(isnan(node.storage(node_collisionAvoidanceMaster{})[0])) && !(std::isinf(node.storage(node_collisionAvoidanceMaster{})[0]))) ||
-                        (!(isnan(node.storage(node_collisionAvoidanceMaster{})[1])) && !(std::isinf(node.storage(node_collisionAvoidanceMaster{})[1])))) {
+                        (!(isnan(node.storage(node_collisionAvoidanceMaster{})[1])) && !(std::isinf(node.storage(node_collisionAvoidanceMaster{})[1]))))
+                    {
 
                         node.storage(node_vecMyVersor{}) += node.storage(node_collisionAvoidanceMaster{});
                         if ((!(isnan(node.storage(node_collisionAvoidanceSlaves{})[0])) && !(std::isinf(node.storage(node_collisionAvoidanceSlaves{})[0]))) ||
-                            (!(isnan(node.storage(node_collisionAvoidanceSlaves{})[1])) && !(std::isinf(node.storage(node_collisionAvoidanceSlaves{})[1])))) {
+                            (!(isnan(node.storage(node_collisionAvoidanceSlaves{})[1])) && !(std::isinf(node.storage(node_collisionAvoidanceSlaves{})[1]))))
+                        {
 
                             node.storage(node_vecMyVersor{}) += node.storage(node_collisionAvoidanceSlaves{});
                         }
@@ -404,21 +453,25 @@ namespace fcpp
             }
         }
 
-        FUN void initialization(ARGS) {
+        FUN void initialization(ARGS)
+        {
             using namespace tags;
             int slaves = 0;
 
             // tuple of is_master and position
             tuple<bool, vec<3>> t = make_tuple(false, make_vec(0, 0, 0));
-            if (isWorker(CALL)) {
+            if (isWorker(CALL))
+            {
                 t = make_tuple(true, node.position());
             }
 
             float percent_charge = node.storage(node_battery_charge{}) / 100.0;
-            if(percent_charge > 0){
+            if (percent_charge > 0)
+            {
                 slaves = (int)count_hood(CALL) - 1;
                 // slave doesn't have slaves
-                if (!isWorker(CALL)) {
+                if (!isWorker(CALL))
+                {
                     slaves = 0;
                 }
             }
@@ -427,16 +480,19 @@ namespace fcpp
             field<int> identifierNumSlaves = nbr(CALL, 0, slaves);
             node.storage(node_numberOfSlave{}) = max_hood(CALL, identifierNumSlaves);
 
-            field < tuple < bool, vec <3>>> identifierMaster = nbr(CALL, t);
+            field<tuple<bool, vec<3>>> identifierMaster = nbr(CALL, t);
             // try to find the master(slaves have 0(false) for bool and master has something bigger(true))
             tuple<bool, vec<3>> identified = max_hood(CALL, identifierMaster);
             // go in the block of code if the node has identified the master, even if your master dies, you can get a new one with propagation
-            if (get<0>(identified)) {
+            if (get<0>(identified))
+            {
                 node.storage(node_posMaster{}) = identified;
                 /**Quando un nodo identifica la posizione del master gli viene assegnato un indice che equivale
                  * all'ordine di arrivo all'interno del cerchio...(servirà nella funzione myCorner)*/
-                if (!(node.storage(node_secondReturn{}))) {
-                    int maxIndex = nbr(CALL, 0, [&](field<int> indexes) {
+                if (!(node.storage(node_secondReturn{})))
+                {
+                    int maxIndex = nbr(CALL, 0, [&](field<int> indexes)
+                                       {
                         int maxIndex = max_hood(CALL, indexes);
                         // also checks if the robot is a slave, so that you don't mind the index of the master
                         if (get<1>(node.storage(node_indexSlave{})) == 0 && !isWorker(CALL)) {
@@ -444,69 +500,78 @@ namespace fcpp
                         }
                         else {
                             return maxIndex;
-                        }
-                        });
+                        } });
 
-                    if ((get<1>(node.storage(node_indexSlave{}))) == 0 && !isWorker(CALL)) {
+                    if ((get<1>(node.storage(node_indexSlave{}))) == 0 && !isWorker(CALL))
+                    {
                         node.storage(node_indexSlave{}) = make_tuple(node.uid, maxIndex);
                     }
                 }
-                else {
-                    if ((get<1>(node.storage(node_indexSlave{}))) == 0 && !isWorker(CALL)) {
+                else
+                {
+                    if ((get<1>(node.storage(node_indexSlave{}))) == 0 && !isWorker(CALL))
+                    {
                         // set the index just to the amount of slaves there is
                         get<1>(node.storage(node_indexSlave{})) = node.storage(node_numberOfSlave{});
                     }
                 }
             }
-            else{
-                // I think here the node_posMaster{} gets a(some) slave TODO: check this 
+            else
+            {
+                // I think here the node_posMaster{} gets a(some) slave TODO: check this
                 node.storage(node_posMaster{}) = identified;
             }
 
             // propagete the maximum number of slaves, if current is bigger, than save it, otherwise take b
-            node.storage(node_maxNumberOfSlave{}) = old(CALL, 0, [&](int b) {
-                return max(b, (node.storage(node_numberOfSlave{})));
-            });
+            node.storage(node_maxNumberOfSlave{}) = old(CALL, 0, [&](int b)
+                                                        { return max(b, (node.storage(node_numberOfSlave{}))); });
         }
 
-
-        FUN void run_flocking(ARGS, node_type nt) {
+        FUN void run_flocking(ARGS)
+        {
             CODE
                 /**controllo nel caso degli indici si sovrapponessero*/
-                field <tuple<int, int>> identifierWrongIndex = nbr(CALL, node.storage(node_indexSlave{}));
+                field<tuple<int, int>>
+                    identifierWrongIndex = nbr(CALL, node.storage(node_indexSlave{}));
 
-            // Aggiungere a true la batteria è a 0 
-            bool flagIndex = all_hood(CALL, map_hood([](tuple<int, int> t, tuple<int, int> myValue) {
+            // Aggiungere a true la batteria è a 0
+            bool flagIndex = all_hood(CALL, map_hood([](tuple<int, int> t, tuple<int, int> myValue)
+                                                     {
                 if (get<1>(myValue) == get<1>(t) && get<0>(myValue) != get<0>(t)) {
                     return false;
                 }
                 else {
                     return true;
-                }
-                }, identifierWrongIndex, node.storage(node_indexSlave{})));
+                } }, identifierWrongIndex, node.storage(node_indexSlave{})));
 
-            if (!(flagIndex && decrementIndex(CALL))) {
-                checkIndex(CALL, nt);
+            if (!(flagIndex && decrementIndex(CALL)))
+            {
+                checkIndex(CALL);
             }
-            else {
+            else
+            {
                 node.storage(node_checkIndex{}) = false;
             }
 
-            if (nt == node_type::ROBOT_SLAVE) {
+            if (!isWorker(CALL))
+            {
                 // instead calculateMyCorner we should have the slave move to a
                 // position of interest based on something(maybe master, maybe goal from
                 // a user, ...)
                 calculateMyCorner(CALL);
-                //!Sistema di collision avoidance
-                collisionAvoidance(CALL, nt);
+                //! Sistema di collision avoidance
+                collisionAvoidance(CALL);
                 errorCalculator(CALL);
             }
 
-            if (nt == node_type::ROBOT_SLAVE) {
-                if (!(get<0>(node.storage(node_posMaster{})))) {
+            if (!isWorker(CALL))
+            {
+                if (!(get<0>(node.storage(node_posMaster{}))))
+                {
                     node.storage(node_startPosition{}) = node.position();
                 }
-                else {
+                else
+                {
                     node.storage(node_startPosition{}) = node.position();
                 }
             }
@@ -515,10 +580,12 @@ namespace fcpp
         // AP PROCESS
 
         //! @brief A robot has reached a goal and now try to terminate the process
-        FUN process_tuple_type ends_processed_goal(ARGS, process_tuple_type& p, goal_tuple_type const& g, status* s) {
+        FUN process_tuple_type ends_processed_goal(ARGS, process_tuple_type &p, goal_tuple_type const &g, status *s)
+        {
             CODE
 
-                std::cout << "Robot " << node.uid << " is trying to terminate goal " << common::get<goal_code>(g) << endl;
+                    std::cout
+                << "Robot " << node.uid << " is trying to terminate goal " << common::get<goal_code>(g) << endl;
             std::cout << endl;
 
             *s = status::terminated_output; // stop propagation
@@ -526,17 +593,20 @@ namespace fcpp
         }
 
         //! @brief A robot has discharged the battery, so AP send a stop command
-        FUN void battery_discharged_when_it_is_running(ARGS, process_tuple_type& p, goal_tuple_type const& g, status* s) {
+        FUN void battery_discharged_when_it_is_running(ARGS, process_tuple_type &p, goal_tuple_type const &g, status *s)
+        {
             CODE
-            *s = status::border; // listen neighbours, but not send messages
+                *s = status::border; // listen neighbours, but not send messages
         }
 
         //! @brief Send a GOAL action to selected node and update the AP state machine of the robot to SELECTED
-        FUN void send_action_to_selected_node(ARGS, process_tuple_type& p, goal_tuple_type const& g, status* s) {
+        FUN void send_action_to_selected_node(ARGS, process_tuple_type &p, goal_tuple_type const &g, status *s)
+        {
             CODE
                 std::string robot_chosen = get_real_robot_name(CALL, node.uid);
 
-            if (isWorker(CALL)) {
+            if (isWorker(CALL))
+            {
                 // std::cout << "Robot " << robot_chosen << " is chosen for goal " << common::get<goal_code>(g) << endl;
                 // print the goal_code_robot_id and node.uid
                 // std::cout << "Goal code robot id: " << goal_code_robot_id << " Node uid: " << node.uid << endl;
@@ -556,13 +626,13 @@ namespace fcpp
                     .pos_x = common::get<goal_pos_x>(g),
                     .pos_y = common::get<goal_pos_y>(g),
                     .pos_z = common::get<goal_pos_z>(g),
-                    .orient_w = common::get<goal_orient_w>(g)
-                };
+                    .orient_w = common::get<goal_orient_w>(g)};
                 action::manager::ActionManager::new_action(action_data);
                 // print the position of x
-                std::cout << "Position x: " << common::get<goal_pos_x>(g) << endl;
+                // std::cout << "Position x: " << common::get<goal_pos_x>(g) << endl;
             }
-            else{
+            else
+            {
                 // send action to file a.k.a send the goal to the scout/slave
                 action::ActionData action_data = {
                     .action = common::get<goal_action>(g),
@@ -571,8 +641,7 @@ namespace fcpp
                     .pos_x = (float)node.storage(node_vecMyVersor{})[0],
                     .pos_y = (float)node.storage(node_vecMyVersor{})[1],
                     .pos_z = (float)node.storage(node_vecMyVersor{})[2],
-                    .orient_w = 0.0
-                };
+                    .orient_w = 0.0};
                 action::manager::ActionManager::new_action(action_data);
             }
         }
@@ -580,17 +649,22 @@ namespace fcpp
         // ACTION
 
         //! @brief Manage when the user has requested an ABORT of a goal
-        FUN void manage_action_abort(ARGS, goal_tuple_type const& g, status* s) {
+        FUN void manage_action_abort(ARGS, goal_tuple_type const &g, status *s)
+        {
             CODE
-                std::cout << "Process ABORT " << common::get<goal_code>(g) << " in node " << node.uid << " with status " << node.storage(node_process_status{}) << endl;
+                    std::cout
+                << "Process ABORT " << common::get<goal_code>(g) << " in node " << node.uid << " with status " << node.storage(node_process_status{}) << endl;
             // if and only if robot is in status RUNNING, sends stop command to robot
-            if (node.storage(node_process_status{}) == ProcessingStatus::SELECTED) {
+            if (node.storage(node_process_status{}) == ProcessingStatus::SELECTED)
+            {
                 send_stop_command_to_robot(CALL, "ABORT", node.uid, g, ProcessingStatus::TERMINATING);
 
                 std::cout << "Robot " << node.uid << " is trying to terminate ABORT " << common::get<goal_code>(g) << endl;
             }
-            else {
-                if (AP_ENGINE_DEBUG) {
+            else
+            {
+                if (AP_ENGINE_DEBUG)
+                {
                     std::cout << "Robot " << node.uid << " is waiting to terminate ABORT " << common::get<goal_code>(g) << endl;
                 }
             }
@@ -598,13 +672,15 @@ namespace fcpp
         }
 
         //! @brief Manage when the user has requested a new GOAL
-        FUN void manage_action_goal(ARGS, node_type nt, goal_tuple_type const& g, status* s, int n_round) {
+        FUN void manage_action_goal(ARGS, goal_tuple_type const &g, status *s, int n_round)
+        {
             CODE
 
                 // std::cout << "Process GOAL " << common::get<goal_code>(g) << ", action " << common::get<goal_action>(g) << " in node " << node.uid << endl;
-            add_goal_to_computing_map(CALL, g);
+                add_goal_to_computing_map(CALL, g);
 
-            old(CALL, common::make_tagged_tuple<goal_code>(common::get<goal_code>(g)), [&](process_tuple_type p) {
+            old(CALL, common::make_tagged_tuple<goal_code>(common::get<goal_code>(g)), [&](process_tuple_type p)
+                {
 
                 // compute charge of battery in percent
                 float percent_charge = node.storage(node_battery_charge{}) / 100.0;
@@ -637,7 +713,7 @@ namespace fcpp
                     }
 
                     if (!isWorker(CALL)) {
-                        run_flocking(CALL, nt);
+                        run_flocking(CALL);
                         send_action_to_selected_node(CALL, p, g, s);
                     }
                 }
@@ -648,44 +724,48 @@ namespace fcpp
                 }
 
                 // TODO
-                return p;
-                });
+                return p; });
         }
 
         //! @brief Termination logic using share (see SHARE termination in ACSOS22 paper)
-        FUN void termination_logic(ARGS, status& s, goal_tuple_type const&, node_type nt) {
+        FUN void termination_logic(ARGS, status &s, goal_tuple_type const &)
+        {
             bool terminatingMyself = s == status::terminated_output;
-            bool terminatingNeigh = nbr(CALL, terminatingMyself, [&](field<bool> nt) {
-                return any_hood(CALL, nt) or terminatingMyself;
-                });
+            bool terminatingNeigh = nbr(CALL, terminatingMyself, [&](field<bool> nt)
+                                        { return any_hood(CALL, nt) or terminatingMyself; });
             bool exiting = all_hood(CALL, nbr(CALL, terminatingNeigh), terminatingNeigh);
 
-            if (exiting) {
-                s = status::border; 
+            if (exiting)
+            {
+                s = status::border;
             }
-            else if (terminatingMyself) {
+            else if (terminatingMyself)
+            {
                 s = status::internal_output;
             }
         }
 
-
         //! @brief Read new goals from shared variable and insert them in NewGoalsList
-        void read_new_goals(std::vector<goal_tuple_type>& NewGoalsList, std::optional<std::string> source) {
+        void read_new_goals(std::vector<goal_tuple_type> &NewGoalsList, std::optional<std::string> source)
+        {
             std::vector<InputGoal> InputGoalsBySource;
 
             // if source is specified
-            if (source.has_value()) {
+            if (source.has_value())
+            {
                 // keep only goals with source = node_ext_name
-                std::copy_if(InputGoalList.begin(), InputGoalList.end(), std::back_inserter(InputGoalsBySource), [&](InputGoal ig) {
-                    return get_robot_id_from_goal_code(ig.goal_code) == source.value();
-                });
-            } else {
+                std::copy_if(InputGoalList.begin(), InputGoalList.end(), std::back_inserter(InputGoalsBySource), [&](InputGoal ig)
+                             { return get_robot_id_from_goal_code(ig.goal_code) == source.value(); });
+            }
+            else
+            {
                 // otherwise, copy all InputGoal
                 InputGoalsBySource = InputGoalList;
             }
-            
+
             std::lock_guard lgg(GoalMutex);
-            auto map_op = [](InputGoal ig) {
+            auto map_op = [](InputGoal ig)
+            {
                 return common::make_tagged_tuple<goal_action, goal_code, goal_pos_x, goal_pos_y, goal_pos_z, goal_orient_w, goal_source, goal_priority, goal_subcode>(
                     ig.action,
                     ig.goal_code,
@@ -695,66 +775,71 @@ namespace fcpp
                     ig.orient_w,
                     ig.source,
                     ig.priority,
-                    ig.subcode
-                );
+                    ig.subcode);
             };
             std::transform(InputGoalsBySource.begin(), InputGoalsBySource.end(), std::back_inserter(NewGoalsList), map_op);
 
             // delete only goals with source = node_ext_name
-            if (source.has_value()) {
-                std::cout << "I am erasing" << std::endl;
+            if (source.has_value())
+            {
+                // std::cout << "I am erasing" << std::endl;
                 // std::cout << "This is the source value" << source.value() << std::endl;
                 InputGoalList.erase(
-                    std::remove_if(InputGoalList.begin(), InputGoalList.end(), [&](InputGoal ig) {
-                        return get_robot_id_from_goal_code(ig.goal_code) == source.value();
-                    }),
-                    InputGoalList.end()
-                );
-            } else {
-                std::cout << "I am clearing" << std::endl;
+                    std::remove_if(InputGoalList.begin(), InputGoalList.end(), [&](InputGoal ig)
+                                   { return get_robot_id_from_goal_code(ig.goal_code) == source.value(); }),
+                    InputGoalList.end());
+            }
+            else
+            {
+                // std::cout << "I am clearing" << std::endl;
                 InputGoalList.clear();
             }
         }
 
         //! @brief Acquire new goals from storage, in according with node_type.
-        FUN void acquire_new_goals(ARGS, std::vector<goal_tuple_type>& NewGoalsList) { CODE
-            read_new_goals(NewGoalsList, std::optional<string>(std::to_string(node.uid)));        
+        FUN void acquire_new_goals(ARGS, std::vector<goal_tuple_type> &NewGoalsList)
+        {
+            CODE
+                read_new_goals(NewGoalsList, std::optional<string>(std::to_string(node.uid)));
         }
-
-        
 
         // MAIN FUNCTIONS
 
         //! @brief Initialize MAIN function, selecting correct node_type, run only ONCE per simulation
-        FUN void init_main_fn(ARGS, int n_round, int number_of_masters) {
+        FUN void init_main_fn(ARGS, int n_round, int number_of_masters)
+        {
+            CODE
+                // std::cout << "range: " << fcpp::coordination::comm << std::endl;
 
-            // std::cout << "range: " << fcpp::coordination::comm << std::endl;
-
-            if (AP_ENGINE_DEBUG) {
-                std::cout << std::endl << std::endl;
-                std::cout << "[node-" << node.uid << "] Time: " <<
-                    std::chrono::time_point_cast<std::chrono::milliseconds>(
-                        std::chrono::system_clock::now()).time_since_epoch(
-                        ).count() << endl;
+                if (AP_ENGINE_DEBUG)
+            {
+                std::cout << std::endl
+                          << std::endl;
+                std::cout << "[node-" << node.uid << "] Time: " << std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now()).time_since_epoch().count() << endl;
             }
 
-            // set node type in the storage
-            #if defined(RUN_SIMULATION)
-                if (node.uid < number_of_masters) {
-                    node.storage(node_isWorker{}) = true;
-                }
-                else if (node.uid <= ROBOTS.size()) {
-                    node.storage(node_isWorker{}) = false;
-                }
-            #elif defined(RUN_EMBEDDED)
-                node.storage(node_isWorker{}) = node.uid == 0 ? true : false;
-            #endif
-            if (AP_ENGINE_DEBUG) {
+// set node type in the storage
+#if defined(RUN_SIMULATION)
+            if (node.uid < number_of_masters)
+            {
+                node.storage(node_isWorker{}) = true;
+            }
+            else if (node.uid <= ROBOTS.size())
+            {
+                node.storage(node_isWorker{}) = false;
+            }
+#elif defined(RUN_EMBEDDED)
+            node.storage(node_isWorker{}) = node.uid == 0 ? true : false;
+#endif
+            if (AP_ENGINE_DEBUG)
+            {
                 std::cout << "MAIN FUNCTION in node " << node.uid << " of type " << (isWorker(CALL) ? "worker" : "scout") << endl;
             }
 
+            // TODO: this might be needs to be used more than just once in the debug mode
             field<int> test_nbr = fcpp::coordination::nbr(CALL, n_round);
-            if (AP_ENGINE_DEBUG) {
+            if (AP_ENGINE_DEBUG)
+            {
                 std::cout << "test_nbr_main_fn: " << test_nbr << "; nbr_uid: " << nbr_uid(CALL) << std::endl;
             }
 
@@ -764,25 +849,34 @@ namespace fcpp
             node.storage(node_shape{}) = shape::sphere;
             node.storage(node_shadow_color{}) = fcpp::color(0x837E7CFF);
             node.storage(node_shadow_shape{}) = shape::sphere;
-            node.storage(node_set{}) = true;
 
+            if (isWorker(CALL))
+            {
+                node.storage(node_isWorker{}) = true;
+                // TODO: probably need the worker_needs so that different workers have different amount of workers
+                node.storage(required_scouts{}) = 2; // FOR NOW IT'S JUST SET TO TO, BUT IT SHOULD BE CHANGED SO THAT A USER CAN SET THE INITIAL VALUE
+                node.storage(scout_need{}) = 2 - nWorkerScout;
+            }
+
+            node.storage(node_set{}) = true;
         }
 
-
-
         //! @brief Initialize variables (storage, etc...) of a robot using feedback data.
-        FUN void init_robot(ARGS) {
-            if (isWorker(CALL)) {
+        FUN void init_robot(ARGS)
+        {
+            if (isWorker(CALL))
+            {
                 node.storage(node_label_text{}) = "RM." + std::to_string(node.uid);
             }
             else
             {
                 node.storage(node_label_text{}) = "RS." + std::to_string(node.uid);
             }
-            
+
             // std::cout << "Robot " << prefix << node.uid << " initialized" << std::endl;
 
-            old(CALL, robot_phase::IDLE, [&](robot_phase ph) {
+            old(CALL, robot_phase::IDLE, [&](robot_phase ph)
+                {
                 std::string rname = ROBOT_PREFIX + std::to_string(node.uid); // name is obtained from node ID
                 node.storage(node_external_name{}) = rname;
 
@@ -791,6 +885,15 @@ namespace fcpp
                 if (RobotStatesMap.find(rname) != RobotStatesMap.end()) {
                     // for each status of the robot
                     for (RobotStatus rs : RobotStatesMap[rname]) {
+                        // print out the robot status
+                        std::cout << "Robot " << rname << " status: "
+                                  << "pos_x: " << rs.pos_x << ", "
+                                  << "pos_y: " << rs.pos_y << ", "
+                                  << "pos_z: " << rs.pos_z << ", "
+                                  << "orient_w: " << rs.orient_w << ", "
+                                  << "battery_percent_charge: " << rs.battery_percent_charge << ", "
+                                  << "goal_status: " << rs.goal_status << ", "
+                                  << "goal_code: " << rs.goal_code << std::endl;
                         // add offset to match with background
                         real_t pos_x_offset = node.storage(node_offset_pos_x{});
                         real_t pos_y_offset = node.storage(node_offset_pos_y{});
@@ -862,16 +965,17 @@ namespace fcpp
                     RobotStatesMap.erase(rname);
                 }
 
-                return ph;
-            });
+                return ph; });
         }
 
         // PROCESS MANAGEMENT
 
         //! @brief Spawn process from goal list acquired, which you get from the feedback.
-        FUN spawn_result_type spawn_process(ARGS, node_type nt, ::vector<goal_tuple_type>& NewGoalsList, int n_round) {
+        FUN spawn_result_type spawn_process(ARGS, ::vector<goal_tuple_type> &NewGoalsList, int n_round)
+        {
             // process new goals, emptying NewGoalsList
-            return coordination::spawn(CALL, [&](goal_tuple_type const& g) {
+            return coordination::spawn(CALL, [&](goal_tuple_type const &g)
+                                       {
                 status s = status::internal_output;
 
                 field<int> test_nbr = fcpp::coordination::nbr(CALL, n_round);
@@ -884,24 +988,24 @@ namespace fcpp
                 if (ABORT_ACTION == common::get<goal_action>(g) &&
                     node.storage(node_process_goal{}) == common::get<goal_code>(g) &&
                     node.storage(node_external_goal{}) == common::get<goal_code>(g)) {
-                    std::cout << "Robot " << node.uid << " is in abort action" << endl;
+                    // std::cout << "Robot " << node.uid << " is in abort action" << endl;
 
                     manage_action_abort(CALL, g, &s);
                 }
 
                 // ACTION: REACH GOAL
                 else if (GOAL_ACTION == common::get<goal_action>(g)) {
-                    std::cout << "Robot " << node.uid << " is in goal action" << endl;
+                    // std::cout << "Robot " << node.uid << " is in goal action" << endl;
                     // print the goal_action and goal_action
                     // std::cout << "Goal action: " << common::get<goal_action>(g) << " Goal code: " << common::get<goal_code>(g) << " for robot " << node.uid << endl;
 
-                    manage_action_goal(CALL, nt, g, &s, n_round);
+                    manage_action_goal(CALL, g, &s, n_round);
                 }
 
-                termination_logic(CALL, s, g, nt);
+                termination_logic(CALL, s, g);
 
                 // Landing if status == border and pos_z > 0 
-                if (nt == node_type::ROBOT_SLAVE && s == status::border && counter(CALL) == 1) {
+                if (!isWorker(CALL) && s == status::border && counter(CALL) == 1) {
                     action::ActionData action_data = {
                         .action = "LAND",
                         .goal_code = node.storage(node_process_goal{}),
@@ -913,56 +1017,62 @@ namespace fcpp
                     };
                     action::manager::ActionManager::new_action(action_data);
                 }
-            return make_tuple(node.current_time(), s);
-            }, NewGoalsList);
+            return make_tuple(node.current_time(), s); }, NewGoalsList);
         }
 
         //! @brief Manage termination of the spawn processes.
-        FUN void manage_termination(ARGS, node_type nt, spawn_result_type& r) {
-            // if process was terminating and now it's terminated, we have to change state machine to IDLE 
-            if (node.storage(node_process_status{}) == ProcessingStatus::TERMINATING) {
+        FUN void manage_termination(ARGS, spawn_result_type &r)
+        {
+            // if process was terminating and now it's terminated, we have to change state machine to IDLE
+            if (node.storage(node_process_status{}) == ProcessingStatus::TERMINATING)
+            {
                 // if process has been terminated, it isn't in the result map of spawn
                 bool process_found = false;
-                for (auto const& x : r) {
+                for (auto const &x : r)
+                {
                     auto g = x.first;
-                    if (common::get<goal_code>(g) == node.storage(node_process_goal{})) {
+                    if (common::get<goal_code>(g) == node.storage(node_process_goal{}))
+                    {
                         process_found = true;
                     }
                 }
-                if (!process_found) {
+                if (!process_found)
+                {
                     std::cout << "Process with code " << node.storage(node_process_goal{}) << " not found, so move robot to IDLE" << endl;
                     node.storage(node_process_status{}) = ProcessingStatus::IDLE;
                 }
             }
 
-            // search on results if the computing processes has been terminated: 
+            // search on results if the computing processes has been terminated:
             //  - if it's terminated (or in other words, if the goal it's not in the "r" variable), we delete it from the map in the storage
             std::vector<std::string> goals_to_remove = {};
-            for (auto const& x : node.storage(node_process_computing_goals{}))
+            for (auto const &x : node.storage(node_process_computing_goals{}))
             {
                 auto g = x.second;
-                if (r.find(g) == r.end()) {
+                if (r.find(g) == r.end())
+                {
                     std::cout << "Remove process with code " << common::get<goal_code>(g) << endl;
                     goals_to_remove.push_back(common::get<goal_code>(g));
                 }
             }
-            for (auto const& gc : goals_to_remove) {
+            for (auto const &gc : goals_to_remove)
+            {
                 remove_goal_from_computing_map(CALL, gc);
             }
         }
 
-
         //! @brief Main case study function.
         MAIN()
         {
-
             // for testing purposes
             int nubmer_of_masters = 2; // TODO: this should be passed in from a user
             // INITIALIZE VARS
             std::vector<goal_tuple_type> NewGoalsList{};
-            int n_round = fcpp::coordination::counter(CALL); // maybe change so that it saves in the node storage, so you don't need to pass it as an argument
+            int n_round = fcpp::coordination::counter(CALL);
+            node.storage(node_countRound{}) = counter(CALL); // TODO: use this instead of n_round
 
-            if (!node.storage(node_set{})) init_main_fn(CALL, n_round, nubmer_of_masters);
+            if (!node.storage(node_set{}))
+                init_main_fn(CALL, n_round, nubmer_of_masters);
 
             // UPDATE DATA
             acquire_new_goals(CALL, NewGoalsList);
@@ -972,12 +1082,10 @@ namespace fcpp
             // Init Flocking
             initialization(CALL);
 
-
             // PROCESS MANAGEMENT
-            // spawn_result_type r = spawn_process(CALL, nt, NewGoalsList, n_round);
+            spawn_result_type r = spawn_process(CALL, NewGoalsList, n_round);
 
-            // manage_termination(CALL, nt, r);
-
+            manage_termination(CALL, r);
         }
 
         //! @brief Export types used by the *_connection functions.
@@ -986,8 +1094,7 @@ namespace fcpp
             bool,
             goal_tuple_type,
             robot_phase,
-            process_tuple_type
-        >;
+            process_tuple_type>;
 
         // TODO: refactor (cancellare le funzioni da togliere)
         FUN_EXPORT flocking_t = export_list<
@@ -997,18 +1104,18 @@ namespace fcpp
             vec<3>,
             tuple<bool, vec<3>>,
             tuple<int, int>,
-            tuple <bool, double>,
+            tuple<bool, double>,
             bool,
-            tuple <bool, bool>
-        >;
+            tuple<bool, bool>>;
 
         //! @brief Export types used by the main function (update it when expanding the program).
         struct main_t : public export_list<
-            any_connection_t,
-            flocking_t,
-            spawn_t<goal_tuple_type, status>,
-            diameter_election_t<tuple<real_t, device_t>>
-        > {};
+                            any_connection_t,
+                            flocking_t,
+                            spawn_t<goal_tuple_type, status>,
+                            diameter_election_t<tuple<real_t, device_t>>>
+        {
+        };
 
     }
 }
