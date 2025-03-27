@@ -47,6 +47,12 @@ namespace fcpp
             return node.storage(node_isWorker{}) ? true : false;
         }
 
+        FUN bool isCharging(ARGS) {
+            if(!isWorker(CALL)) {
+                return node.storage(scout_isCharging{});
+            } else return false;   
+        }
+
         //! @brief Change color of node, passing in argument
         FUN void change_color(ARGS, fcpp::color color)
         {
@@ -140,6 +146,10 @@ namespace fcpp
         bool compare(double a, double b)
         {
             return a < b;
+        }
+
+        FUN bool isActive(ARGS){
+            return (node.storage(node_active{}) == 1) ? true : false;
         }
 
         void log_error(string uid, string time, double error)
@@ -309,14 +319,15 @@ namespace fcpp
                     if (get<1>(node.storage(node_indexSlave{})) == get<1>(check) && get<0>(node.storage(node_indexSlave{})) != get<0>(check))
                     {
                         node.storage(node_checkIndex{}) = true;
-                        if (!(node.storage(node_secondReturn{})))
-                        {
-                            get<1>(node.storage(node_indexSlave{})) += 1;
-                        }
-                        else
-                        {
-                            get<1>(node.storage(node_indexSlave{})) -= 1;
-                        }
+                        // if (!(node.storage(node_secondReturn{})))
+                        // {
+                        //     get<1>(node.storage(node_indexSlave{})) += 1;
+                        // }
+                        // else
+                        // {
+                        //     get<1>(node.storage(node_indexSlave{})) -= 1;
+                        // }
+                        get<1>(node.storage(node_indexSlave{})) += 1;
                     }
                 }
             }
@@ -358,13 +369,13 @@ namespace fcpp
         FUN bool decrementIndex(ARGS)
         {
             using namespace tags;
-            int difference = node.storage(node_maxNumberOfSlave{}) - node.storage(node_numberOfSlave{});
-            if (difference > 0 && get<1>(node.storage(node_indexSlave{})) > node.storage(node_numberOfSlave{}))
+            int current_slaves = max_hood(CALL, nbr(CALL, node.storage(node_numberOfSlave{})));
+            if (get<1>(node.storage(node_indexSlave{})) > current_slaves && current_slaves != 0)
             {
                 get<1>(node.storage(node_indexSlave{})) = 1;
-                return false;
+                return true;
             }
-            return true;
+            return false;
         }
 
         FUN void errorCalculator(ARGS)
@@ -594,15 +605,155 @@ namespace fcpp
             }
             node.storage(expected_dist_worker_scout{}) = distanceMasterSlave;
 
-            // TODO: maybe do a out of order simulation
+            // // TODO: maybe do a out of order simulation
 
             int workerId = node.storage(scout_curr_worker{});
+
+            field<infoWorkerType> infoWorkerField = nbr(CALL, infoWorker);
+
+            // Used to retrive the info of the current scout's worker. I think the acc is a placeholder again, and is used if the scout doesn't have a worker
+            infoWorkerType currWorker = fold_hood(CALL, [&](infoWorkerType val, infoWorkerType acc) { 
+                if(get<infoW_nodeId>(val) == workerId) {
+                    return val;
+                } else return acc;
+            }, infoWorkerField, make_tagged_tuple<infoW_active, infoW_need, infoW_nodeDistance, infoW_position, infoW_velocity, infoW_nodeId>(false, INT_MIN, INT_MAX, make_vec(0, 0, 0), make_vec(0, 0, 0), node.uid));   
+
+            // Update the scout's info on the worker
+            if(get<infoW_active>(currWorker)) {
+                node.storage(node_posWorker{}) = make_tuple(get<infoW_active>(currWorker), get<infoW_position>(currWorker));
+            }
+
+            // Update the distance of the scout to the workers(multiple, since we used nbr and we have multiple workers)
+            field<infoWorkerType> updatedInfoWorkerField = map_hood([&](infoWorkerType workerData) {
+                double dist = -(distance(get<infoW_position>(workerData), node.position()));
+
+                get<infoW_nodeDistance>(workerData) = dist;
+
+                return workerData;
+            }, infoWorkerField);
+
+            infoWorkerType newWorkerInfo = max_hood(CALL, updatedInfoWorkerField); // gets the worker with the smallest distance to the scout
+            // smallest because, we negate the distance in the map_hood function, so the smallest distance is then the largest value
+
+            if (node.storage(node_countRound{}) > 400 && get<infoW_active>(newWorkerInfo)) // check with Gianluca if we need the roundcount
+            {
+                // only for scouts
+                if (!isWorker(CALL))
+                {
+                    // find the closest scout. If there is a need for a new scout, we will reassign one, otherwise nothing
+                    // TODO: would it be better here to first check if the worker actually needs a new scout?
+
+                    tuple<vec<3>, int> closestScout = make_tuple(node.position(), -1);
+
+                    split(CALL, node.storage(scout_curr_worker{}), [&]() { // executes only in the network of the given key, which in this case is the current worker of the current scout
+                        tuple<vec<3>, int> tupleScout = make_tuple(node.position(), node.uid);
+
+                        field<tuple<vec<3>, int>> fieldScout = nbr(CALL, tupleScout); // field of scouts(I think only the scouts of the network of the current worker), since the worker cannot get into this code
+
+                        closestScout = fold_hood(CALL, [&](tuple<vec<3>, int> val, tuple<vec<3>, int> acc) { // acc is the starting value, and after the return what is returned is the new acc
+
+                            double accDist = distance(get<infoW_position>(newWorkerInfo), get<0>(acc));
+                            double valDist = distance(get<infoW_position>(newWorkerInfo), get<0>(val));
+
+                            return valDist < accDist ? val : acc;
+                        }, fieldScout, make_tuple(node.position(), node.uid));
+                    });
+
+                    if(node.storage(scout_curr_worker{}) < 0 || (get<infoW_need>(newWorkerInfo) > 0 && node.uid == get<1>(closestScout) && get<infoW_need>(currWorker) < get<infoW_need>(newWorkerInfo) - 1)) {
+                        if(!isWorker(CALL)) node.storage(scout_curr_worker{}) = get<infoW_nodeId>(newWorkerInfo);
+
+                        // change the worker for current scout
+                        node.storage(node_posWorker{}) = make_tuple(get<infoW_active>(newWorkerInfo), get<infoW_position>(newWorkerInfo));
+                    } 
+                }
+                
+            }
+            
+        }
+
+        FUN void updateFollowersCount(ARGS) {
+            if(isActive(CALL)) {
+                int num_scouts = count_hood(CALL) - 1;
+
+                if(isWorker(CALL)) node.storage(scout_need{}) = node.storage(required_scouts{}) - num_scouts;
+                node.storage(node_numberOfScouts{}) = num_scouts;
+            }
+        }
+
+        FUN void assignScout(ARGS) {
+            /**When a node identifies the position of the worker, it is assigned an index that corresponds
+             * to the order of arrival within the circle.*/
+            if (isActive(CALL)) {
+
+                tuple<int, int> scoutVal = make_tuple(node.storage(scout_curr_worker{}), get<1>(node.storage(node_indexSlave{}))); // id of the scouts current worker and the index of the scout
+                field<tuple<int, int>> fieldScoutVal = nbr(CALL, scoutVal); // just a field of the scoutVal tuple of the neighbors
+
+                tuple<int, int> currMaxIndex = fold_hood(CALL, [&](tuple<int, int> val, tuple<int, int> acc) {
+                    if(get<1>(val) > get<1>(acc) && node.storage(scout_curr_worker{}) == get<0>(val) && !isWorker(CALL)) { // check if the current node has a higher value than the previous max value, that the worker of both is the same and that the current node is not the worker
+                        return val;
+                    } else return acc;
+                }, fieldScoutVal, make_tuple(node.storage(scout_curr_worker{}), 0));
+
+
+                int maxIndex = nbr(CALL, 0, [&](field<int> indexes) {
+                    maxIndex = get<1>(currMaxIndex); // globaly max index of a scout
+                    if (get<1>(node.storage(node_indexSlave{})) == 0 && !isWorker(CALL)) { // if the scout has no index, we assign one more than the max
+                        return maxIndex + 1;
+                    } else {
+                        return maxIndex;
+                    }
+                });
+                // Assign the found value, but just if the scout has no index
+                if ((get<1>(node.storage(node_indexSlave{}))) == 0 && !isWorker(CALL)) {
+                    node.storage(node_indexSlave{}) = make_tuple(node.uid, maxIndex);
+                }
+            } 
+        }
+
+        /**
+         * Check if my index is equal to that of a neighbor.
+         * Returns TRUE if it finds duplicates of its index
+        */
+        FUN bool checkDuplicateIndex(ARGS) { CODE
+            /**Check in case the indexes overlap*/
+            bool duplicateExists = false;
+            if (!isWorker(CALL) && isActive(CALL)) {
+                field<tuple<int, int>> identifierWrongIndex = nbr(CALL, node.storage(node_indexSlave{}));
+                duplicateExists = any_hood(CALL, map_hood([](tuple<int, int> t, tuple<int, int> myValue) {
+                    if (get<1>(myValue) == get<1>(t) && get<0>(myValue) != get<0>(t)) { // check if current node has the same index as the one from neighbour and that the node is not the same one, so you don't compare me to me
+                        return true;
+                    }else{
+                        return false;
+                    }
+                }, identifierWrongIndex, node.storage(node_indexSlave{})));
+            }
+            return duplicateExists;
+        }
+
+        FUN void correctIndexes(ARGS) {
+            if (isActive(CALL) && !isCharging(CALL)) 
+            {
+                // Check for duplicate indexes
+                bool duplicatedIndexes = split(CALL, node.storage(scout_curr_worker{}), [&]() {return checkDuplicateIndex(CALL);}); // check for duplicates in the network of the current worker
+                
+                if (duplicatedIndexes)
+                {
+                    // If there are duplicates, adjust the indexes accordingly
+                    split(CALL, node.storage(scout_curr_worker{}), [&]() {return checkIndex(CALL);}); // do for the network of the current worker
+                } else {
+                    node.storage(node_checkIndex{}) = false; // in the other code the name is node_fixIndex
+                }       
+
+                // Decrement indexes higher than the current number of scouts
+                // In the next round, they will be seen as duplicates and will be fixed
+                split(CALL, node.storage(scout_curr_worker{}), [&]() {return decrementIndex(CALL);}); // do for the network of the current worker
+            }
         }
 
         // AP PROCESS
 
         //! @brief A robot has reached a goal and now try to terminate the process
-        FUN process_tuple_type ends_processed_goal(ARGS, process_tuple_type &p, goal_tuple_type const &goal, status *status_end)
+        FUN process_tuple_type ends_processed_goal(ARGS, process_tuple_type &process, goal_tuple_type const &goal, status *status_end)
         {
             CODE
 
@@ -611,7 +762,7 @@ namespace fcpp
             std::cout << endl;
 
             *status_end = status::terminated_output; // stop propagation
-            return p;
+            return process;
         }
 
         //! @brief A robot has discharged the battery, so AP send a stop command
@@ -702,7 +853,7 @@ namespace fcpp
                 // std::cout << "Process GOAL " << get<goal_code>(goal) << ", action " << get<goal_action>(goal) << " in node " << node.uid << endl;
                 add_goal_to_computing_map(CALL, goal);
 
-            old(CALL, make_tagged_tuple<goal_code>(get<goal_code>(goal)), [&](process_tuple_type p)
+            old(CALL, make_tagged_tuple<goal_code>(get<goal_code>(goal)), [&](process_tuple_type process)
                 {
 
                 // compute charge of battery in percent
@@ -712,12 +863,12 @@ namespace fcpp
                 if (get<goal_code>(goal) == node.storage(node_process_goal{}) && //i was running current goal in the process
                     get<goal_code>(goal) == node.storage(node_external_goal{}) && //the robot was running current goal
                     ProcessingStatus::TERMINATING == node.storage(node_process_status{})) { //but now i'm terminating
-                    return ends_processed_goal(CALL, p, goal, status_goal);
+                    return ends_processed_goal(CALL, process, goal, status_goal);
                 }
 
                 // if battery is empty, then stop at current position
                 if (percent_charge <= 0.0) { //the battery is full discharged
-                    battery_discharged_when_it_is_running(CALL, p, status_goal);
+                    battery_discharged_when_it_is_running(CALL, process, status_goal);
                 }
 
                 // Battery charged
@@ -731,13 +882,13 @@ namespace fcpp
                             // calculated(in a function), since we don't have a
                             // predetermined path, but get the end position from the
                             // goal
-                            send_action_to_selected_node(CALL, p, goal);
+                            send_action_to_selected_node(CALL, process, goal);
                         }
                     }
 
                     if (!isWorker(CALL)) {
                         run_flocking(CALL);
-                        send_action_to_selected_node(CALL, p, goal);
+                        send_action_to_selected_node(CALL, process, goal);
                     }
                 }
                 // blinking colors if not running
@@ -747,7 +898,7 @@ namespace fcpp
                 }
 
                 // TODO
-                return p; });
+                return process; });
         }
 
         //! @brief Termination logic using share (see SHARE termination in ACSOS22 paper)
@@ -853,7 +1004,6 @@ namespace fcpp
                     node.storage(scout_need{}) = 2 - nWorkerScout; // TODO: change this and original required scouts so they read from an array, where the index is the node.uid
                     node.storage(original_required_scouts{}) = 2;
                     node.storage(scout_curr_worker{}) = -1; // the worker is not assigned to a scout
-                    node.storage(expected_dist_worker_scout{}) = distanceMasterSlave;
                     node.storage(node_numberOfScouts{}) = nWorkerScout; // number of scouts assigned to each worker
                 }
                 else
@@ -870,10 +1020,22 @@ namespace fcpp
                         {
                             node.storage(scout_curr_worker{}) = i - 1;
                             // print the scout_curr_worker with my worker is: scout_curr_worker
-                            std::cout << "Scout " << node.uid << "assigned to worker " << node.storage(scout_curr_worker{}) << std::endl;
+                            // std::cout << "Scout " << node.uid << "assigned to worker " << node.storage(scout_curr_worker{}) << std::endl;
                             break;
                         }
                     }
+
+                    // TODO: the battery is not use yet, can be in the future
+                    node.storage(scout_need{}) = -1;
+                    node.storage(scout_isCharging{}) = false;
+                    node.storage(scout_battery_percentage{}) = 100;
+                    node.storage(scout_min_battery_percaentage{}) = 15;
+
+                    // TODO: here set the battery discharge rate, depeneding on the type of the battery
+                    // node.storage(scout_battery_discharge_rate{}) = 0.1; // this is just a placeholder for now, for real test it should be a
+                    // different rate, based on what user chose
+
+
                     
                 }
             #elif defined(RUN_EMBEDDED)
@@ -897,6 +1059,8 @@ namespace fcpp
             node.storage(node_shape{}) = shape::sphere;
             node.storage(node_shadow_color{}) = fcpp::color(0x837E7CFF);
             node.storage(node_shadow_shape{}) = shape::sphere;
+            node.storage(expected_dist_worker_scout{}) = distanceMasterSlave;
+
 
             node.storage(node_set{}) = true;
         }
@@ -1015,12 +1179,12 @@ namespace fcpp
                     std::cout << "test_nbr_in_process: " << test_nbr << std::endl;
                 }
 
-                if (isWorker(CALL))
-                {
-                    // print the goal_code and goal_action and which round it is
-                    std::cout << "Goal code: " << get<goal_code>(goal) << " Goal action: " << get<goal_action>(goal) << " Round: " << n_round << endl;
-                    std::cout << endl;
-                }
+                // if (isWorker(CALL))
+                // {
+                //     // print the goal_code and goal_action and which round it is
+                //     std::cout << "Goal code: " << get<goal_code>(goal) << " Goal action: " << get<goal_action>(goal) << " Round: " << n_round << endl;
+                //     std::cout << endl;
+                // }
                 
 
                 // ACTION: ABORT GOAL
@@ -1120,8 +1284,23 @@ namespace fcpp
             // multi_worker_doesn't have this, since it is applied directly in the AP itself, and it doesn't have ROS2
             apply_feedback_to_ap(CALL);
 
+            // call updateWorker so that the scouts get the correct worker
+            // updateWorker(CALL);
+
+            // update the count of scouts
+            split(CALL, (isWorker(CALL)) ? node.uid : node.storage(scout_curr_worker{}), [&]() {return updateFollowersCount(CALL);}); // split according to the uid if current node is worker, otherwise use the worker of the current scout
+
             // Init Flocking
-            initialization(CALL);
+            initialization(CALL); // I think we will not need this after the refactoring
+
+            // Assign index to the scout
+            assignScout(CALL);
+
+            correctIndexes(CALL);
+
+            // TODO: HERE IS WHERE I STOPPED. NOW THE INDEXES SHOULD BE CORRECT, THE SLAVES SHOULD BELONG TO CORRECT WORKERS
+            // NOW THE GOAL NEEDS TO BE FOLLOWED(WORKER MOVED ACCORDING TO WHAT THE GOAL FROM ROS2 IS AND SLAVES SHOULD POSITIONED
+            // ACCORDING TO ITS WORKER)
 
             // PROCESS MANAGEMENT
             spawn_result_type r = spawn_process(CALL, NewGoalsList, n_round);

@@ -304,6 +304,25 @@ namespace fcpp
             struct node_numberOfScouts
             {
             };
+            struct scout_isCharging
+            {
+            };
+            struct scout_battery_percentage
+            {
+            };
+            struct scout_min_battery_percaentage
+            {
+            };
+            struct scout_battery_discharge_rate
+            {
+            };
+            struct node_posWorker
+            {
+            };
+            struct node_active
+            {
+            };
+            
 
             //! @brief tags for infoWorker.
             struct infoW_active
@@ -328,7 +347,6 @@ namespace fcpp
             struct scout_curr_worker // uid of the worker the scout is currently assigned to. -1 if not assigned
             {
             };
-
         } // tags
 
 #ifndef AP_USE_CASE
@@ -535,6 +553,12 @@ namespace fcpp
                             expected_dist_worker_scout, double,
                             scout_curr_worker, int,
                             node_numberOfScouts, int,
+                            scout_isCharging, bool,
+                            scout_battery_percentage, double,
+                            scout_min_battery_percaentage, double,
+                            scout_battery_discharge_rate, double,
+                            node_posWorker, tuple<bool, vec<3>>,
+                            node_active, bool,
 
                             // START Flocking
                             node_posMaster, tuple<bool, vec<3>>,
