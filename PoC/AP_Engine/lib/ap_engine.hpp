@@ -1286,7 +1286,7 @@ namespace fcpp
             // multi_worker_doesn't have this, since it is applied directly in the AP itself, and it doesn't have ROS2
             apply_feedback_to_ap(CALL);
 
-            // call updateWorker so that the scouts get the correct worker. TODO: MOVE TO THE PROCESS. FOR NOT DECIDED TO NOT MOVE IT
+            // call updateWorker so that the scouts get the correct worker. TODO: MOVE TO THE PROCESS. FOR NOW DECIDED TO NOT MOVE IT
             // updateWorker(CALL);
 
             // update the count of scouts
@@ -1301,7 +1301,7 @@ namespace fcpp
             // correctIndexes(CALL);
 
             // TODO: HERE IS WHERE I STOPPED. NOW THE INDEXES SHOULD BE CORRECT, THE SLAVES SHOULD BELONG TO CORRECT WORKERS
-            // NOW THE GOAL NEEDS TO BE FOLLOWED(WORKER MOVED ACCORDING TO WHAT THE GOAL FROM ROS2 IS AND SLAVES SHOULD POSITIONED
+            // NOW THE GOAL NEEDS TO BE FOLLOWED(WORKER MOVED ACCORDING TO WHAT THE GOAL FROM ROS2 IS AND SLAVES SHOULD POSITION
             // ACCORDING TO ITS WORKER)
 
             // PROCESS MANAGEMENT
