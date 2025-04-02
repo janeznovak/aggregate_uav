@@ -382,7 +382,7 @@ namespace fcpp
         // Start Flocking
 
         //! @brief Distance CircularCrown-slave, equivale al raggio della corona circolare della circonferenza,
-        constexpr double distanceCircularCrown = comm - ((comm / 100) * 25);
+        constexpr double distanceCircularCrown = (std::min(2.77, 3.29) * (comm - ((comm / 100) * 25)) / comm) * 0.25;
 
 #if AP_USE_CASE == HIGHDISTANCE
         //! @brief Distance master-slave, equivale al raggio della circonferenza della formazione.
@@ -398,7 +398,7 @@ namespace fcpp
 #endif
 
         //! @brief The maximum communication range between nodes; TODO: change this to test with different data, check which range is ok.
-        constexpr size_t communication_range = 10; // TODO: test with different data, also test with different retain time
+        constexpr size_t communication_range = 1.1; // TODO: test with different data, also test with different retain time
 
         //! @brief Constant minimum number of nodes to form a circle
         constexpr int minNodesToFormCircle = 5;

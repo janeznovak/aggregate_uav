@@ -142,7 +142,7 @@ class CrazyflyController(Node):
             self.get_logger().info(f"Master GOAL aborted")
 
         self.notifySetpointsStop()
-        self.land(0.03, 1.0)
+        self.land(0.15, 10.0)
 
     def ap_goal_callback(self, msg: Goal):
         if self.isMaster:
@@ -159,7 +159,7 @@ class CrazyflyController(Node):
             if msg.type == "LAND":
                 self.get_logger().info("Landing Message SLAVE")
                 self.notifySetpointsStop()
-                self.land(0.03, 1.0)
+                self.land(0.15, 10.0)
             else:
                 e_p = np.array([msg.x, msg.y, msg.qz])
                 if not np.isnan(e_p).any():

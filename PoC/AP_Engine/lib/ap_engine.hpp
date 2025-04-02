@@ -110,6 +110,7 @@ namespace fcpp
         FUN void remove_goal_from_computing_map(ARGS, std::string goal_code)
         {
             CODE
+                std::cout << "I am removing the goal " << goal_code << " from the computing map for node " << node.uid << std::endl;
                 node.storage(node_process_computing_goals{})
                     .erase(goal_code);
         }
@@ -199,6 +200,7 @@ namespace fcpp
             // and previous state is NOT REACHED: new color is "reached" and deletes goal storage
             if (feedback::GoalStatus::REACHED != node.storage(node_external_status{}))
             {
+                std::cout << "I have reached the goal in if " << node.uid << std::endl;
                 new_color = fcpp::color(fcpp::coordination::reached_goal_color);
                 // set to terminating processing status
                 node.storage(node_process_status{}) = ProcessingStatus::TERMINATING;
@@ -215,6 +217,7 @@ namespace fcpp
             }
             else
             {
+                std::cout << "I have reached the goal in else " << node.uid << std::endl;
                 new_color = fcpp::color(fcpp::coordination::reached_goal_color);
             }
             change_color(CALL, new_color);
@@ -417,62 +420,94 @@ namespace fcpp
             {
                 if (get<0>(node.storage(node_posMaster{})))
                 {
-                    bool flag = compare(distance(get<1>(node.storage(node_posMaster{})), node.position()), minDistance);
-                    vec<3> elasticMaster = make_vec(0, 0, 0);
-                    vec<3> v = get<1>(node.storage(node_posMaster{})) - node.position();
-                    if (!node.storage(node_fixIndex{}))
-                    {
-                        elasticMaster = v * (1 - distanceMasterSlave / (norm(v))) * hardnessMasterSlave;
-                    }
-                    else
-                    {
-                        elasticMaster = v * ((1 - distanceCircularCrown / (norm(v)))) * hardnessCircularCrown;
-                    }
-                    if (flag)
-                    {
-                        //! Viene considerata come limite critico di livello 2 la distanza minima consentita
-                        elasticMaster += elasticMaster * incrementForce;
-                    }
-                    node.storage(node_collisionAvoidanceMaster{}) = elasticMaster;
-
-                    //! Viene considerata come limite critico di livello 1 il 90% della suddivisione in parti uguali per permettere
-                    //! un margine d'errore del 10%
-                    double distanceSlaveSlave = (2 * distanceMasterSlave * pi) / node.storage(node_numberOfSlave{});
-
-                    tuple<bool, vec<3>> elasticSlave = sum_hood(CALL, map_hood([](vec<3> v, double d, double l, double constAvoid)
-                                                                               {
-                        tuple<bool, vec<3>> t = make_tuple(false, make_vec(0, 0, 0));
-                        double criticalLimit = l * 0.9;
-                        if (d < criticalLimit) {
-                            get<1>(t) = v * ((1 - l / (norm(v))) * hardnessSlaveSlave);
-                            //! Viene considerata come limite critico di livello 2 la distanza minima consentita
-                            if (d < constAvoid) {
-                                get<1>(t) += get<1>(t) * incrementForce;
-                            }
+                    // Get current position and master position
+                    vec<3> current_pos = node.position();
+                    vec<3> master_pos = get<1>(node.storage(node_posMaster{}));
+                    
+                    // Calculate distance to master (only in x-y plane)
+                    double dist_to_master = std::sqrt(std::pow(current_pos[0] - master_pos[0], 2) + 
+                                                    std::pow(current_pos[1] - master_pos[1], 2));
+                    
+                    // Define safety zones
+                    const double min_safe_distance = minDistance;
+                    const double transition_zone = min_safe_distance * 1.5; // Smooth transition zone
+                    
+                    // Initialize avoidance forces
+                    vec<3> avoidance_force = make_vec(0, 0, 0);
+                    
+                    // Calculate base repulsion force
+                    if (dist_to_master < transition_zone) {
+                        // Calculate direction vector (only in x-y plane)
+                        vec<3> direction = make_vec(
+                            (current_pos[0] - master_pos[0]) / dist_to_master,
+                            (current_pos[1] - master_pos[1]) / dist_to_master,
+                            0
+                        );
+                        
+                        // Calculate force magnitude with smooth transition
+                        double force_magnitude = 0;
+                        if (dist_to_master < min_safe_distance) {
+                            // Strong repulsion in danger zone
+                            force_magnitude = hardnessMasterSlave * (1.0 - (dist_to_master / min_safe_distance));
+                        } else {
+                            // Smooth transition in transition zone
+                            force_magnitude = hardnessMasterSlave * 0.5 * (1.0 - ((dist_to_master - min_safe_distance) / (transition_zone - min_safe_distance)));
                         }
-                        return t; }, node.nbr_vec(), node.nbr_dist(), distanceSlaveSlave, minDistance),
-                                                                tuple<bool, vec<3>>{});
-                    node.storage(node_collisionAvoidanceSlaves{}) = get<1>(elasticSlave);
-                    if (node.storage(node_collisionAvoidanceSlaves{}) != make_vec(0, 0, 0))
-                    {
-                        node.storage(node_flagDistance{}) = true;
+                        
+                        // Apply horizontal avoidance only
+                        avoidance_force[0] = direction[0] * force_magnitude;
+                        avoidance_force[1] = direction[1] * force_magnitude;
                     }
-                    else
-                    {
-                        node.storage(node_flagDistance{}) = false;
-                    }
-
-                    //! Viene semplicemente controllato che i valori calcolati siano assegnabili, ovvero !NaN || !inf
-                    if ((!(isnan(node.storage(node_collisionAvoidanceMaster{})[0])) && !(std::isinf(node.storage(node_collisionAvoidanceMaster{})[0]))) ||
-                        (!(isnan(node.storage(node_collisionAvoidanceMaster{})[1])) && !(std::isinf(node.storage(node_collisionAvoidanceMaster{})[1]))))
-                    {
-
-                        node.storage(node_vecMyVersor{}) += node.storage(node_collisionAvoidanceMaster{});
-                        if ((!(isnan(node.storage(node_collisionAvoidanceSlaves{})[0])) && !(std::isinf(node.storage(node_collisionAvoidanceSlaves{})[0]))) ||
-                            (!(isnan(node.storage(node_collisionAvoidanceSlaves{})[1])) && !(std::isinf(node.storage(node_collisionAvoidanceSlaves{})[1]))))
-                        {
-
-                            node.storage(node_vecMyVersor{}) += node.storage(node_collisionAvoidanceSlaves{});
+                    
+                    // Store the avoidance force
+                    node.storage(node_collisionAvoidanceMaster{}) = avoidance_force;
+                    
+                    // Calculate inter-UAV avoidance
+                    tuple<bool, vec<3>> neighbor_avoidance = sum_hood(CALL, map_hood([](vec<3> v, double d, double l, double constAvoid) {
+                        tuple<bool, vec<3>> result = make_tuple(false, make_vec(0, 0, 0));
+                        
+                        // Calculate horizontal distance only
+                        double horizontal_dist = std::sqrt(std::pow(v[0], 2) + std::pow(v[1], 2));
+                        
+                        if (horizontal_dist < l * 1.5) { // Check in transition zone
+                            vec<3> direction = make_vec(
+                                v[0] / horizontal_dist,
+                                v[1] / horizontal_dist,
+                                0
+                            );
+                            double force_magnitude = 0;
+                            
+                            if (horizontal_dist < constAvoid) {
+                                // Strong repulsion in danger zone
+                                force_magnitude = hardnessSlaveSlave * (1.0 - (horizontal_dist / constAvoid));
+                            } else {
+                                // Smooth transition
+                                force_magnitude = hardnessSlaveSlave * 0.5 * (1.0 - ((horizontal_dist - constAvoid) / (l * 1.5 - constAvoid)));
+                            }
+                            
+                            // Apply horizontal avoidance only
+                            get<1>(result)[0] = direction[0] * force_magnitude;
+                            get<1>(result)[1] = direction[1] * force_magnitude;
+                            
+                            get<0>(result) = true;
+                        }
+                        
+                        return result;
+                    }, node.nbr_vec(), node.nbr_dist(), distanceMasterSlave, minDistance), tuple<bool, vec<3>>{});
+                    
+                    // Store neighbor avoidance force
+                    node.storage(node_collisionAvoidanceSlaves{}) = get<1>(neighbor_avoidance);
+                    
+                    // Update flag based on any avoidance forces
+                    node.storage(node_flagDistance{}) = (norm(avoidance_force) > 0.001 || norm(get<1>(neighbor_avoidance)) > 0.001);
+                    
+                    // Apply avoidance forces if they are valid
+                    if (!std::isnan(avoidance_force[0]) && !std::isinf(avoidance_force[0])) {
+                        node.storage(node_vecMyVersor{}) += avoidance_force;
+                        
+                        vec<3> neighbor_force = get<1>(neighbor_avoidance);
+                        if (!std::isnan(neighbor_force[0]) && !std::isinf(neighbor_force[0])) {
+                            node.storage(node_vecMyVersor{}) += neighbor_force;
                         }
                     }
                 }
@@ -1262,6 +1297,7 @@ namespace fcpp
             }
             for (auto const &gc : goals_to_remove)
             {
+                // std::cout << "I am removing the goal " << gc << " from the computing map" << std::endl;
                 remove_goal_from_computing_map(CALL, gc);
             }
         }
@@ -1304,6 +1340,17 @@ namespace fcpp
             // ACCORDING TO ITS WORKER)
 
             // PROCESS MANAGEMENT
+            if (node.uid == 1)
+            {
+                // print the NewGoalsList
+                std::cout << "NewGoalsList: " << std::endl;
+                for (auto const &goal : NewGoalsList)
+                {
+                    std::cout << "I have a new goal and I am drone 1: " << std::endl;
+                    std::cout << "Goal code: " << get<goal_code>(goal) << " Goal action: " << get<goal_action>(goal) << std::endl;
+                }
+            }
+            
             spawn_result_type r = spawn_process(CALL, NewGoalsList, n_round);
 
             manage_termination(CALL, r);
