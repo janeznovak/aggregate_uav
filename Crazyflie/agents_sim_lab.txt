@@ -1,6 +1,6 @@
-1.1, 0.92, 0.0, crazyflie
-2.2, 0.92, 0.0, crazyflie
-4.1, 5.08, 0.0, crazyflie
-0.1, 2.92, 0.0, crazyflie
-4.2, 2.92, 0.0, crazyflie
-0.2, 1.0, 0.0, crazyflie
+1.1, 0.92, crazyflie
+2.2, 0.92, crazyflie
+1.1, 2.0, crazyflie
+1.1, 0.5, crazyflie
+2.2, 2.0, crazyflie
+2.2, 0.5, crazyflie
