@@ -34,7 +34,7 @@ if [[ -f $(dirname "$0")/Navigation_System/install/local_setup.bash ]] &&
         find "$(dirname "$0")/../Storage/from_user" -depth -type f \( -name '*.txt' -o -name '*.lock' \) -delete -o -path "$(dirname "$0")/Storage/from_user" -prune -type f \( -name '*.txt' -o -name '*.lock' \) -delete
         echo "Cleaned Storage folder"
         
-		echo "Launching simulation.."
+		echo "Launching test.."
 		ros2 launch system_launcher system_launcher.launch.py
 		
 		else

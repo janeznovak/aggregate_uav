@@ -39,8 +39,9 @@ class CrazyflyController(Node):
         self.isMaster = cfname in MASTER_PREFIXES
         self.cf_position = np.array([0.0, 0.0, 0.0])
 
-        self.takeoffService = self.create_client(Takeoff, prefix + "/takeoff")
-        self.takeoffService.wait_for_service()
+        # not using takeoff, since it gets first position(also the z axis) from the cmdFullState
+        # self.takeoffService = self.create_client(Takeoff, prefix + "/takeoff")
+        # self.takeoffService.wait_for_service()
         self.landService = self.create_client(Land, prefix + "/land")
         self.landService.wait_for_service()
 
@@ -141,8 +142,12 @@ class CrazyflyController(Node):
             self.goalStatePublisher.publish(gf)
             self.get_logger().info(f"Master GOAL aborted")
 
-        self.notifySetpointsStop()
-        self.land(0.15, 10.0)
+        # using the callback to notify that the low-level commands have finished and then starts with land
+        self.notifySetpointsStop_and_then_land(0.10, 5.0)
+        # self.notifySetpointsStop()
+        # time.sleep(10.0)
+        # self.get_logger().info(f"I should be landing to 10 cm in 10 seconds")
+        # self.land(0.5, 5.0)
 
     def ap_goal_callback(self, msg: Goal):
         if self.isMaster:
@@ -158,8 +163,9 @@ class CrazyflyController(Node):
         else:
             if msg.type == "LAND":
                 self.get_logger().info("Landing Message SLAVE")
-                self.notifySetpointsStop()
-                self.land(0.15, 10.0)
+                self.notifySetpointsStop_and_then_land(0.10, 5.0)
+                # self.notifySetpointsStop()
+                # self.land(0.10, 10.0)
             else:
                 e_p = np.array([msg.x, msg.y, msg.qz])
                 if not np.isnan(e_p).any():
@@ -192,11 +198,43 @@ class CrazyflyController(Node):
             groupMask (int): Group mask bits. See :meth:`setGroupMask()` doc.
 
         """
+        self.get_logger().info(f"Landing to {targetHeight} in {duration} seconds")
         req = Land.Request()
         req.group_mask = groupMask
         req.height = targetHeight
         req.duration = rclpy.duration.Duration(seconds=duration).to_msg()
-        self.landService.call_async(req)
+        # rclpy.spin_until_future_complete(self, future)
+        # self.landService.call_async(req)
+        
+        if not self.landService.service_is_ready():
+             self.get_logger().error("Land service is not available!")
+             return # Or handle error appropriately
+         
+        future = self.landService.call_async(req)
+        # Attach the callback function to be executed when the future is done
+        future.add_done_callback(self._land_callback_done)
+        self.get_logger().info("Land request sent, waiting for completion asynchronously...")
+        
+        # if future.done():
+        #     try:
+        #         response = future.result()
+        #         self.get_logger().info("Land service call successful")
+        #     except Exception as e:
+        #         self.get_logger().error(f"Service call failed: {e}")
+        # else:
+        #     self.get_logger().error("Service call timed out")
+            
+    def _land_callback_done(self, future):
+        try:
+            # Retrieve the result. If an exception occurred during the call,
+            # future.result() will raise it.
+            response = future.result()
+            # Response might be None if the service definition is empty '---'
+            self.get_logger().info(f'Land service call successful.')
+            # print the response
+            self.get_logger().info(f'Response: {response}')
+        except Exception as e:
+            self.get_logger().error(f'Land service call failed: {e}')
 
     def cmdFullState(self, pos, vel, acc, yaw, omega):
         """
@@ -328,6 +366,38 @@ class CrazyflyController(Node):
         req.remain_valid_millisecs = remainValidMillisecs
         req.group_mask = groupMask
         self.notifySetpointsStopService.call_async(req)
+    
+    def notifySetpointsStop_and_then_land(self, targetHeight, duration, groupMask=0):
+        """Sends NotifySetpointsStop and chains the land command to its callback."""
+        self.get_logger().info("Requesting notify_setpoints_stop...")
+        req = NotifySetpointsStop.Request()
+        req.remain_valid_millisecs = 100 # Keep default or adjust
+        req.group_mask = groupMask
+
+        if not self.notifySetpointsStopService.wait_for_service(timeout_sec=1.0):
+             self.get_logger().error("NotifySetpointsStop service not available! Cannot land.")
+             return
+
+        future = self.notifySetpointsStopService.call_async(req)
+        # Use functools.partial or lambda to pass land parameters to the callback
+        from functools import partial
+        callback = partial(self._notify_setpoints_stop_done_then_land,
+                           targetHeight=targetHeight,
+                           duration=duration,
+                           groupMask=groupMask)
+        future.add_done_callback(callback)
+        self.get_logger().info("NotifySetpointsStop request sent, will land on completion.")
+        
+    def _notify_setpoints_stop_done_then_land(self, future, targetHeight, duration, groupMask):
+        """Callback executed after NotifySetpointsStop completes."""
+        try:
+            response = future.result()
+            self.get_logger().info(f'NotifySetpointsStop call successful. Response: {response}. Now initiating land.')
+            # --- NOW call land ---
+            self.land(targetHeight, duration, groupMask)
+            # ---------------------
+        except Exception as e:
+            self.get_logger().error(f'NotifySetpointsStop call failed: {e}. Landing aborted.')
 
 
 def main(args=None):
