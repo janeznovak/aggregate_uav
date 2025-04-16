@@ -7,6 +7,8 @@ import rowan
 from pathlib import Path
 import numpy as np
 import threading
+from functools import partial
+
 
 from crazyflie_interfaces.msg import FullState, Position
 from crazyflie_interfaces.srv import Land, NotifySetpointsStop, Takeoff
@@ -380,7 +382,6 @@ class CrazyflyController(Node):
 
         future = self.notifySetpointsStopService.call_async(req)
         # Use functools.partial or lambda to pass land parameters to the callback
-        from functools import partial
         callback = partial(self._notify_setpoints_stop_done_then_land,
                            targetHeight=targetHeight,
                            duration=duration,

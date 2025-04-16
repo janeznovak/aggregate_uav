@@ -369,6 +369,7 @@ namespace fcpp
                 vec<3> versore = vecMyRadiant + dist;
                 // versore[2] = 0;
                 node.storage(node_vecMyVersor{}) = versore;
+                node.storage(node_vecMyVersor{})[2] += 0.4;
                 // this is my versore
                 // std::cout << "Calculating my vec_versore " << node.storage(node_vecMyVersor{}) << std::endl;
                 // std::cout << "My node_indexSlave " << get<1>(node.storage(node_indexSlave{})) << std::endl;
