@@ -42,10 +42,12 @@ class CrazyflyController(Node):
         self.cf_position = np.array([0.0, 0.0, 0.0])
 
         # not using takeoff, since it gets first position(also the z axis) from the cmdFullState
-        # self.takeoffService = self.create_client(Takeoff, prefix + "/takeoff")
-        # self.takeoffService.wait_for_service()
+        self.takeoffService = self.create_client(Takeoff, prefix + "/takeoff")
+        self.takeoffService.wait_for_service()
         self.landService = self.create_client(Land, prefix + "/land")
         self.landService.wait_for_service()
+        
+        self.has_tookoff = False
 
         self.notifySetpointsStopService = self.create_client(
             NotifySetpointsStop, prefix + '/notify_setpoints_stop')
@@ -160,8 +162,15 @@ class CrazyflyController(Node):
                 self.get_logger().info(f"This is the message: {msg}")
                 self.abort_flag = False
                 self.get_logger().info(f"Received GOAL Msg")
+                if not self.has_tookoff:
+                    self.takeoff(0.3, 10.0)  # Example takeoff call with height 1.0 and duration 5.0
+                    self.get_logger().info("Waiting for takeoff to complete...")
+                    takeoff_future = self.takeoffService.call_async(Takeoff.Request())
+                    takeoff_future.add_done_callback(self._takeoff_done_callback)
+                    self.has_tookoff = True
                 thread = threading.Thread(target=self.execute_master_trajectory, args=(msg,))
                 thread.start()
+            # self.notifySetpointsStop_and_then_land(0.10, 5.0)
         else:
             if msg.type == "LAND":
                 self.get_logger().info("Landing Message SLAVE")
@@ -171,6 +180,12 @@ class CrazyflyController(Node):
             else:
                 e_p = np.array([msg.x, msg.y, msg.qz])
                 if not np.isnan(e_p).any():
+                    if not self.has_tookoff:
+                        self.takeoff(7.0, 10.0)  # Example takeoff call with height 1.0 and duration 5.0
+                        self.get_logger().info("Waiting for takeoff to complete...")
+                        takeoff_future = self.takeoffService.call_async(Takeoff.Request())
+                        takeoff_future.add_done_callback(self._takeoff_done_callback)
+                        self.has_tookoff = True
                     self.execute_trajectory(e_p)
 
     def ap_abort_callback(self, msg: Goal):
@@ -226,6 +241,18 @@ class CrazyflyController(Node):
         # else:
         #     self.get_logger().error("Service call timed out")
             
+    def _takeoff_done_callback(self, future):
+        try:
+            # Retrieve the result. If an exception occurred during the call,
+            # future.result() will raise it.
+            response = future.result()
+            # Response might be None if the service definition is empty '---'
+            self.get_logger().info(f'Takeoff service call successful.')
+            # print the response
+            self.get_logger().info(f'Response: {response}')
+        except Exception as e:
+            self.get_logger().error(f'Takeoff service call failed: {e}')        
+    
     def _land_callback_done(self, future):
         try:
             # Retrieve the result. If an exception occurred during the call,
@@ -371,7 +398,7 @@ class CrazyflyController(Node):
     
     def notifySetpointsStop_and_then_land(self, targetHeight, duration, groupMask=0):
         """Sends NotifySetpointsStop and chains the land command to its callback."""
-        self.get_logger().info("Requesting notify_setpoints_stop...")
+        self.get_logger().info(f"Requesting notify_setpoints_stop... I am master: {str(self.isMaster)} and my id is: {self.cfname}")
         req = NotifySetpointsStop.Request()
         req.remain_valid_millisecs = 100 # Keep default or adjust
         req.group_mask = groupMask
