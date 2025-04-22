@@ -623,7 +623,7 @@ namespace fcpp
 
             // for testing purposes there is 250, can be changed
             if (get<infoW_active>(newWorkerInfo)
-                && node.storage(node_countRound{}) > 250
+                // && node.storage(node_countRound{}) > 250
                 ) // check with Gianluca if we need the roundcount
             {
             //     // only for scouts

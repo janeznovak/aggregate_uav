@@ -3,35 +3,35 @@ robots:
   cf_0:
     enabled: True
     uri: udp://0.0.0.0:19850
-    initial_position: [1.1, 0.92, 0.0]
+    initial_position: [0.0, 0.0, 0.0]
     type: cf_sim  # see robot_types
 
   cf_1:
     enabled: True
     uri: udp://0.0.0.0:19851
-    initial_position: [2.2, 0.92, 0.0]
+    initial_position: [1.8, 2.4, 0.0]
     type: cf_sim  # see robot_types
 
   cf_2:
     enabled: True
     uri: udp://0.0.0.0:19852
-    initial_position: [4.1, 5.08, 0.0]
+    initial_position: [0.0, 0.6, 0.0]
     type: cf_sim  # see robot_types
   
   cf_3:
-    enabled: True
+    enabled: False
     uri: udp://0.0.0.0:19853
     initial_position: [0.1, 2.92, 0.0]
     type: cf_sim  # see robot_types
   
   cf_4:
-    enabled: True
+    enabled: False
     uri: udp://0.0.0.0:19854
     initial_position: [4.2, 2.92, 0.0]
     type: cf_sim  # see robot_types
 
   cf_5:
-    enabled: True
+    enabled: False
     uri: udp://0.0.0.0:19855
     initial_position: [0.2, 1.0, 0.0]
     type: cf_sim  # see robot_types
