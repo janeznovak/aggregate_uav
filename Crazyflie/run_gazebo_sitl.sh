@@ -106,7 +106,7 @@ if [ -z ${SCRIPT} ]; then
             spawn_custom_robot ${robot_type} $(($n)) ${fields[0]} ${fields[1]}
         fi
         n=$(($n + 1))
-    done < "agents_lab.txt"
+    done < "agents_sim_lab.txt"
 else
     IFS=,
     for target in ${SCRIPT}; do

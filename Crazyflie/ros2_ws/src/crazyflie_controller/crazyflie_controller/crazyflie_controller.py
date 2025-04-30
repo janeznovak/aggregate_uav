@@ -8,6 +8,7 @@ from pathlib import Path
 import numpy as np
 import threading
 from functools import partial
+import time
 
 
 from crazyflie_interfaces.msg import FullState, Position
@@ -112,18 +113,37 @@ class CrazyflyController(Node):
         traj_name = msg.goal_id.split("-")[0]
         master_id = msg.goal_id.split("-")[2]
         robot_real_id = self.cfname.split("_")[1]
-        
+
         if master_id == robot_real_id:
             self.get_logger().info(f"The master id is: {master_id} and the robot real name is: {robot_real_id}")
-            traj.loadcsv(
-                f"{share_folder}/trajectory_data/{traj_name}.csv"
-            )
+            try:
+                traj_path = f"{share_folder}/trajectory_data/{traj_name}.csv"
+                self.get_logger().info(f"Loading trajectory from: {traj_path}")
+                traj.loadcsv(traj_path)
+            except FileNotFoundError:
+                self.get_logger().error(f"Trajectory file not found: {traj_path}")
+                gf.goal_state = GOAL_FAILED
+                gf.goal_id = msg.goal_id
+                self.goalStatePublisher.publish(gf)
+                return # Stop execution if trajectory not found
+            except Exception as e:
+                self.get_logger().error(f"Error loading trajectory: {e}")
+                gf.goal_state = GOAL_FAILED
+                gf.goal_id = msg.goal_id
+                self.goalStatePublisher.publish(gf)
+                return # Stop execution on other loading errors
+
 
         start_time = timeHelper.time()
         while not timeHelper.isShutdown() and not self.abort_flag:
             t = timeHelper.time() - start_time
             if t > traj.duration:
-                break
+                # Make sure the drone reaches the final state precisely
+                if traj.duration > 0: # Avoid evaluation at t=0 if duration is 0
+                    e = traj.eval(traj.duration)
+                    self.get_logger().info(f"Sending final trajectory point at t={traj.duration}")
+                    self.cmdFullState(e.pos, e.vel, e.acc, e.yaw, e.omega)
+                break # Exit loop
 
             e = traj.eval(t)
             self.cmdFullState(
@@ -133,26 +153,43 @@ class CrazyflyController(Node):
                 e.yaw,
                 e.omega,
             )
+            # Optional: Add a small sleep within the loop if publishing too fast
+            # time.sleep(0.01) # e.g., sleep for 10ms
 
-        # Goal Ended
+        # Goal Ended or Aborted
+        goal_status_message = ""
         if not self.abort_flag:
             gf.goal_state = GOAL_REACHED
-            gf.goal_id = msg.goal_id
-            self.goalStatePublisher.publish(gf)
-            self.get_logger().info(f"Master GOAL ended")
+            goal_status_message = f"Master GOAL {msg.goal_id} ended normally."
         else:
             gf.goal_state = GOAL_ABORTED
-            gf.goal_id = msg.goal_id
-            self.goalStatePublisher.publish(gf)
-            self.get_logger().info(f"Master GOAL aborted")
+            goal_status_message = f"Master GOAL {msg.goal_id} aborted."
 
-        # using the callback to notify that the low-level commands have finished and then starts with land
-        self.notifySetpointsStop_and_then_land(0.10, 5.0)
-        # self.notifySetpointsStop()
-        # time.sleep(10.0)
-        # self.get_logger().info(f"I should be landing to 10 cm in 10 seconds")
-        # self.land(0.5, 5.0)
+        gf.goal_id = msg.goal_id
+        self.goalStatePublisher.publish(gf)
+        self.get_logger().info(goal_status_message)
 
+
+        # ******** THE FIX: ADD DELAY HERE ********
+        # Allow time for the last cmdFullState message to be processed
+        # and the commander buffer on the drone to clear before switching modes.
+        # Adjust the delay time (0.2 to 0.5 seconds is usually reasonable)
+        stop_duration_s = 0.3
+        self.get_logger().info(f"Trajectory finished. Waiting {stop_duration_s}s before initiating land sequence...")
+        time.sleep(stop_duration_s)
+        # ******************************************
+
+
+        # Now initiate the landing sequence
+        # Use a small target height (e.g., 5-10cm) and a reasonable duration
+        target_land_height = 0.05 # Land to 5cm above origin
+        land_duration = 3.0      # Land over 3 seconds
+        self.get_logger().info(f"Initiating landing sequence for {self.cfname} to height {target_land_height}m over {land_duration}s.")
+        self.notifySetpointsStop_and_then_land(target_land_height, land_duration)
+
+        # Reset abort flag for the next goal
+        self.abort_flag = False
+        
     def ap_goal_callback(self, msg: Goal):
         if self.isMaster:
             master_id = msg.goal_id.split("-")[2]
@@ -392,7 +429,7 @@ class CrazyflyController(Node):
 
         """
         req = NotifySetpointsStop.Request()
-        req.remain_valid_millisecs = remainValidMillisecs
+        req.remain_valid_millisecs = 200
         req.group_mask = groupMask
         self.notifySetpointsStopService.call_async(req)
     
@@ -420,6 +457,7 @@ class CrazyflyController(Node):
         """Callback executed after NotifySetpointsStop completes."""
         try:
             response = future.result()
+            # time.sleep(0.2)
             self.get_logger().info(f'NotifySetpointsStop call successful. Response: {response}. Now initiating land.')
             # --- NOW call land ---
             self.land(targetHeight, duration, groupMask)

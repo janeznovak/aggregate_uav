@@ -40,7 +40,7 @@ namespace fcpp
         using namespace std::chrono;
         using spawn_result_type = std::unordered_map<goal_tuple_type, times_t, fcpp::common::hash<goal_tuple_type>>;
 
-        constexpr int worker_requirements[5] = {0, 1, 0, 0, 0};
+        constexpr int worker_requirements[5] = {0, 2, 0, 0, 0};
 
         // UTILS AP
 
@@ -369,7 +369,7 @@ namespace fcpp
                 vec<3> versore = vecMyRadiant + dist;
                 // versore[2] = 0;
                 node.storage(node_vecMyVersor{}) = versore;
-                node.storage(node_vecMyVersor{})[2] += 0.5;
+                node.storage(node_vecMyVersor{})[2] += 0.6;
                 // this is my versore
                 // std::cout << "Calculating my vec_versore " << node.storage(node_vecMyVersor{}) << std::endl;
                 // std::cout << "My node_indexSlave " << get<1>(node.storage(node_indexSlave{})) << std::endl;

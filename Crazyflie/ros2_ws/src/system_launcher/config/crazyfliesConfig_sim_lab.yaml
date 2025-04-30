@@ -15,13 +15,13 @@ robots:
   cf_2:
     enabled: True
     uri: udp://0.0.0.0:19852
-    initial_position: [0.0, 0.6, 0.0]
+    initial_position: [0.0, 0.3, 0.0]
     type: cf_sim  # see robot_types
   
   cf_3:
-    enabled: False
+    enabled: True
     uri: udp://0.0.0.0:19853
-    initial_position: [0.1, 2.92, 0.0]
+    initial_position: [0.3, 0.0, 0.0]
     type: cf_sim  # see robot_types
   
   cf_4:
