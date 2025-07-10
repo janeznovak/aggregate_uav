@@ -344,6 +344,15 @@ namespace fcpp
             struct scout_curr_worker // uid of the worker the scout is currently assigned to. -1 if not assigned
             {
             };
+
+            //! @brief The drone's velocity vector.
+            struct node_velocity : public item<vec<3>, vec<3>{0,0,0}> {};
+
+            //! @brief The drone's position in the last round.
+            struct node_last_position : public item<vec<3>, vec<3>{0,0,0}> {};
+
+            //! @brief The calculated collision avoidance vector.
+            struct node_avoidance_force : public item<vec<3>, vec<3>{0,0,0}> {};
         } // tags
 
 #ifndef AP_USE_CASE
@@ -578,7 +587,13 @@ namespace fcpp
                             node_startPosition, vec<3> //! Initialized only for the nominal test
                             // END Flocking
 
-                            >,
+                            node_velocity, vec<3>,
+                            node_last_position, vec<3>,
+                            node_avoidance_force, vec<3>,
+                            node_set, bool,
+                            node_active, int,
+                            node_countRound, int,
+                            nodes_by_goal_subcode, subcode_map_distr<nodes_by_goal_subcode>>,
                         // data initialisation
                         init<
                             x, rectangle_d,

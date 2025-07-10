@@ -9,8 +9,9 @@ import numpy as np
 import threading
 
 from crazyflie_interfaces.msg import FullState, Position
-from crazyflie_interfaces.srv import Land, NotifySetpointsStop, Takeoff
+from crazyflie_interfaces.srv import Land, NotifySetpointsStop, Takeoff, GoTo
 from geometry_msgs.msg import PoseStamped
+from geometry_msgs.msg import Point
 from nav_system_interfaces.msg import Goal
 from nav_system_interfaces.msg import GoalFeedback
 from crazyflie_py.uav_trajectory import Trajectory
@@ -25,6 +26,13 @@ GOAL_RUNNING: int = 3
 GOAL_UNKNOWN: int = 4
 GOAL_NONE: int = -1
 
+
+def arrayToGeometryPoint(a):
+    result = Point()
+    result.x = a[0]
+    result.y = a[1]
+    result.z = a[2]
+    return result
 
 class CrazyflyController(Node):
     def __init__(self, cfname):
@@ -43,6 +51,9 @@ class CrazyflyController(Node):
         self.takeoffService.wait_for_service()
         self.landService = self.create_client(Land, prefix + "/land")
         self.landService.wait_for_service()
+        
+        self.goToService = self.create_client(GoTo, prefix + '/go_to')
+        self.goToService.wait_for_service()
 
         self.notifySetpointsStopService = self.create_client(
             NotifySetpointsStop, prefix + '/notify_setpoints_stop')
@@ -53,6 +64,11 @@ class CrazyflyController(Node):
         )
         self.cmdFullStateMsg = FullState()
         self.cmdFullStateMsg.header.frame_id = "/world"
+        
+        self.cmdPositionPublisher = self.create_publisher(
+            Position, prefix + '/cmd_position', 1)
+        self.cmdPositionMsg = Position()
+        self.cmdPositionMsg.header.frame_id = '/world'
 
         self.goalTopic = self.create_subscription(
             Goal, f"{prefix}/ap_goal", self.ap_goal_callback, 10
