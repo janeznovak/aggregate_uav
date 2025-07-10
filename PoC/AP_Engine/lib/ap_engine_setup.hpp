@@ -439,8 +439,8 @@ namespace fcpp
         constexpr fcpp::packed_color discharged_color = MAROON;
 
         constexpr int nWorker = 2;
-        constexpr int nScout = 4;
-        constexpr int nWorkerScout = nScout / nWorker;
+        constexpr int nScout = 1;
+        constexpr int nWorkerScout = 1;
     }
 
     //! @brief Namespace for component options.

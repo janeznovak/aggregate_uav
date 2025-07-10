@@ -2,27 +2,27 @@
 robots:
   cf_0:
     enabled: True
-    uri: radio://0/80/2M/E7E7E7E7E7
+    uri: udp://0.0.0.0:19850
     initial_position: [0.0, 0.0, 0.0]
-    type: cf_lab_lh  # see robot_types
+    type: cf_sim  # see robot_types
 
   cf_1:
     enabled: True
-    uri: radio://0/80/2M/E7E7E7E7E8
+    uri: udp://0.0.0.0:19851
     initial_position: [1.8, 2.4, 0.0]
-    type: cf_lab_lh  # see robot_types
+    type: cf_sim  # see robot_types
 
   cf_2:
     enabled: True
-    uri: radio://0/80/2M/E7E7E7E7E9
-    initial_position: [0.0, 0.6, 0.0]
-    type: cf_lab_lh  # see robot_types
+    uri: udp://0.0.0.0:19852
+    initial_position: [0.0, 0.3, 0.0]
+    type: cf_sim  # see robot_types
   
   cf_3:
     enabled: True
-    uri: radio://0/80/2M/E7E7E7E7EA
-    initial_position: [1.2, 2.4, 0.0]
-    type: cf_lab_lh  # see robot_types
+    uri: udp://0.0.0.0:19853
+    initial_position: [0.3, 0.0, 0.0]
+    type: cf_sim  # see robot_types
   
   cf_4:
     enabled: False
@@ -235,10 +235,6 @@ robot_types:
 
   # for light house
   cf_lab_lh:
-    lighthouse:
-      enabled: true
-      mode: 2
-      base_station_count: 2
     motion_capture:
       enabled: false
     firmware_logging:
