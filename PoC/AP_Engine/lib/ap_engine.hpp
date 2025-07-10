@@ -433,9 +433,9 @@ namespace fcpp
                     const double transition_zone = min_safe_distance * 1.5; // Smooth transition zone
                     
                     // Initialize avoidance forces
-                    vec<3> avoidance_force = make_vec(0, 0, 0);
+                    vec<3> avoidance_force_master = make_vec(0, 0, 0);
                     
-                    // Calculate base repulsion force
+                    // Calculate base repulsion force from master
                     if (dist_to_master < transition_zone) {
                         // Calculate direction vector (only in x-y plane)
                         vec<3> direction = make_vec(
@@ -455,24 +455,29 @@ namespace fcpp
                         }
                         
                         // Apply horizontal avoidance only
-                        avoidance_force[0] = direction[0] * force_magnitude;
-                        avoidance_force[1] = direction[1] * force_magnitude;
+                        avoidance_force_master[0] = direction[0] * force_magnitude;
+                        avoidance_force_master[1] = direction[1] * force_magnitude;
                     }
                     
-                    // Store the avoidance force
-                    node.storage(node_collisionAvoidanceMaster{}) = avoidance_force;
-                    
-                    // Calculate inter-UAV avoidance
-                    tuple<bool, vec<3>> neighbor_avoidance = sum_hood(CALL, map_hood([](vec<3> v, double d, double l, double constAvoid) {
+                    // Calculate inter-UAV avoidance with prediction
+                    const double prediction_time = 0.2; // Tune this based on your system's latency (e.g., 200ms)
+
+                    // Get a field of neighbor velocities
+                    field<vec<3>> nbr_velocities = nbr(CALL, node.storage(node_velocity{}));
+
+                    tuple<bool, vec<3>> neighbor_avoidance = sum_hood(CALL, map_hood([&](vec<3> nbr_vec, vec<3> nbr_vel, double d, double l, double constAvoid) {
                         tuple<bool, vec<3>> result = make_tuple(false, make_vec(0, 0, 0));
+
+                        // Predict neighbor's future relative position
+                        vec<3> predicted_nbr_vec = nbr_vec + (nbr_vel - node.storage(node_velocity{})) * prediction_time;
                         
-                        // Calculate horizontal distance only
-                        double horizontal_dist = std::sqrt(std::pow(v[0], 2) + std::pow(v[1], 2));
+                        // Calculate horizontal distance to predicted position
+                        double horizontal_dist = std::sqrt(std::pow(predicted_nbr_vec[0], 2) + std::pow(predicted_nbr_vec[1], 2));
                         
                         if (horizontal_dist < l * 1.5) { // Check in transition zone
                             vec<3> direction = make_vec(
-                                v[0] / horizontal_dist,
-                                v[1] / horizontal_dist,
+                                predicted_nbr_vec[0] / horizontal_dist,
+                                predicted_nbr_vec[1] / horizontal_dist,
                                 0
                             );
                             double force_magnitude = 0;
@@ -493,23 +498,16 @@ namespace fcpp
                         }
                         
                         return result;
-                    }, node.nbr_vec(), node.nbr_dist(), distanceMasterSlave, minDistance), tuple<bool, vec<3>>{});
+                    }, node.nbr_vec(), nbr_velocities, node.nbr_dist(), distanceMasterSlave, minDistance), tuple<bool, vec<3>>{});
                     
-                    // Store neighbor avoidance force
-                    node.storage(node_collisionAvoidanceSlaves{}) = get<1>(neighbor_avoidance);
+                    // Combine master and neighbor avoidance forces
+                    vec<3> total_avoidance_force = avoidance_force_master + get<1>(neighbor_avoidance);
+                    
+                    // Store the total avoidance force
+                    node.storage(node_avoidance_force{}) = total_avoidance_force;
                     
                     // Update flag based on any avoidance forces
-                    node.storage(node_flagDistance{}) = (norm(avoidance_force) > 0.001 || norm(get<1>(neighbor_avoidance)) > 0.001);
-                    
-                    // Apply avoidance forces if they are valid
-                    if (!std::isnan(avoidance_force[0]) && !std::isinf(avoidance_force[0])) {
-                        node.storage(node_vecMyVersor{}) += avoidance_force;
-                        
-                        vec<3> neighbor_force = get<1>(neighbor_avoidance);
-                        if (!std::isnan(neighbor_force[0]) && !std::isinf(neighbor_force[0])) {
-                            node.storage(node_vecMyVersor{}) += neighbor_force;
-                        }
-                    }
+                    node.storage(node_flagDistance{}) = (norm(total_avoidance_force) > 0.001);
                 }
             }
         }
@@ -531,23 +529,24 @@ namespace fcpp
                     return true;
                 } }, identifierWrongIndex, node.storage(node_indexSlave{})));
 
-            // if (!(flagIndex && decrementIndex(CALL)))
-            // {
-            //     fixIndex(CALL);
-            // }
-            // else
-            // {
-            //     node.storage(node_fixIndex{}) = false;
-            // }
-
             if (!isWorker(CALL))
             {
-                // instead calculateMyCorner we should have the slave move to a
-                // position of interest based on something(maybe master, maybe goal from
-                // a user, ...)
+                // Calculate the vector towards the ideal formation position
                 calculateMyCorner(CALL);
-                //! Sistema di collision avoidance
+                
+                // Calculate the combined repulsion force from neighbors and the master
                 collisionAvoidance(CALL);
+
+                // Get the calculated forces
+                vec<3> formation_vector = node.storage(node_vecMyVersor{});
+                vec<3> avoidance_vector = node.storage(node_avoidance_force{});
+
+                // Combine the forces using the configured weights
+                vec<3> final_propulsion_vector = (ATTRACTION_FORCE_WEIGHT * formation_vector) + (REPULSION_FORCE_WEIGHT * avoidance_vector);
+                
+                // Store the final vector to be used for movement
+                node.storage(node_vecMyVersor{}) = final_propulsion_vector;
+
                 errorCalculator(CALL);
             }
 
@@ -815,18 +814,24 @@ namespace fcpp
                 std::cout << "Goal action: " << get<goal_action>(goal) << endl;
                 std::cout << "Goal code: " << get<goal_code>(goal) << endl;
                 std::cout << "Robot chosen: " << robot_chosen << endl;
-                std::cout << "Position x: " << (float)node.storage(node_vecMyVersor{})[0] << endl;
-                std::cout << "Position y: " << (float)node.storage(node_vecMyVersor{})[1] << endl;
-                std::cout << "Position z: " << (float)node.storage(node_vecMyVersor{})[2] << endl;
+                
+                // The propulsion vector (vecMyVersor) tells us the direction and magnitude to move.
+                // The target position is the current position plus this vector.
+                vec<3> propulsion_vector = node.storage(node_vecMyVersor{});
+                vec<3> target_position = node.position() + propulsion_vector;
+
+                std::cout << "Position x: " << target_position[0] << endl;
+                std::cout << "Position y: " << target_position[1] << endl;
+                std::cout << "Position z: " << target_position[2] << endl;
                 std::cout << "Orientation w: " << get<goal_orient_w>(goal) << endl;
                 // send action to file a.k.a send the goal to the scout/slave
                 action::ActionData action_data = {
                     .action = get<goal_action>(goal),
                     .goal_code = get<goal_code>(goal),
                     .robot = robot_chosen,
-                    .pos_x = (float)node.storage(node_vecMyVersor{})[0],
-                    .pos_y = (float)node.storage(node_vecMyVersor{})[1],
-                    .pos_z = (float)node.storage(node_vecMyVersor{})[2],
+                    .pos_x = (float)target_position[0],
+                    .pos_y = (float)target_position[1],
+                    .pos_z = (float)target_position[2],
                     .orient_w = 0.0};
                 action::manager::ActionManager::new_action(action_data);
             }
@@ -1088,6 +1093,10 @@ namespace fcpp
             node.storage(node_shadow_shape{}) = shape::sphere;
             node.storage(expected_dist_worker_scout{}) = distanceMasterSlave;
 
+            // Initialize velocity and last position
+            node.storage(node_velocity{}) = make_vec(0, 0, 0);
+            node.storage(node_last_position{}) = node.position();
+
 
             node.storage(node_set{}) = true;
         }
@@ -1321,6 +1330,14 @@ namespace fcpp
             // multi_worker_doesn't have this, since it is applied directly in the AP itself, and it doesn't have ROS2
             apply_feedback_to_ap(CALL);
 
+            // Calculate velocity
+            vec<3> current_pos = node.position();
+            vec<3> last_pos = node.storage(node_last_position{});
+            // Assuming dt=1.0 (velocity is in meters per round)
+            vec<3> velocity = (current_pos - last_pos);
+            node.storage(node_velocity{}) = velocity;
+            node.storage(node_last_position{}) = current_pos;
+
             // call updateWorker so that the scouts get the correct worker. TODO: MOVE TO THE PROCESS. FOR NOW DECIDED TO NOT MOVE IT
             updateWorker(CALL);
 
@@ -1363,6 +1380,7 @@ namespace fcpp
             goal_tuple_type,
             robot_phase,
             process_tuple_type,
+            vec<3>,
             infoWorkerType>;
 
         // TODO: refactor (cancellare le funzioni da togliere)
