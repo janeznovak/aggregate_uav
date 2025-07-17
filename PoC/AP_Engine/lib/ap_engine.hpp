@@ -40,7 +40,7 @@ namespace fcpp
         using namespace std::chrono;
         using spawn_result_type = std::unordered_map<goal_tuple_type, times_t, fcpp::common::hash<goal_tuple_type>>;
 
-        constexpr int worker_requirements[5] = {0, 2, 0, 0, 0};
+        constexpr int worker_requirements[5] = {2, 2, 0, 0, 0};
 
         // UTILS AP
 
@@ -434,9 +434,9 @@ namespace fcpp
                     const double transition_zone = min_safe_distance * 1.5; // Smooth transition zone
                     
                     // Initialize avoidance forces
-                    vec<3> avoidance_force_master = make_vec(0, 0, 0);
+                    vec<3> avoidance_force = make_vec(0, 0, 0);
                     
-                    // Calculate base repulsion force from master
+                    // Calculate base repulsion force
                     if (dist_to_master < transition_zone) {
                         // Calculate direction vector (only in x-y plane)
                         vec<3> direction = make_vec(
@@ -456,29 +456,24 @@ namespace fcpp
                         }
                         
                         // Apply horizontal avoidance only
-                        avoidance_force_master[0] = direction[0] * force_magnitude;
-                        avoidance_force_master[1] = direction[1] * force_magnitude;
+                        avoidance_force[0] = direction[0] * force_magnitude;
+                        avoidance_force[1] = direction[1] * force_magnitude;
                     }
                     
-                    // Calculate inter-UAV avoidance with prediction
-                    const double prediction_time = 0.2; // Tune this based on your system's latency (e.g., 200ms)
-
-                    // Get a field of neighbor velocities
-                    field<vec<3>> nbr_velocities = nbr(CALL, node.storage(node_velocity{}));
-
-                    tuple<bool, vec<3>> neighbor_avoidance = sum_hood(CALL, map_hood([&](vec<3> nbr_vec, vec<3> nbr_vel, double d, double l, double constAvoid) {
+                    // Store the avoidance force
+                    // node.storage(node_collisionAvoidanceMaster{}) = avoidance_force;
+                    
+                    // Calculate inter-UAV avoidance
+                    tuple<bool, vec<3>> neighbor_avoidance = sum_hood(CALL, map_hood([](vec<3> v, double d, double l, double constAvoid) {
                         tuple<bool, vec<3>> result = make_tuple(false, make_vec(0, 0, 0));
-
-                        // Predict neighbor's future relative position
-                        vec<3> predicted_nbr_vec = nbr_vec + (nbr_vel - node.storage(node_velocity{})) * prediction_time;
                         
-                        // Calculate horizontal distance to predicted position
-                        double horizontal_dist = std::sqrt(std::pow(predicted_nbr_vec[0], 2) + std::pow(predicted_nbr_vec[1], 2));
+                        // Calculate horizontal distance only
+                        double horizontal_dist = std::sqrt(std::pow(v[0], 2) + std::pow(v[1], 2));
                         
                         if (horizontal_dist < l * 1.5) { // Check in transition zone
                             vec<3> direction = make_vec(
-                                predicted_nbr_vec[0] / horizontal_dist,
-                                predicted_nbr_vec[1] / horizontal_dist,
+                                v[0] / horizontal_dist,
+                                v[1] / horizontal_dist,
                                 0
                             );
                             double force_magnitude = 0;
@@ -499,18 +494,227 @@ namespace fcpp
                         }
                         
                         return result;
-                    }, node.nbr_vec(), nbr_velocities, node.nbr_dist(), distanceMasterSlave, minDistance), tuple<bool, vec<3>>{});
+                    }, node.nbr_vec(), node.nbr_dist(), distanceMasterSlave, minDistance), tuple<bool, vec<3>>{});
                     
-                    // Combine master and neighbor avoidance forces
-                    vec<3> total_avoidance_force = avoidance_force_master + get<1>(neighbor_avoidance);
-                    
-                    // Store the total avoidance force
-                    node.storage(node_avoidance_force{}) = total_avoidance_force;
+                    // Store neighbor avoidance force
+                    // node.storage(node_collisionAvoidanceSlaves{}) = get<1>(neighbor_avoidance);
                     
                     // Update flag based on any avoidance forces
-                    node.storage(node_flagDistance{}) = (norm(total_avoidance_force) > 0.001);
+                    node.storage(node_flagDistance{}) = (norm(avoidance_force) > 0.001 || norm(get<1>(neighbor_avoidance)) > 0.001);
+                    
+                    // Apply avoidance forces if they are valid
+                    if (!std::isnan(avoidance_force[0]) && !std::isinf(avoidance_force[0])) {
+                        node.storage(node_vecMyVersor{}) += avoidance_force;
+                        
+                        vec<3> neighbor_force = get<1>(neighbor_avoidance);
+                        if (!std::isnan(neighbor_force[0]) && !std::isinf(neighbor_force[0])) {
+                            node.storage(node_vecMyVersor{}) += neighbor_force;
+                        }
+                    }
                 }
             }
+        }
+
+        /**
+         * @brief 2D Buffered Voronoi Cell (BVC) collision avoidance for scouts, using pure FCPP aggregate programming.
+         * This function computes the BVC for the current scout among its siblings (same master) and the master,
+         * then projects the desired position into the buffered cell to ensure collision-free movement.
+         *
+         * Uses only FCPP aggregate functions without creating intermediate arrays.
+         *
+         * @param ARGS Macro for FCPP function arguments
+         */
+        FUN void collisionAvoidanceBVC(ARGS) {
+            using namespace tags;
+            if (isWorker(CALL)) return;
+
+            // --- Parameters ---
+            constexpr double drone_radius = 0.2; // meters (example)
+            constexpr double buffer = drone_radius * 1.1; // 10% safety margin
+
+            // Get my current and desired position (in 2D)
+            vec<3> my_pos3d = node.position();
+            vec<3> desired_pos3d = node.storage(node_vecMyRadiant{}); // calculated in calculateMyCorner
+            vec<2> my_pos = make_vec(my_pos3d[0], my_pos3d[1]);
+            vec<2> desired_pos = make_vec(desired_pos3d[0], desired_pos3d[1]);
+
+            int my_master = node.storage(scout_curr_worker{});
+
+            // --- Aggregate computation: Project desired position away from each relevant neighbor ---
+            vec<2> safe_pos = fold_hood(CALL, 
+                [&](vec<3> nbr_pos3d, int nbr_master, bool nbr_is_worker, vec<2> current_safe_pos) {
+                    // Only consider scouts with the same master (exclude workers and different masters)
+                    if (nbr_is_worker || nbr_master != my_master) {
+                        return current_safe_pos; // Skip this neighbor
+                    }
+
+                    vec<2> nbr_pos = make_vec(nbr_pos3d[0], nbr_pos3d[1]);
+                    
+                    // Compute perpendicular bisector and project if needed
+                    vec<2> vec_to_nbr = nbr_pos - my_pos;
+                    double dist_to_nbr = norm(vec_to_nbr);
+                    
+                    if (dist_to_nbr < 1e-6) return current_safe_pos; // Skip if too close
+                    
+                    vec<2> normal = vec_to_nbr / dist_to_nbr; // Unit vector from me to neighbor
+                    
+                    // Buffered boundary point (shifted toward me by buffer distance)
+                    vec<2> boundary_point = my_pos + normal * (dist_to_nbr / 2.0 - buffer);
+                    
+                    // Check if current safe position is on the unsafe side of the boundary
+                    double projection = (current_safe_pos - boundary_point) * normal;
+                    if (projection > 0) {
+                        // Project to the safe side
+                        return current_safe_pos - normal * projection;
+                    }
+                    
+                    return current_safe_pos; // Already safe
+                },
+                nbr(CALL, node.position()),
+                nbr(CALL, node.storage(scout_curr_worker{})),
+                nbr(CALL, isWorker(CALL)),
+                desired_pos // Start with the desired formation position
+            );
+
+            // --- Handle master avoidance if master exists ---
+            if (get<0>(node.storage(node_posMaster{}))) {
+                vec<3> master_pos3d = get<1>(node.storage(node_posMaster{}));
+                vec<2> master_pos = make_vec(master_pos3d[0], master_pos3d[1]);
+                
+                vec<2> vec_to_master = master_pos - my_pos;
+                double dist_to_master = norm(vec_to_master);
+                
+                if (dist_to_master > 1e-6) {
+                    vec<2> normal = vec_to_master / dist_to_master;
+                    vec<2> boundary_point = my_pos + normal * (dist_to_master / 2.0 - buffer);
+                    
+                    double projection = (safe_pos - boundary_point) * normal;
+                    if (projection > 0) {
+                        safe_pos = safe_pos - normal * projection;
+                    }
+                }
+            }
+
+            // Update the target position (in node_vecMyVersor, as in calculateMyCorner)
+            node.storage(node_vecMyVersor{})[0] = safe_pos[0];
+            node.storage(node_vecMyVersor{})[1] = safe_pos[1];
+            // z remains unchanged
+        }
+
+        /**
+         * @brief Field Calculus implementation of 2D Buffered Voronoi Cell (BVC) collision avoidance.
+         *
+         * This function ensures collision-free navigation for a scout drone by calculating a safe
+         * target position. It operates in two main stages, both using field calculus:
+         * 1. It computes a safe position considering all other peer scouts in its swarm.
+         * 2. It then refines that position to ensure it also respects the master drone's buffer zone.
+         *
+         * The final output is a safe 2D direction vector stored in `node_vecMyVersor`.
+         * This approach is decentralized and relies on local information only.
+         *
+         * @param ARGS Macro for FCPP function arguments.
+         */
+        FUN void collisionAvoidanceBVC_FC(ARGS)
+        {
+            using namespace tags;
+            // This logic is only for scouts.
+            if (isWorker(CALL)) return;
+            std::cout << "peder is here" << std::endl;
+            // --- 1. Define Parameters and High-Level Goal ---
+            
+            // Safety buffer is the drone's physical radius plus a 10% safety margin.
+            constexpr double drone_radius = 0.2; // Example radius in meters
+            constexpr double buffer = drone_radius * 1.1;
+
+            // My current 2D position.
+            vec<3> my_pos3d = node.position();
+            vec<2> my_pos2d = make_vec(my_pos3d[0], my_pos3d[1]);
+
+            // Calculate my high-level GOAL: the absolute position I want to be in the formation.
+            // This is my "preferred" destination before safety checks.
+            vec<3> master_pos3d = get<1>(node.storage(node_posMaster{}));
+            vec<3> formation_vector = node.storage(node_vecMyRadiant{}); // My spot relative to the master.
+            vec<3> desired_pos_3d = master_pos3d + formation_vector;
+            vec<2> initial_desired_pos = make_vec(desired_pos_3d[0], desired_pos_3d[1]);
+
+            // --- 2. Field Calculus for Scout-to-Scout Avoidance ---
+
+            // Define the information each node needs to share for BVC calculations.
+            // We share our unique ID, our 2D position, and our master ID.
+            using BVCInfo = tuple<device_t, vec<2>, int>;
+            BVCInfo my_bvc_info = make_tuple(node.uid, my_pos2d, node.storage(scout_curr_worker{}));
+
+            // Get a field of combined BVC info from all neighbors.
+            field<BVCInfo> nbr_bvc_info = nbr(CALL, my_bvc_info);
+
+            // Iteratively project the desired position into the safe zone of each PEER scout.
+            // A peer is a scout that shares the same master as me.
+            vec<2> safe_pos_after_scouts = fold_hood(CALL,
+                [&](BVCInfo nbr_info, vec<2> current_safe_pos) {
+                    device_t nbr_uid = get<0>(nbr_info);
+                    vec<2> nbr_pos = get<1>(nbr_info);
+                    int nbr_master_id = get<2>(nbr_info);
+                    
+                    // Check if the neighbor is a peer scout (same master, not me).
+                    if (nbr_master_id != node.storage(scout_curr_worker{}) || nbr_uid == node.uid) {
+                        return current_safe_pos; // Not a peer, ignore.
+                    }
+
+                    // Define the half-plane boundary. It's the perpendicular bisector of the line between us.
+                    vec<2> vec_to_nbr = nbr_pos - my_pos2d;
+                    double dist_to_nbr = norm(vec_to_nbr);
+                    if (dist_to_nbr < 1e-6) return current_safe_pos; // Drones are on top of each other, ignore.
+
+                    vec<2> normal = vec_to_nbr / dist_to_nbr; // Unit vector pointing from me to the neighbor.
+
+                    // The buffered boundary is shifted towards me by `buffer`.
+                    // The safe region is on "my" side of this shifted line.
+                    // A point `p` on the buffered boundary is `p = my_pos2d + normal * (dist_to_nbr / 2.0 - buffer)`.
+                    vec<2> point_on_buffered_boundary = my_pos2d + normal * (dist_to_nbr / 2.0 - buffer);
+
+                    // Check if the current desired position is already in the safe half-plane.
+                    // If `dot product > 0`, it's on the "unsafe" side of the boundary.
+                    if ((current_safe_pos - point_on_buffered_boundary) * normal > 0) {
+                        // It's not safe. Project it onto the buffered boundary line to make it safe.
+                        return current_safe_pos - normal * ((current_safe_pos - point_on_buffered_boundary) * normal);
+                    }
+                    
+                    // It's already safe with respect to this neighbor, no change needed.
+                    return current_safe_pos;
+                },
+                nbr_bvc_info,
+                initial_desired_pos // Start with the ideal formation position.
+            );
+
+            // --- 3. Final Projection for Master Drone Avoidance ---
+            // The master drone is a high-priority agent. We apply its constraint last.
+            vec<2> final_safe_pos = safe_pos_after_scouts;
+            if (get<0>(node.storage(node_posMaster{}))) {
+                vec<2> master_pos2d = make_vec(master_pos3d[0], master_pos3d[1]);
+                vec<2> vec_to_master = master_pos2d - my_pos2d;
+                double dist_to_master = norm(vec_to_master);
+
+                if (dist_to_master > 1e-6) {
+                    vec<2> normal = vec_to_master / dist_to_master;
+                    vec<2> point_on_buffered_boundary = my_pos2d + normal * (dist_to_master / 2.0 - buffer);
+                    if ((final_safe_pos - point_on_buffered_boundary) * normal > 0) {
+                        final_safe_pos = final_safe_pos - normal * ((final_safe_pos - point_on_buffered_boundary) * normal);
+                    }
+                }
+            }
+
+            // --- 4. Update Node State with the Final Safe Vector ---
+
+            // The result `final_safe_pos` is the safest place to go.
+            // We now calculate the DIRECTION VECTOR needed to move towards it.
+            vec<2> safe_direction_vector = final_safe_pos - my_pos2d;
+
+            // Update the versor used for propulsion with the new, safe direction.
+            // This correctly provides a vector for movement, not an absolute position.
+            node.storage(node_vecMyVersor{})[0] = safe_direction_vector[0];
+            node.storage(node_vecMyVersor{})[1] = safe_direction_vector[1];
+            // Z-component remains unchanged to maintain altitude.
+            // node.storage(node_vecMyVersor{})[2] is not modified.
         }
 
         FUN void run_flocking(ARGS)
@@ -522,7 +726,7 @@ namespace fcpp
 
             // Aggiungere a true la batteria è a 0
             bool flagIndex = all_hood(CALL, map_hood([](tuple<int, int> t, tuple<int, int> myValue)
-                                                     {
+                                                    {
                 if (get<1>(myValue) == get<1>(t) && get<0>(myValue) != get<0>(t)) {
                     return false;
                 }
@@ -530,24 +734,25 @@ namespace fcpp
                     return true;
                 } }, identifierWrongIndex, node.storage(node_indexSlave{})));
 
+            // if (!(flagIndex && decrementIndex(CALL)))
+            // {
+            //     fixIndex(CALL);
+            // }
+            // else
+            // {
+            //     node.storage(node_fixIndex{}) = false;
+            // }
+
             if (!isWorker(CALL))
             {
-                // Calculate the vector towards the ideal formation position
+                // instead calculateMyCorner we should have the slave move to a
+                // position of interest based on something(maybe master, maybe goal from
+                // a user, ...)
                 calculateMyCorner(CALL);
-                
-                // Calculate the combined repulsion force from neighbors and the master
-                collisionAvoidance(CALL);
-
-                // Get the calculated forces
-                vec<3> formation_vector = node.storage(node_vecMyVersor{});
-                vec<3> avoidance_vector = node.storage(node_avoidance_force{});
-
-                // Combine the forces using the configured weights
-                vec<3> final_propulsion_vector = (ATTRACTION_FORCE_WEIGHT * formation_vector) + (REPULSION_FORCE_WEIGHT * avoidance_vector);
-                
-                // Store the final vector to be used for movement
-                node.storage(node_vecMyVersor{}) = final_propulsion_vector;
-
+                //! Sistema di collision avoidance
+                // collisionAvoidance(CALL);
+                // collisionAvoidanceBVC(CALL);
+                collisionAvoidanceBVC_FC(CALL);
                 errorCalculator(CALL);
             }
 
@@ -622,7 +827,7 @@ namespace fcpp
 
             // for testing purposes there is 250, can be changed
             if (get<infoW_active>(newWorkerInfo)
-                // && node.storage(node_countRound{}) > 250
+            //  && node.storage(node_countRound{}) > 250
                 ) // check with Gianluca if we need the roundcount
             {
             //     // only for scouts
@@ -716,7 +921,7 @@ namespace fcpp
         /**
          * Check if my index is equal to that of a neighbor.
          * Returns TRUE if it finds duplicates of its index
-        */
+     */
         FUN bool checkDuplicateIndex(ARGS) { CODE
             /**Check in case the indexes overlap*/
             bool duplicateExists = false;
@@ -815,24 +1020,18 @@ namespace fcpp
                 std::cout << "Goal action: " << get<goal_action>(goal) << endl;
                 std::cout << "Goal code: " << get<goal_code>(goal) << endl;
                 std::cout << "Robot chosen: " << robot_chosen << endl;
-                
-                // The propulsion vector (vecMyVersor) tells us the direction and magnitude to move.
-                // The target position is the current position plus this vector.
-                vec<3> propulsion_vector = node.storage(node_vecMyVersor{});
-                vec<3> target_position = node.position() + propulsion_vector;
-
-                std::cout << "Position x: " << target_position[0] << endl;
-                std::cout << "Position y: " << target_position[1] << endl;
-                std::cout << "Position z: " << target_position[2] << endl;
+                std::cout << "Position x: " << (float)node.storage(node_vecMyVersor{})[0] << endl;
+                std::cout << "Position y: " << (float)node.storage(node_vecMyVersor{})[1] << endl;
+                std::cout << "Position z: " << (float)node.storage(node_vecMyVersor{})[2] << endl;
                 std::cout << "Orientation w: " << get<goal_orient_w>(goal) << endl;
                 // send action to file a.k.a send the goal to the scout/slave
                 action::ActionData action_data = {
                     .action = get<goal_action>(goal),
                     .goal_code = get<goal_code>(goal),
                     .robot = robot_chosen,
-                    .pos_x = (float)target_position[0],
-                    .pos_y = (float)target_position[1],
-                    .pos_z = (float)target_position[2],
+                    .pos_x = (float)node.storage(node_vecMyVersor{})[0],
+                    .pos_y = (float)node.storage(node_vecMyVersor{})[1],
+                    .pos_z = (float)node.storage(node_vecMyVersor{})[2],
                     .orient_w = 0.0};
                 action::manager::ActionManager::new_action(action_data);
             }
@@ -963,7 +1162,7 @@ namespace fcpp
             {
                 // keep only goals with source = node_ext_name
                 std::copy_if(InputGoalList.begin(), InputGoalList.end(), std::back_inserter(InputGoalsBySource), [&](InputGoal ig)
-                             { return get_robot_id_from_goal_code(ig.goal_code) == source.value(); });
+                            { return get_robot_id_from_goal_code(ig.goal_code) == source.value(); });
             }
             else
             {
@@ -994,7 +1193,7 @@ namespace fcpp
                 // std::cout << "This is the source value" << source.value() << std::endl;
                 InputGoalList.erase(
                     std::remove_if(InputGoalList.begin(), InputGoalList.end(), [&](InputGoal ig)
-                                   { return get_robot_id_from_goal_code(ig.goal_code) == source.value(); }),
+                                { return get_robot_id_from_goal_code(ig.goal_code) == source.value(); }),
                     InputGoalList.end());
             }
             else
@@ -1035,7 +1234,7 @@ namespace fcpp
 
                     node.storage(required_scouts{}) = worker_requirements[node.uid];
                     node.storage(scout_need{}) = worker_requirements[node.uid] - nWorkerScout;
-                    node.storage(original_required_scouts{}) = worker_requirements[node.uid]; // TODO: if we won't use the dynamic change of the requirement, this is not needed
+                    // node.storage(original_required_scouts{}) = worker_requirements[node.uid]; // TODO: if we won't use the dynamic change of the requirement, this is not needed
                     node.storage(scout_curr_worker{}) = -1; // the worker is not assigned to a scout
                     node.storage(node_numberOfSlave{}) = nWorkerScout; // number of scouts assigned to each worker
                 }
@@ -1061,8 +1260,8 @@ namespace fcpp
                     // TODO: the battery is not use yet, can be in the future
                     node.storage(scout_need{}) = -1;
                     node.storage(scout_isCharging{}) = false;
-                    node.storage(scout_battery_percentage{}) = 100;
-                    node.storage(scout_min_battery_percaentage{}) = 15;
+                    // node.storage(scout_battery_percentage{}) = 100;
+                    // node.storage(scout_min_battery_percaentage{}) = 15;
 
                     // TODO: here set the battery discharge rate, depeneding on the type of the battery
                     // node.storage(scout_battery_discharge_rate{}) = 0.1; // this is just a placeholder for now, for real test it should be a
@@ -1094,10 +1293,6 @@ namespace fcpp
             node.storage(node_shadow_shape{}) = shape::sphere;
             node.storage(expected_dist_worker_scout{}) = distanceMasterSlave;
 
-            // Initialize velocity and last position
-            node.storage(node_velocity{}) = make_vec(0, 0, 0);
-            node.storage(node_last_position{}) = node.position();
-
 
             node.storage(node_set{}) = true;
         }
@@ -1120,13 +1315,13 @@ namespace fcpp
                     for (RobotStatus rs : RobotStatesMap[rname]) {
                         // print out the robot status
                         std::cout << "Robot " << rname << " status: "
-                                  << "pos_x: " << rs.pos_x << ", "
-                                  << "pos_y: " << rs.pos_y << ", "
-                                  << "pos_z: " << rs.pos_z << ", "
-                                  << "orient_w: " << rs.orient_w << ", "
-                                  << "battery_percent_charge: " << rs.battery_percent_charge << ", "
-                                  << "goal_status: " << rs.goal_status << ", "
-                                  << "goal_code: " << rs.goal_code << std::endl;
+                                << "pos_x: " << rs.pos_x << ", "
+                                << "pos_y: " << rs.pos_y << ", "
+                                << "pos_z: " << rs.pos_z << ", "
+                                << "orient_w: " << rs.orient_w << ", "
+                                << "battery_percent_charge: " << rs.battery_percent_charge << ", "
+                                << "goal_status: " << rs.goal_status << ", "
+                                << "goal_code: " << rs.goal_code << std::endl;
                         // add offset to match with background
                         real_t pos_x_offset = node.storage(node_offset_pos_x{});
                         real_t pos_y_offset = node.storage(node_offset_pos_y{});
@@ -1208,7 +1403,7 @@ namespace fcpp
         {
             // process new goals, emptying NewGoalsList
             return coordination::spawn(CALL, [&](goal_tuple_type const &goal)
-                                       {
+                                    {
                 status st = status::internal_output;
 
                 field<int> test_nbr = fcpp::coordination::nbr(CALL, n_round);
@@ -1331,14 +1526,6 @@ namespace fcpp
             // multi_worker_doesn't have this, since it is applied directly in the AP itself, and it doesn't have ROS2
             apply_feedback_to_ap(CALL);
 
-            // Calculate velocity
-            vec<3> current_pos = node.position();
-            vec<3> last_pos = node.storage(node_last_position{});
-            // Assuming dt=1.0 (velocity is in meters per round)
-            vec<3> velocity = (current_pos - last_pos);
-            node.storage(node_velocity{}) = velocity;
-            node.storage(node_last_position{}) = current_pos;
-
             // call updateWorker so that the scouts get the correct worker. TODO: MOVE TO THE PROCESS. FOR NOW DECIDED TO NOT MOVE IT
             updateWorker(CALL);
 
@@ -1381,7 +1568,6 @@ namespace fcpp
             goal_tuple_type,
             robot_phase,
             process_tuple_type,
-            vec<3>,
             infoWorkerType>;
 
         // TODO: refactor (cancellare le funzioni da togliere)
@@ -1395,7 +1581,8 @@ namespace fcpp
             tuple<bool, double>,
             bool,
             tuple<bool, bool>,
-            tuple<vec<3>, int>>;
+            tuple<vec<3>, int>,
+            tuple<device_t, vec<2>, int>>;  // BVCInfo type for collision avoidance
 
         //! @brief Export types used by the main function (update it when expanding the program).
         struct main_t : public export_list<

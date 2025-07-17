@@ -107,11 +107,6 @@ namespace fcpp
             {
             };
 
-            //! @brief Color of the label of the current node.
-            struct node_label_color
-            {
-            };
-
             //! @brief Shape of the shadow of current node.
             struct node_shadow_shape
             {
@@ -252,19 +247,7 @@ namespace fcpp
             struct node_maxNumberOfSlave
             {
             };
-            struct node_secondReturn
-            {
-            };
             struct node_flagDistance
-            {
-            };
-            struct node_collisionAvoidanceSlaves
-            {
-            };
-            struct node_collisionAvoidanceMaster
-            {
-            };
-            struct node_exactExpectedPosition
             {
             };
             struct position_error
@@ -295,25 +278,10 @@ namespace fcpp
             struct scout_need
             {
             };
-            struct original_required_scouts
-            {
-            };
             struct expected_dist_worker_scout
             {
             };
-            struct node_numberOfScouts
-            {
-            };
             struct scout_isCharging
-            {
-            };
-            struct scout_battery_percentage
-            {
-            };
-            struct scout_min_battery_percaentage
-            {
-            };
-            struct scout_battery_discharge_rate
             {
             };
             struct node_active
@@ -344,15 +312,6 @@ namespace fcpp
             struct scout_curr_worker // uid of the worker the scout is currently assigned to. -1 if not assigned
             {
             };
-
-            //! @brief The drone's velocity vector.
-            struct node_velocity : public item<vec<3>, vec<3>{0,0,0}> {};
-
-            //! @brief The drone's position in the last round.
-            struct node_last_position : public item<vec<3>, vec<3>{0,0,0}> {};
-
-            //! @brief The calculated collision avoidance vector.
-            struct node_avoidance_force : public item<vec<3>, vec<3>{0,0,0}> {};
         } // tags
 
 #ifndef AP_USE_CASE
@@ -407,7 +366,7 @@ namespace fcpp
 #endif
 
         //! @brief The maximum communication range between nodes; TODO: change this to test with different data, check which range is ok.
-        constexpr size_t communication_range = 1.1; // TODO: test with different data, also test with different retain time
+        constexpr size_t communication_range = 100; // TODO: test with different data, also test with different retain time
 
         //! @brief Constant minimum number of nodes to form a circle
         constexpr int minNodesToFormCircle = 5;
@@ -439,8 +398,8 @@ namespace fcpp
         constexpr fcpp::packed_color discharged_color = MAROON;
 
         constexpr int nWorker = 2;
-        constexpr int nScout = 1;
-        constexpr int nWorkerScout = 1;
+        constexpr int nScout = 4;
+        constexpr int nWorkerScout = nScout / nWorker;
     }
 
     //! @brief Namespace for component options.
@@ -537,7 +496,6 @@ namespace fcpp
                             node_shape, shape,
                             node_label_size, double,
                             node_label_text, string,
-                            node_label_color, color,
                             node_shadow_shape, shape,
                             node_shadow_size, double,
                             node_shadow_color, color,
@@ -559,14 +517,9 @@ namespace fcpp
                             node_countRound, int,
                             required_scouts, int,
                             scout_need, int,
-                            original_required_scouts, int,
                             expected_dist_worker_scout, double,
                             scout_curr_worker, int,
-                            node_numberOfScouts, int,
                             scout_isCharging, bool,
-                            scout_battery_percentage, double,
-                            scout_min_battery_percaentage, double,
-                            scout_battery_discharge_rate, double,
                             node_active, int,
 
                             // START Flocking
@@ -578,22 +531,11 @@ namespace fcpp
                             node_vecMyVersor, vec<3>,
                             node_fixIndex, bool,
                             node_maxNumberOfSlave, int,
-                            node_secondReturn, bool,
                             node_flagDistance, bool,
-                            node_collisionAvoidanceSlaves, vec<3>,
-                            node_collisionAvoidanceMaster, vec<3>,
-                            node_exactExpectedPosition, vec<3>,
                             position_error, double,
                             node_startPosition, vec<3> //! Initialized only for the nominal test
                             // END Flocking
-
-                            node_velocity, vec<3>,
-                            node_last_position, vec<3>,
-                            node_avoidance_force, vec<3>,
-                            node_set, bool,
-                            node_active, int,
-                            node_countRound, int,
-                            nodes_by_goal_subcode, subcode_map_distr<nodes_by_goal_subcode>>,
+                        >,
                         // data initialisation
                         init<
                             x, rectangle_d,
@@ -615,7 +557,6 @@ namespace fcpp
                         color_tag<node_color, left_color, right_color>,                                                       // colors of a node are read from these
                         label_size_tag<node_label_size>,                                                                      // the size of the node label is read from this tag in the store
                         label_text_tag<node_label_text>,                                                                      // the text of the node label is read from this tag in the store
-                        label_color_tag<node_label_color>,                                                                    // color of the node label is read from these
                         shadow_shape_tag<node_shadow_shape>,                                                                  // the shape of a shadow is read from this tag in the store
                         shadow_size_tag<node_shadow_size>,                                                                    // the size of the shadow is read from this tag in the store
                         shadow_color_tag<node_shadow_color>                                                                   // color of the node shape is read from these

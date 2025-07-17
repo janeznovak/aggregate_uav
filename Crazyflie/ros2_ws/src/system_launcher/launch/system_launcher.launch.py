@@ -10,7 +10,7 @@ from launch.conditions import LaunchConfigurationEquals
 def generate_launch_description():
     # load crazyflies
     crazyflies_yaml = os.path.join(
-        get_package_share_directory("system_launcher"), "config", "crazyfliesConfig_lab.yaml"
+        get_package_share_directory("system_launcher"), "config", "crazyfliesConfig.yaml"
     )
 
     with open(crazyflies_yaml, "r") as ymlfile:
