@@ -5,54 +5,63 @@ robots:
     uri: udp://0.0.0.0:19850
     initial_position: [5.0, 6.0, 0.0]
     type: cf_sim  # see robot_types
+    # worker
 
   cf_1:
     enabled: True
     uri: udp://0.0.0.0:19851
     initial_position: [25.0, 6.0, 0.0]
     type: cf_sim  # see robot_types
+    # worker
 
   cf_2:
     enabled: True
     uri: udp://0.0.0.0:19852
     initial_position: [8.0, 8.0, 0.0]
     type: cf_sim  # see robot_types
+    # worker
   
   cf_3:
     enabled: True
     uri: udp://0.0.0.0:19853
     initial_position: [4.0, 8.0, 0.0]
     type: cf_sim  # see robot_types
+    # scout
 
   cf_4:
     enabled: True
     uri: udp://0.0.0.0:19854
     initial_position: [4.0, 3.0, 0.0]
     type: cf_sim  # see robot_types
+    # scout
   
   cf_5:
     enabled: True
     uri: udp://0.0.0.0:19855
     initial_position: [27.0, 8.0, 0.0]
     type: cf_sim  # see robot_types
-
+    # scout
+  
   cf_6:
     enabled: True
     uri: udp://0.0.0.0:19856
     initial_position: [23.0, 6.0, 0.0]
     type: cf_sim  # see robot_types
+    # scout
 
   cf_7:
     enabled: True
     uri: udp://0.0.0.0:19857
     initial_position: [23.0, 3.0, 0.0]
     type: cf_sim  # see robot_types
+    # scout
 
-  # cf_8:
-  #   enabled: False
-  #   uri: udp://0.0.0.0:19858
-  #   initial_position: [5.0, 5.0, 0.0]
-  #   type: cf_sim  # see robot_types
+  cf_8:
+    enabled: True
+    uri: udp://0.0.0.0:19858
+    initial_position: [5.0, 5.0, 0.0]
+    type: cf_sim  # see robot_types
+    # scout
 
   # cf_9:
   #   enabled: False

@@ -287,7 +287,12 @@ namespace fcpp
             struct node_active
             {
             };
-            
+            struct was_running_last_round
+            {
+            };
+            struct goal_start_time
+            {
+            };
 
             //! @brief tags for infoWorker.
             struct infoW_active
@@ -521,6 +526,8 @@ namespace fcpp
                             scout_curr_worker, int,
                             scout_isCharging, bool,
                             node_active, int,
+                            was_running_last_round, bool,
+                            goal_start_time, std::chrono::time_point<std::chrono::steady_clock>,
 
                             // START Flocking
                             node_posMaster, tuple<bool, vec<3>>,

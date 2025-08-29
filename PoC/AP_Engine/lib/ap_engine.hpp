@@ -15,6 +15,8 @@
 #include <cmath>
 #include <fstream>
 #include <iostream>
+#include <iomanip>
+#include <sstream>
 
 #include "lib/poc_config.hpp"
 #include "lib/fcpp.hpp"
@@ -41,6 +43,13 @@ namespace fcpp
         using spawn_result_type = std::unordered_map<goal_tuple_type, times_t, fcpp::common::hash<goal_tuple_type>>;
 
         constexpr int worker_requirements[5] = {2, 2, 0, 0, 0};
+
+        // CSV LOGGING CONFIGURATION
+        const std::string CSV_FILENAME = "goal_completion_log.csv";
+        
+        // TIMING STORAGE TAGS
+        // DECLARE_TAGGED_TUPLE_ELEMENT(goal_start_time, std::chrono::time_point<std::chrono::steady_clock>);
+        // DECLARE_TAGGED_TUPLE_ELEMENT(was_running_last_round, bool);
 
         // UTILS AP
 
@@ -176,6 +185,64 @@ namespace fcpp
             }
         }
 
+        // CSV LOGGING UTILITIES
+
+        void initialize_csv_file() {
+            std::string out_path = string(OUTPUT_FOLDER_BASE_PATH) + string("from_ap/to_log/");
+            create_folder_if_not_exists(out_path);
+            
+            std::string csv_path = out_path + CSV_FILENAME;
+            std::ifstream check_file(csv_path);
+            
+            // If file doesn't exist, create it and write headers
+            if (!check_file.good()) {
+                std::ofstream file(csv_path);
+                if (file.is_open()) {
+                    file << "drone_name,goal_reached,time_taken_ms,enough_scouts,scout_count,need_parameter,timestamp\n";
+                    file.close();
+                }
+            }
+            check_file.close();
+        }
+
+        void log_goal_completion(const std::string& drone_name, bool goal_reached, 
+                               double time_taken_ms, bool enough_scouts, int scout_count, 
+                               int need_parameter) {
+            std::string out_path = string(OUTPUT_FOLDER_BASE_PATH) + string("from_ap/to_log/");
+            create_folder_if_not_exists(out_path);
+            
+            std::string csv_path = out_path + CSV_FILENAME;
+            std::ofstream file(csv_path, std::ios::app);
+            
+            if (file.is_open()) {
+                auto now = std::chrono::system_clock::now();
+                auto time_t_now = std::chrono::system_clock::to_time_t(now);
+                
+                file << drone_name << ","
+                     << (goal_reached ? "true" : "false") << ","
+                     << std::fixed << std::setprecision(2) << time_taken_ms << ","
+                     << (enough_scouts ? "true" : "false") << ","
+                     << scout_count << ","
+                     << need_parameter << ","
+                     << std::put_time(std::localtime(&time_t_now), "%Y-%m-%d %H:%M:%S")
+                     << "\n";
+                file.close();
+            }
+        }
+
+        FUN void start_goal_timing(ARGS) {
+            CODE
+                node.storage(goal_start_time{}) = std::chrono::steady_clock::now();
+        }
+
+        FUN double get_goal_duration_ms(ARGS) {
+            CODE
+                auto now = std::chrono::steady_clock::now();
+                auto start = node.storage(goal_start_time{});
+                auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - start);
+                return static_cast<double>(duration.count());
+        }
+
         // STATE MACHINE
 
         //! @brief Manage state machine when battery is discharged
@@ -183,6 +250,7 @@ namespace fcpp
         {
             CODE
                 change_color(CALL, fcpp::color(fcpp::coordination::discharged_color));
+                std::cout << "I am discharging and I am drone" << node.uid << std::endl;
         }
 
         //! @brief Manage state machine when robot is running a goal
@@ -197,6 +265,7 @@ namespace fcpp
         {
             CODE
                 fcpp::color new_color;
+            std::cout << "I have reached the goal and I am drone" << node.uid << std::endl;
             // and previous state is NOT REACHED: new color is "reached" and deletes goal storage
             if (feedback::GoalStatus::REACHED != node.storage(node_external_status{}))
             {
@@ -206,6 +275,17 @@ namespace fcpp
                 node.storage(node_process_status{}) = ProcessingStatus::TERMINATING;
                 // update time
                 update_last_goal_update_time(CALL);
+
+                // Log goal completion for workers
+                if (isWorker(CALL)) {
+                    std::string drone_name = get_real_robot_name(CALL, node.uid);
+                    double time_taken = get_goal_duration_ms(CALL);
+                    int scout_count = node.storage(node_numberOfSlave{});
+                    int need_param = node.storage(required_scouts{});
+                    bool enough_scouts = scout_count >= need_param;
+                    
+                    log_goal_completion(drone_name, true, time_taken, enough_scouts, scout_count, need_param);
+                }
 
                 // and if process node is SELECTED, then AP has selected new node and simulation is ready to start
             }
@@ -228,6 +308,7 @@ namespace fcpp
         {
             CODE
                 fcpp::color new_color;
+            std::cout << "I have an unknown goal and I am drone" << node.uid << std::endl;
             // and if process node is SELECTED, then AP has selected new node and simulation is ready to start
             if (node.storage(node_process_status{}) == ProcessingStatus::SELECTED)
             {
@@ -236,6 +317,7 @@ namespace fcpp
             else
             {
                 new_color = fcpp::color(fcpp::coordination::idle_color);
+                std::cout << "change color to idle 1 and I am drone" << node.uid << std::endl;
                 // update time
                 update_last_goal_update_time(CALL);
             }
@@ -247,6 +329,7 @@ namespace fcpp
         {
             CODE
                 fcpp::color new_color;
+            std::cout << "I have aborted goal and I am drone" << node.uid << std::endl;
             // and if process node is SELECTED, then AP has selected new node and simulation is ready to start
             if (node.storage(node_process_status{}) == ProcessingStatus::SELECTED)
             {
@@ -266,6 +349,7 @@ namespace fcpp
         {
             CODE
                 fcpp::color new_color;
+            std::cout << "I have failed goal and I am drone" << node.uid << std::endl;
             // and previous state is not FAILED (first time of FAILED status): change internal status to IDLE
             if (feedback::GoalStatus::FAILED != node.storage(node_external_status{}))
             {
@@ -274,6 +358,17 @@ namespace fcpp
                 node.storage(node_process_status{}) = ProcessingStatus::IDLE;
                 // update time
                 update_last_goal_update_time(CALL);
+
+                // Log goal failure for workers
+                if (isWorker(CALL)) {
+                    std::string drone_name = get_real_robot_name(CALL, node.uid);
+                    double time_taken = get_goal_duration_ms(CALL);
+                    int scout_count = node.storage(node_numberOfSlave{});
+                    int need_param = node.storage(required_scouts{});
+                    bool enough_scouts = scout_count >= need_param;
+                    
+                    log_goal_completion(drone_name, false, time_taken, enough_scouts, scout_count, need_param);
+                }
 
                 // or previous state is FAILED (it's NOT the first time of FAILED status)
             }
@@ -297,14 +392,30 @@ namespace fcpp
         {
             CODE
                 fcpp::color new_color;
+            std::cout << "I have no goal and I am drone" << node.uid << std::endl;
             // and if process node is SELECTED, then AP has selected new node and simulation is ready to start
             if (node.storage(node_process_status{}) == ProcessingStatus::SELECTED)
             {
                 new_color = fcpp::color(fcpp::coordination::running_color);
+                if (!isWorker(CALL)) {
+                    node.storage(was_running_last_round{}) = true;
+                }
             }
             else
             {
                 new_color = fcpp::color(fcpp::coordination::idle_color);
+                std::cout << "change color to idle 2 and I am drone" << node.uid << std::endl;
+                std::cout << "I have no goal in else and I am drone" << node.uid << " and was_running_last_round: " << node.storage(was_running_last_round{}) << std::endl;
+                if (!isWorker(CALL) && node.storage(was_running_last_round{})) {
+                    node.storage(was_running_last_round{}) = false;
+                    std::string drone_name = get_real_robot_name(CALL, node.uid);
+                    double time_taken = get_goal_duration_ms(CALL);
+                    int scout_count = 0;
+                    int need_param = 0;
+                    bool enough_scouts = true;
+                    
+                    log_goal_completion(drone_name, true, time_taken, enough_scouts, scout_count, need_param);
+                }
             }
             change_color(CALL, new_color);
         }
@@ -996,6 +1107,9 @@ namespace fcpp
 
                 // set processing status to SELECTED
                 node.storage(node_process_status{}) = ProcessingStatus::SELECTED;
+                
+                // Start timing for goal completion
+                start_goal_timing(CALL);
 
                 // save goal
                 node.storage(node_process_goal{}) = get<goal_code>(goal);
@@ -1119,6 +1233,8 @@ namespace fcpp
                             }
                             if (node.storage(scout_curr_worker{}) == goal_code_robot_id)
                             {
+                                // Start timing for scout goal completion
+                                start_goal_timing(CALL);
                                 send_action_to_selected_node(CALL, goal);
                             }
                         // }
@@ -1128,6 +1244,7 @@ namespace fcpp
                 if (get<goal_code>(goal) != node.storage(node_process_goal{}) &&
                     node.storage(node_process_status{}) != ProcessingStatus::SELECTED) {
                     blink_computing_color(CALL, n_round);
+                    // TODO: i think here the scouts are, so it means that they are running, or are not idle. This means that was running should be true and when they get to idle and running was true, they should be set to false and log to csv
                 }
 
                 // TODO
@@ -1294,7 +1411,14 @@ namespace fcpp
             node.storage(expected_dist_worker_scout{}) = distanceMasterSlave;
 
 
+            // Initialize timing storage
+            node.storage(goal_start_time{}) = std::chrono::steady_clock::now();
+            node.storage(was_running_last_round{}) = false;
+            
             node.storage(node_set{}) = true;
+            
+            // Initialize CSV file for goal completion logging
+            initialize_csv_file();
         }
 
         //! @brief Initialize variables (storage, etc...) of a robot using feedback data.
@@ -1342,6 +1466,7 @@ namespace fcpp
 
                         // change colour according with feedback from robots
                         fcpp::color new_color = fcpp::color(fcpp::coordination::idle_color);
+                        std::cout << "change color to idle 3 and I am drone" << node.uid << std::endl;
                         // if new state is RUNNING: change to "running color"
                         if (feedback::GoalStatus::RUNNING == rs.goal_status) {
                             // print that the robot is running
@@ -1582,7 +1707,9 @@ namespace fcpp
             bool,
             tuple<bool, bool>,
             tuple<vec<3>, int>,
-            tuple<device_t, vec<2>, int>>;  // BVCInfo type for collision avoidance
+            tuple<device_t, vec<2>, int>  // BVCInfo type for collision avoidance
+            // std::chrono::time_point<std::chrono::steady_clock>
+            >;  // For goal timing
 
         //! @brief Export types used by the main function (update it when expanding the program).
         struct main_t : public export_list<
