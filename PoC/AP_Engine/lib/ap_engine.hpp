@@ -46,6 +46,14 @@ namespace fcpp
 
         // CSV LOGGING CONFIGURATION
         const std::string CSV_FILENAME = "goal_completion_log.csv";
+        const std::string EVALUATION_LOG_FILENAME = "evaluation_log.csv";
+        constexpr double FORMATION_ERROR_THRESHOLD = 0.5; // Meters. Total error threshold to consider formation restored.
+
+        // TIMING & METRICS STORAGE TAGS
+        DECLARE_TAGGED_TUPLE_ELEMENT(last_scout_count, int);
+        DECLARE_TAGGED_TUPLE_ELEMENT(is_in_recovery, bool);
+        DECLARE_TAGGED_TUPLE_ELEMENT(failure_detected_time, std::chrono::steady_clock::time_point);
+        DECLARE_TAGGED_TUPLE_ELEMENT(reassigning_scout_start_pos, vec<3>);
         
         // TIMING STORAGE TAGS
         // DECLARE_TAGGED_TUPLE_ELEMENT(goal_start_time, std::chrono::time_point<std::chrono::steady_clock>);
@@ -226,6 +234,40 @@ namespace fcpp
                      << need_parameter << ","
                      << std::put_time(std::localtime(&time_t_now), "%Y-%m-%d %H:%M:%S")
                      << "\n";
+                file.close();
+            }
+        }
+
+        void initialize_evaluation_log() {
+            std::string out_path = string(OUTPUT_FOLDER_BASE_PATH) + string("from_ap/to_log/");
+            create_folder_if_not_exists(out_path);
+            
+            std::string csv_path = out_path + EVALUATION_LOG_FILENAME;
+            std::ifstream check_file(csv_path);
+            
+            if (!check_file.good()) {
+                std::ofstream file(csv_path);
+                if (file.is_open()) {
+                    file << "sim_time_ms,event_type,worker_id,scout_id,value1,value2,value3\n";
+                    file.close();
+                }
+            }
+            check_file.close();
+        }
+
+        void log_evaluation_event(long long sim_time_ms, const std::string& event_type, int worker_id, int scout_id = -1, double value1 = 0.0, double value2 = 0.0, double value3 = 0.0) {
+            std::string out_path = string(OUTPUT_FOLDER_BASE_PATH) + string("from_ap/to_log/");
+            std::string csv_path = out_path + EVALUATION_LOG_FILENAME;
+            std::ofstream file(csv_path, std::ios::app);
+            
+            if (file.is_open()) {
+                file << sim_time_ms << ","
+                     << event_type << ","
+                     << worker_id << ","
+                     << scout_id << ","
+                     << value1 << ","
+                     << value2 << ","
+                     << value3 << "\n";
                 file.close();
             }
         }
@@ -1419,6 +1461,8 @@ namespace fcpp
             
             // Initialize CSV file for goal completion logging
             initialize_csv_file();
+            // Initialize CSV file for evaluation metrics logging
+            initialize_evaluation_log();
         }
 
         //! @brief Initialize variables (storage, etc...) of a robot using feedback data.
@@ -1657,6 +1701,9 @@ namespace fcpp
             // update the count of scouts
             split(CALL, (isWorker(CALL)) ? node.uid : node.storage(scout_curr_worker{}), [&]() {return updateFollowersCount(CALL);}); // split according to the uid if current node is worker, otherwise use the worker of the current scout
 
+            // MANAGE AND LOG RECOVERY METRICS (for workers)
+            manage_recovery_metrics(CALL);
+
             // Init Flocking
             // initialization(CALL); // I think we will not need this after the refactoring
 
@@ -1720,6 +1767,81 @@ namespace fcpp
 
         {
         };
+
+        //! @brief Manages the detection and logging of recovery metrics for workers.
+        FUN void manage_recovery_metrics(ARGS) {
+            CODE
+            if (!isWorker(CALL)) return;
+
+            int current_scout_count = node.storage(node_numberOfSlave{});
+            int last_scout_count_val = node.storage(last_scout_count{});
+            bool is_in_recovery_val = node.storage(is_in_recovery{});
+            auto current_sim_time = std::chrono::duration_cast<std::chrono::milliseconds>(node.current_time().time_since_epoch()).count();
+
+            // 1. FAILURE DETECTION
+            if (current_scout_count < last_scout_count_val && node.storage(scout_need{}) >= 2 && !is_in_recovery_val) {
+                node.storage(is_in_recovery{}) = true;
+                node.storage(failure_detected_time{}) = std::chrono::steady_clock::now();
+                log_evaluation_event(current_sim_time, "FAILURE_DETECTED", node.uid, -1, last_scout_count_val, current_scout_count);
+            }
+
+            // 2. LOGGING AND RESOLUTION CHECKS (only if in recovery)
+            if (node.storage(is_in_recovery{})) {
+                // 2a. NEED RESOLUTION DETECTION
+                if (current_scout_count > last_scout_count_val) {
+                    auto failure_time = node.storage(failure_detected_time{});
+                    auto now = std::chrono::steady_clock::now();
+                    double time_to_resolution_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now - failure_time).count();
+                    log_evaluation_event(current_sim_time, "NEED_RESOLVED", node.uid, -1, time_to_resolution_ms);
+                    // This assumes one scout is reassigned. The worker is now waiting for it to arrive.
+                }
+
+                // 2b. FORMATION ERROR CALCULATION & LOGGING
+                double formation_error = calculate_formation_error(CALL);
+                log_evaluation_event(current_sim_time, "FORMATION_ERROR", node.uid, -1, formation_error);
+
+                // 2c. FORMATION RESTORATION DETECTION
+                if (formation_error < FORMATION_ERROR_THRESHOLD && current_scout_count >= node.storage(required_scouts{})) {
+                     auto failure_time = node.storage(failure_detected_time{});
+                     auto now = std::chrono::steady_clock::now();
+                     double time_to_restoration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now - failure_time).count();
+                     log_evaluation_event(current_sim_time, "FORMATION_RESTORED", node.uid, -1, time_to_restoration_ms);
+                     // End of recovery cycle for this worker
+                     node.storage(is_in_recovery{}) = false;
+                }
+            }
+
+            // 3. UPDATE STATE FOR NEXT ROUND
+            node.storage(last_scout_count{}) = current_scout_count;
+        }
+
+        FUN double calculate_formation_error(ARGS) {
+            using namespace tags;
+            if (!isWorker(CALL)) return 0.0;
+
+            // Get the current positions of all scouts
+            field<tuple<vec<3>, int>> scout_data = nbr(CALL, node.storage(node_numberOfSlave{}));
+
+            // Now calculate the sum of squared errors
+            double total_error = fold_hood(CALL, [&](scout_info data, double current_error) {
+                vec<3> scout_pos = get<0>(data);
+                int scout_index = get<1>(data);
+                int total_scouts = node.storage(node_numberOfSlave{});
+                if (total_scouts == 0 || scout_index == 0) return current_error;
+
+                // Calculate ideal position for this scout based on its index
+                double ideal_radiant = scout_index * ((2 * pi) / total_scouts);
+                double ideal_x = std::sin(ideal_radiant) * distanceMasterSlave;
+                double ideal_y = std::cos(ideal_radiant) * distanceMasterSlave;
+                vec<3> ideal_pos_relative = make_vec(ideal_x, ideal_y, 0);
+                vec<3> ideal_pos_absolute = node.position() + ideal_pos_relative;
+                
+                // Add squared distance to the total error
+                return current_error + dist_sq(scout_pos, ideal_pos_absolute);
+            }, scout_data, 0.0);
+            
+            return total_error > 0 ? sqrt(total_error) : 0.0;
+        }
 
     }
 }
