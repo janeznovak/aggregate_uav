@@ -42,8 +42,8 @@ int main() {
         fcpp::coordination::tags::tavg, 
         fcpp::coordination::tags::tvar,
         fcpp::coordination::node_offset_pos_x, 
-        fcpp::coordination::node_offset_pos_y, 
-        fcpp::coordination::nodes_by_goal_subcode
+        fcpp::coordination::node_offset_pos_y
+        // fcpp::coordination::nodes_by_goal_subcode
     >(
         "NODES AP Engine",
         background_image,

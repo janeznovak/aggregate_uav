@@ -95,11 +95,11 @@ def generate_launch_description():
                 period=time,
                 actions=[group]
             )
-            time += 3.0
+            time += 4.0
             robots_node.append(timed_group)
 
     delay_action_robots = TimerAction(
-            period=7.0,  
+            period=7.0,
             actions=robots_node
     )
 

@@ -91,7 +91,7 @@ source ${src_path}/tools/crazyflie-simulation/simulator_files/gazebo/launch/setu
 
 echo "Starting gazebo"
 gz sim -s -r worlds/${world}.sdf -v 3 &
-sleep 3
+sleep 5
 
 n=0
 
@@ -106,7 +106,8 @@ if [ -z ${SCRIPT} ]; then
             spawn_custom_robot ${robot_type} $(($n)) ${fields[0]} ${fields[1]}
         fi
         n=$(($n + 1))
-    done < "agents.txt"
+        sleep 0.5
+    done < "agents_easy.txt"
 else
     IFS=,
     for target in ${SCRIPT}; do

@@ -73,24 +73,24 @@ namespace fcpp
             };
 
             //! @brief Color of the current node.
-            struct node_color
-            {
-            };
+            // struct node_color
+            // {
+            // };
 
             //! @brief Left color of the current node.
-            struct left_color
-            {
-            };
+            // struct left_color
+            // {
+            // };
 
             //! @brief Right color of the current node.
-            struct right_color
-            {
-            };
+            // struct right_color
+            // {
+            // };
 
             //! @brief Size of the current node.
-            struct node_size
-            {
-            };
+            // struct node_size
+            // {
+            // };
 
             //! @brief Shape of the current node.
             struct node_shape
@@ -98,29 +98,29 @@ namespace fcpp
             };
 
             //! @brief Size of the label of the current node.
-            struct node_label_size
-            {
-            };
+            // struct node_label_size
+            // {
+            // };
 
             //! @brief Text of the label of the current node.
-            struct node_label_text
-            {
-            };
+            // struct node_label_text
+            // {
+            // };
 
             //! @brief Shape of the shadow of current node.
-            struct node_shadow_shape
-            {
-            };
+            // struct node_shadow_shape
+            // {
+            // };
 
             //! @brief Size of the shadow of the current node.
-            struct node_shadow_size
-            {
-            };
+            // struct node_shadow_size
+            // {
+            // };
 
             //! @brief Color of the shadow of the current node.
-            struct node_shadow_color
-            {
-            };
+            // struct node_shadow_color
+            // {
+            // };
 
             //! @brief Status of the current node read by robot feedback.
             struct node_external_status
@@ -173,9 +173,9 @@ namespace fcpp
             };
 
             //! @brief Map with nodes enabled for specific goal.subcode
-            struct nodes_by_goal_subcode
-            {
-            };
+            // struct nodes_by_goal_subcode
+            // {
+            // };
 
             //! @brief Action of the goal
             struct goal_action
@@ -317,6 +317,18 @@ namespace fcpp
             struct scout_curr_worker // uid of the worker the scout is currently assigned to. -1 if not assigned
             {
             };
+
+            struct last_scout_count
+            {
+            };
+
+            struct is_in_recovery
+            {
+            };
+
+            struct failure_detected_time
+            {
+            };
         } // tags
 
 #ifndef AP_USE_CASE
@@ -359,19 +371,19 @@ namespace fcpp
 
 #if AP_USE_CASE == HIGHDISTANCE
         //! @brief Distance master-slave, equivale al raggio della circonferenza della formazione.
-        constexpr double distanceMasterSlave = distanceCircularCrown - ((distanceCircularCrown / 100) * 50);
+        constexpr double distanceMasterSlave = distanceCircularCrown - ((distanceCircularCrown / 100) * 30);
 
 #elif AP_USE_CASE == LOWDISTANCE
         //! @brief Distance master-slave, equivalente al range di comunicazione
-        constexpr double distanceMasterSlave = distanceCircularCrown - ((distanceCircularCrown / 100) * 80);
+        constexpr double distanceMasterSlave = distanceCircularCrown - ((distanceCircularCrown / 100) * 60);
 
 #else
         //! @brief Distance master-slave, equivale al raggio della circonferenza della formazione.
-        constexpr double distanceMasterSlave = distanceCircularCrown - ((distanceCircularCrown / 100) * 50); // in other code called distanceWorkerScout
+        constexpr double distanceMasterSlave = distanceCircularCrown - ((distanceCircularCrown / 100) * 30); // in other code called distanceWorkerScout
 #endif
 
         //! @brief The maximum communication range between nodes; TODO: change this to test with different data, check which range is ok.
-        constexpr size_t communication_range = 100; // TODO: test with different data, also test with different retain time
+        constexpr size_t communication_range = 20; // TODO: test with different data, also test with different retain time
 
         //! @brief Constant minimum number of nodes to form a circle
         constexpr int minNodesToFormCircle = 5;
@@ -387,9 +399,9 @@ namespace fcpp
         //! @brief Hardness constant for elastic force CircularCrown-Slave.
         constexpr double hardnessCircularCrown = (distanceCircularCrown / 10000) * 2;
         //! @brief Hardness constant for elastic force Slave-Slave.
-        constexpr double hardnessSlaveSlave = 0.01;
+        constexpr double hardnessSlaveSlave = 0.005;
         //! @brief Percentage increment force if distance devices is < minimum distance, high collision risk
-        constexpr double incrementForce = 50;
+        constexpr double incrementForce = 25;
         // END Flocking
 
         // simulator vars
@@ -402,8 +414,8 @@ namespace fcpp
         constexpr fcpp::packed_color aborted_goal_color = RED;
         constexpr fcpp::packed_color discharged_color = MAROON;
 
-        constexpr int nWorker = 2;
-        constexpr int nScout = 4;
+        constexpr int nWorker = 3;
+        constexpr int nScout = 1;
         constexpr int nWorkerScout = nScout / nWorker;
     }
 
@@ -490,20 +502,20 @@ namespace fcpp
                         // the basic contents of the node storage
                         tuple_store<
                             seed, uint_fast32_t,
-                            speed, double,
+                            // speed, double,
                             devices, size_t,
                             sidex, real_t,
                             sidey, real_t,
-                            node_color, color,
-                            left_color, color,
-                            right_color, color,
-                            node_size, double,
+                            // node_color, color,
+                            // left_color, color,
+                            // right_color, color,
+                            // node_size, double,
                             node_shape, shape,
-                            node_label_size, double,
-                            node_label_text, string,
-                            node_shadow_shape, shape,
-                            node_shadow_size, double,
-                            node_shadow_color, color,
+                            // node_label_size, double,
+                            // node_label_text, string,
+                            // node_shadow_shape, shape,
+                            // node_shadow_size, double,
+                            // node_shadow_color, color,
                             node_external_status, feedback::GoalStatus,
                             node_external_status_update_time, std::time_t,
                             node_external_goal, string,
@@ -516,7 +528,7 @@ namespace fcpp
                             node_offset_pos_y, real_t,
                             tavg, real_t,
                             tvar, real_t,
-                            nodes_by_goal_subcode, std::unordered_map<std::string, std::vector<device_t>>,
+                            // nodes_by_goal_subcode, std::unordered_map<std::string, std::vector<device_t>>,
                             node_set, bool,
                             node_isWorker, bool,
                             node_countRound, int,
@@ -540,33 +552,38 @@ namespace fcpp
                             node_maxNumberOfSlave, int,
                             node_flagDistance, bool,
                             position_error, double,
-                            node_startPosition, vec<3> //! Initialized only for the nominal test
+                            node_startPosition, vec<3>, //! Initialized only for the nominal test
                             // END Flocking
+
+                            last_scout_count, int,
+                            is_in_recovery, bool,
+                            failure_detected_time, std::chrono::time_point<std::chrono::steady_clock>
                         >,
                         // data initialisation
                         init<
                             x, rectangle_d,
                             node_active, n<1>,
                             seed, functor::cast<distribution::interval_n<double, 0, seed_max>, uint_fast32_t>,
-                            speed, functor::div<i<speed>, n<0>>,
+                            // speed, functor::div<i<speed>, n<0>>,
                             devices, i<devices>,
                             tavg, i<tavg>, // seconds of mean period
                             tvar, i<tvar>, // seconds of variance period
                             node_offset_pos_x, i<node_offset_pos_x>,
-                            node_offset_pos_y, i<node_offset_pos_y>,
-                            nodes_by_goal_subcode, subcode_map_distr<nodes_by_goal_subcode>>,
+                            node_offset_pos_y, i<node_offset_pos_y>
+                            // nodes_by_goal_subcode, subcode_map_distr<nodes_by_goal_subcode>>,
+                            >,
                         dimension<fcpp::coordination::dim>,                                             // dimensionality of the space
                         connector<connect::fixed<fcpp::coordination::communication_range, 1, dim>>, // connection allowed within a radius comm range
                         // connector<connect::radial<80, connect::fixed<fcpp::coordination::comm, 1, dim>>>,                                                                                                // connector<connect::fixed<fcpp::coordination::comm, 1, fcpp::coordination::dim>>, // connection allowed within a fixed comm range
                         // connector<connect::radial<80, connect::fixed<fcpp::coordination::communication_range, 1, dim>>>,
-                        shape_tag<node_shape>,                                                                                // the shape of a node is read from this tag in the store
-                        size_tag<node_size>,                                                                                  // the size of a node is read from this tag in the store
-                        color_tag<node_color, left_color, right_color>,                                                       // colors of a node are read from these
-                        label_size_tag<node_label_size>,                                                                      // the size of the node label is read from this tag in the store
-                        label_text_tag<node_label_text>,                                                                      // the text of the node label is read from this tag in the store
-                        shadow_shape_tag<node_shadow_shape>,                                                                  // the shape of a shadow is read from this tag in the store
-                        shadow_size_tag<node_shadow_size>,                                                                    // the size of the shadow is read from this tag in the store
-                        shadow_color_tag<node_shadow_color>                                                                   // color of the node shape is read from these
+                        shape_tag<node_shape>                                                                                // the shape of a node is read from this tag in the store
+                        // size_tag<node_size>,                                                                                  // the size of a node is read from this tag in the store
+                        // color_tag<node_color, left_color, right_color>,                                                       // colors of a node are read from these
+                        // label_size_tag<node_label_size>,                                                                      // the size of the node label is read from this tag in the store
+                        // label_text_tag<node_label_text>,                                                                      // the text of the node label is read from this tag in the store
+                        // shadow_shape_tag<node_shadow_shape>,                                                                  // the shape of a shadow is read from this tag in the store
+                        // shadow_size_tag<node_shadow_size>,                                                                    // the size of the shadow is read from this tag in the store
+                        // shadow_color_tag<node_shadow_color>                                                                   // color of the node shape is read from these
         );
 
     }

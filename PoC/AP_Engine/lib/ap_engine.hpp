@@ -27,6 +27,7 @@
 #include "lib/action_writer.hpp"
 #include <cstdlib>
 #include <optional>
+#include <mutex>
 #include "lib/goal_parser.h"
 
 namespace fcpp
@@ -43,17 +44,21 @@ namespace fcpp
         using spawn_result_type = std::unordered_map<goal_tuple_type, times_t, fcpp::common::hash<goal_tuple_type>>;
 
         constexpr int worker_requirements[5] = {2, 2, 0, 0, 0};
+        // Defines the initial number of scouts assigned to each worker at the start of the simulation.
+        // The size of this array implicitly defines the number of masters.
+        // Example: {3, 2, 4} -> Master 0 starts with 3 scouts, Master 1 with 2, Master 2 with 4.
+        constexpr int initial_scouts_per_worker[] = {2, 2};
 
         // CSV LOGGING CONFIGURATION
         const std::string CSV_FILENAME = "goal_completion_log.csv";
         const std::string EVALUATION_LOG_FILENAME = "evaluation_log.csv";
-        constexpr double FORMATION_ERROR_THRESHOLD = 0.5; // Meters. Total error threshold to consider formation restored.
+        constexpr double FORMATION_ERROR_THRESHOLD = 2.0; // Meters. Max distance threshold to consider formation restored.
 
         // TIMING & METRICS STORAGE TAGS
-        DECLARE_TAGGED_TUPLE_ELEMENT(last_scout_count, int);
-        DECLARE_TAGGED_TUPLE_ELEMENT(is_in_recovery, bool);
-        DECLARE_TAGGED_TUPLE_ELEMENT(failure_detected_time, std::chrono::steady_clock::time_point);
-        DECLARE_TAGGED_TUPLE_ELEMENT(reassigning_scout_start_pos, vec<3>);
+        // DECLARE_TAGGED_TUPLE_ELEMENT(last_scout_count, int);
+        // DECLARE_TAGGED_TUPLE_ELEMENT(is_in_recovery, bool);
+        // DECLARE_TAGGED_TUPLE_ELEMENT(failure_detected_time, std::chrono::steady_clock::time_point);
+        // DECLARE_TAGGED_TUPLE_ELEMENT(reassigning_scout_start_pos, vec<3>);
         
         // TIMING STORAGE TAGS
         // DECLARE_TAGGED_TUPLE_ELEMENT(goal_start_time, std::chrono::time_point<std::chrono::steady_clock>);
@@ -76,9 +81,9 @@ namespace fcpp
         FUN void change_color(ARGS, fcpp::color color)
         {
             CODE
-                node.storage(left_color{}) = fcpp::color(color);
-            node.storage(right_color{}) = fcpp::color(color);
-            node.storage(node_color{}) = fcpp::color(color);
+            //     node.storage(left_color{}) = fcpp::color(color);
+            // node.storage(right_color{}) = fcpp::color(color);
+            // node.storage(node_color{}) = fcpp::color(color);
         }
 
         //! @brief Blink color of node
@@ -172,25 +177,118 @@ namespace fcpp
             return (node.storage(node_active{}) == 1) ? true : false;
         }
 
+        // IMPROVED MEASUREMENT SYSTEM
+        
+        // Thread-safe measurement data collection
+        struct MeasurementData {
+            std::string timestamp;
+            int node_id;
+            double value;
+            std::string metric_type;
+            std::string additional_info;
+        };
+        
+        // Buffered measurement collector for better performance
+        class MeasurementCollector {
+        private:
+            static std::vector<MeasurementData> measurement_buffer;
+            static std::mutex buffer_mutex;
+            static constexpr size_t BUFFER_SIZE = 1000;
+            
+        public:
+            static void add_measurement(const std::string& timestamp, int node_id, 
+                                      double value, const std::string& metric_type, 
+                                      const std::string& additional_info = "") {
+                std::lock_guard<std::mutex> lock(buffer_mutex);
+                measurement_buffer.push_back({timestamp, node_id, value, metric_type, additional_info});
+                
+                // Flush buffer when it gets full
+                if (measurement_buffer.size() >= BUFFER_SIZE) {
+                    flush_buffer_internal();
+                }
+            }
+            
+            static void flush_buffer() {
+                std::lock_guard<std::mutex> lock(buffer_mutex);
+                flush_buffer_internal();
+            }
+            
+        private:
+            static void flush_buffer_internal() {
+                if (measurement_buffer.empty()) return;
+                
+                std::string out_path = string(OUTPUT_FOLDER_BASE_PATH) + string("from_ap/to_log/");
+                create_folder_if_not_exists(out_path);
+                std::string measurement_file = out_path + "measurements.csv";
+                
+                std::ofstream file(measurement_file, std::ios::app);
+                if (file.is_open()) {
+                    // Write header if file is new
+                    file.seekp(0, std::ios::end);
+                    if (file.tellp() == 0) {
+                        file << "timestamp,node_id,value,metric_type,additional_info\n";
+                    }
+                    
+                    // Write all buffered measurements
+                    for (const auto& data : measurement_buffer) {
+                        file << data.timestamp << "," 
+                             << data.node_id << "," 
+                             << std::fixed << std::setprecision(6) << data.value << "," 
+                             << data.metric_type << "," 
+                             << data.additional_info << "\n";
+                    }
+                    file.close();
+                }
+                measurement_buffer.clear();
+            }
+        };
+        
+        // Static member definitions (would normally go in .cpp file)
+        std::vector<MeasurementData> MeasurementCollector::measurement_buffer;
+        std::mutex MeasurementCollector::buffer_mutex;
+        
+        // Improved error logging function
         void log_error(string uid, string time, double error)
         {
-            std::string out_path = string(OUTPUT_FOLDER_BASE_PATH) + string("from_ap/to_log/");
-            create_folder_if_not_exists(out_path);
-
-            std::ofstream file;
-            std::string uniqueFilename = out_path + "/" + uid + "_error_log.txt";
-
-            file.open(uniqueFilename, std::ios::app);
-
-            if (file.is_open())
-            {
-                file << time << "," << std::to_string(error) << std::endl;
-                file.close();
-            }
-            else
-            {
-                std::cout << "Error log file." << std::endl;
-            }
+            MeasurementCollector::add_measurement(time, std::stoi(uid), error, "position_error");
+        }
+        
+        // Measurement utility functions
+        void flush_measurements() {
+            MeasurementCollector::flush_buffer();
+        }
+        
+        // Enhanced measurement functions for common use cases
+        FUN void log_performance_metric(ARGS, const std::string& metric_name, double value, const std::string& context = "") {
+            CODE
+            std::string timestamp = std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(
+                std::chrono::system_clock::now().time_since_epoch()).count());
+            MeasurementCollector::add_measurement(timestamp, node.uid, value, metric_name, context);
+        }
+        
+        // Forward declaration
+        FUN double calculate_formation_error(ARGS);
+        
+        FUN void log_formation_metrics(ARGS) {
+            CODE
+            if (!isWorker(CALL)) return;
+            
+            // Log current formation state - use simulation time directly
+            std::string timestamp = std::to_string(static_cast<long long>(node.current_time() * 1000)); // Convert to milliseconds
+            
+            int scout_count = node.storage(node_numberOfSlave{});
+            int required_scout_count = node.storage(required_scouts{});
+            double formation_error = calculate_formation_error(CALL);
+            bool recovery_status = node.storage(is_in_recovery{});
+            
+            MeasurementCollector::add_measurement(timestamp, node.uid, scout_count, "current_scout_count");
+            MeasurementCollector::add_measurement(timestamp, node.uid, required_scout_count, "required_scout_count");
+            MeasurementCollector::add_measurement(timestamp, node.uid, formation_error, "formation_error_continuous");
+            MeasurementCollector::add_measurement(timestamp, node.uid, recovery_status ? 1.0 : 0.0, "recovery_status");
+            
+            // Calculate formation efficiency
+            double efficiency = scout_count > 0 ? (double)std::min(scout_count, required_scout_count) / required_scout_count : 0.0;
+            MeasurementCollector::add_measurement(timestamp, node.uid, efficiency, "formation_efficiency");
         }
 
         // CSV LOGGING UTILITIES
@@ -216,6 +314,7 @@ namespace fcpp
         void log_goal_completion(const std::string& drone_name, bool goal_reached, 
                                double time_taken_ms, bool enough_scouts, int scout_count, 
                                int need_parameter) {
+            // Legacy CSV logging (kept for compatibility)
             std::string out_path = string(OUTPUT_FOLDER_BASE_PATH) + string("from_ap/to_log/");
             create_folder_if_not_exists(out_path);
             
@@ -236,6 +335,24 @@ namespace fcpp
                      << "\n";
                 file.close();
             }
+            
+            // Enhanced measurement logging
+            auto timestamp = std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(
+                std::chrono::system_clock::now().time_since_epoch()).count());
+            
+            // Extract node ID from drone name (assuming format like "robot_1")
+            int node_id = 0;
+            std::size_t pos = drone_name.find_last_of("_");
+            if (pos != std::string::npos) {
+                node_id = std::stoi(drone_name.substr(pos + 1));
+            }
+            
+            // Log multiple metrics
+            MeasurementCollector::add_measurement(timestamp, node_id, time_taken_ms, "goal_completion_time");
+            MeasurementCollector::add_measurement(timestamp, node_id, goal_reached ? 1.0 : 0.0, "goal_success_rate");
+            MeasurementCollector::add_measurement(timestamp, node_id, scout_count, "scout_count", 
+                                                 "need=" + std::to_string(need_parameter));
+            MeasurementCollector::add_measurement(timestamp, node_id, enough_scouts ? 1.0 : 0.0, "scout_sufficiency");
         }
 
         void initialize_evaluation_log() {
@@ -256,6 +373,7 @@ namespace fcpp
         }
 
         void log_evaluation_event(long long sim_time_ms, const std::string& event_type, int worker_id, int scout_id = -1, double value1 = 0.0, double value2 = 0.0, double value3 = 0.0) {
+            // Legacy CSV logging (kept for compatibility)
             std::string out_path = string(OUTPUT_FOLDER_BASE_PATH) + string("from_ap/to_log/");
             std::string csv_path = out_path + EVALUATION_LOG_FILENAME;
             std::ofstream file(csv_path, std::ios::app);
@@ -270,6 +388,21 @@ namespace fcpp
                      << value3 << "\n";
                 file.close();
             }
+            
+            // Enhanced measurement logging with better organization
+            std::string timestamp = std::to_string(sim_time_ms);
+            std::string additional_info = "worker=" + std::to_string(worker_id);
+            if (scout_id >= 0) {
+                additional_info += ",scout=" + std::to_string(scout_id);
+            }
+            if (value2 != 0.0) {
+                additional_info += ",val2=" + std::to_string(value2);
+            }
+            if (value3 != 0.0) {
+                additional_info += ",val3=" + std::to_string(value3);
+            }
+            
+            MeasurementCollector::add_measurement(timestamp, worker_id, value1, event_type, additional_info);
         }
 
         FUN void start_goal_timing(ARGS) {
@@ -522,7 +655,7 @@ namespace fcpp
                 vec<3> versore = vecMyRadiant + dist;
                 // versore[2] = 0;
                 node.storage(node_vecMyVersor{}) = versore;
-                node.storage(node_vecMyVersor{})[2] += 0.6;
+                node.storage(node_vecMyVersor{})[2] += 0.1;
                 // this is my versore
                 // std::cout << "Calculating my vec_versore " << node.storage(node_vecMyVersor{}) << std::endl;
                 // std::cout << "My node_indexSlave " << get<1>(node.storage(node_indexSlave{})) << std::endl;
@@ -558,12 +691,29 @@ namespace fcpp
                 vec<3> vecTheta = make_vec(x, y, 0);
                 vec<3> exactPosition = vecTheta + get<1>(node.storage(node_posMaster{}));
                 double error = distance(exactPosition, node.position());
-                double normalizedError = error / distanceMasterSlave; // Normalizzazione dell'errore
+                double normalizedError = error / distanceMasterSlave;
+                
+                // Store error for local use
                 node.storage(position_error{}) = error;
-                log_error(
-                    std::to_string(node.uid),
-                    std::to_string(time_point_cast<milliseconds>(system_clock::now()).time_since_epoch().count()),
-                    error);
+                
+                // Enhanced logging with additional metrics
+                std::string timestamp = std::to_string(time_point_cast<milliseconds>(system_clock::now()).time_since_epoch().count());
+                
+                // Log both absolute and normalized error
+                MeasurementCollector::add_measurement(timestamp, node.uid, error, "position_error", 
+                                                     "master=" + std::to_string(node.storage(scout_curr_worker{})));
+                MeasurementCollector::add_measurement(timestamp, node.uid, normalizedError, "normalized_position_error");
+                
+                // Also track formation quality metrics
+                int total_scouts = node.storage(node_numberOfSlave{});
+                if (total_scouts > 0) {
+                    MeasurementCollector::add_measurement(timestamp, node.uid, 
+                                                         get<1>(node.storage(node_indexSlave{})), "scout_index", 
+                                                         "total_scouts=" + std::to_string(total_scouts));
+                }
+                
+                // Legacy logging (for backward compatibility)
+                log_error(std::to_string(node.uid), timestamp, error);
             }
         }
 
@@ -760,9 +910,7 @@ namespace fcpp
          * This function ensures collision-free navigation for a scout drone by calculating a safe
          * target position. It operates in two main stages, both using field calculus:
          * 1. It computes a safe position considering all other peer scouts in its swarm.
-         * 2. It then refines that position to ensure it also respects the master drone's buffer zone.
-         *
-         * The final output is a safe 2D direction vector stored in `node_vecMyVersor`.
+         * 2. It then refines that position to ensure it alFalseered in `node_vecMyVersor`.
          * This approach is decentralized and relies on local information only.
          *
          * @param ARGS Macro for FCPP function arguments.
@@ -1389,31 +1537,39 @@ namespace fcpp
                 if (node.uid < number_of_masters)
                 {
                     node.storage(node_isWorker{}) = true;
-                    node.storage(node_label_text{}) = "RM." + std::to_string(node.uid);
+                    // node.storage(node_label_text{}) = "RM." + std::to_string(node.uid);
 
                     node.storage(required_scouts{}) = worker_requirements[node.uid];
-                    node.storage(scout_need{}) = worker_requirements[node.uid] - nWorkerScout;
-                    // node.storage(original_required_scouts{}) = worker_requirements[node.uid]; // TODO: if we won't use the dynamic change of the requirement, this is not needed
+                    // when each worker starts with same number of scouts
+                    // node.storage(scout_need{}) = worker_requirements[node.uid] - nWorkerScout;
+                    // The number of scouts a worker needs is its requirement minus its starting allocation.
+                    node.storage(scout_need{}) = worker_requirements[node.uid] - initial_scouts_per_worker[node.uid];
                     node.storage(scout_curr_worker{}) = -1; // the worker is not assigned to a scout
-                    node.storage(node_numberOfSlave{}) = nWorkerScout; // number of scouts assigned to each worker
+                    // when each worker starts with same number of scouts
+                    // node.storage(node_numberOfSlave{}) = nWorkerScout; // number of scouts assigned to each worker
+                    // The number of scouts a worker has at the start is defined by the new configuration array.
+                    node.storage(node_numberOfSlave{}) = initial_scouts_per_worker[node.uid];
                 }
                 else
                 {
                     node.storage(node_isWorker{}) = false;
-                    node.storage(node_label_text{}) = "RS." + std::to_string(node.uid);
+                    // node.storage(node_label_text{}) = "RS." + std::to_string(node.uid);
 
-                    for (int i = 1; i <= number_of_masters; i++)
-                    {
-                        int val = (node.uid - (number_of_masters - 1)) / (nWorkerScout * i);
+                    // Assign scout to a worker based on the initial_scouts_per_worker configuration.
+                    int scout_index = node.uid - number_of_masters; // a 0-based index for the scout
+                    int cumulative_scouts = 0;
+                    int assigned_master = -1;
 
-                        // Assign the scout to the worker(to it's worker, since this function is run only once and each worker has it's own scouts)
-                        if(val == 0 || (node.uid - (number_of_masters - 1)) == nWorkerScout * i)
-                        {
-                            node.storage(scout_curr_worker{}) = i - 1;
-                            // print the scout_curr_worker with my worker is: scout_curr_worker
-                            // std::cout << "Scout " << node.uid << "assigned to worker " << node.storage(scout_curr_worker{}) << std::endl;
+                    for (int i = 0; i < number_of_masters; ++i) {
+                        cumulative_scouts += initial_scouts_per_worker[i];
+                        if (scout_index < cumulative_scouts) {
+                            assigned_master = i;
                             break;
                         }
+                    }
+
+                    if (assigned_master != -1) {
+                        node.storage(scout_curr_worker{}) = assigned_master;
                     }
 
                     // TODO: the battery is not use yet, can be in the future
@@ -1445,17 +1601,22 @@ namespace fcpp
             }
 
             // set parameters that will not change and mark that they have been initialised
-            node.storage(node_size{}) = NODE_SIZE;
-            node.storage(node_label_size{}) = LABEL_SIZE;
+            // node.storage(node_size{}) = NODE_SIZE;
+            // node.storage(node_label_size{}) = LABEL_SIZE;
             node.storage(node_shape{}) = shape::sphere;
-            node.storage(node_shadow_color{}) = fcpp::color(0x837E7CFF);
-            node.storage(node_shadow_shape{}) = shape::sphere;
-            node.storage(expected_dist_worker_scout{}) = distanceMasterSlave;
+            // node.storage(node_shadow_color{}) = fcpp::color(0x837E7CFF);
+            // node.storage(node_shadow_shape{}) = shape::sphere;
+            // node.storage(expected_dist_worker_scout{}) = distanceMasterSlave;
 
 
             // Initialize timing storage
             node.storage(goal_start_time{}) = std::chrono::steady_clock::now();
             node.storage(was_running_last_round{}) = false;
+            
+            // Initialize recovery metrics storage
+            node.storage(last_scout_count{}) = isWorker(CALL) ? initial_scouts_per_worker[node.uid] : 0;
+            node.storage(is_in_recovery{}) = false;
+            node.storage(failure_detected_time{}) = std::chrono::steady_clock::now();
             
             node.storage(node_set{}) = true;
             
@@ -1500,12 +1661,12 @@ namespace fcpp
                         float battery_percent_charge_trunc = std::trunc(rs.battery_percent_charge / 10) * 10;
                         if (rs.battery_percent_charge >= 0) {
                             // resize the node according with the battery percent charge
-                            node.storage(node_size{}) = (battery_percent_charge_trunc / 100.0) * NODE_SIZE;
-                            node.storage(node_shadow_size{}) = (battery_percent_charge_trunc / 100.0) * NODE_SHADOW_SIZE;
+                            // node.storage(node_size{}) = (battery_percent_charge_trunc / 100.0) * NODE_SIZE;
+                            // node.storage(node_shadow_size{}) = (battery_percent_charge_trunc / 100.0) * NODE_SHADOW_SIZE;
                         }
                         else {
-                            node.storage(node_size{}) = NODE_SIZE / 2;
-                            node.storage(node_shadow_size{}) = NODE_SHADOW_SIZE / 2;
+                            // node.storage(node_size{}) = NODE_SIZE / 2;
+                            // node.storage(node_shadow_size{}) = NODE_SHADOW_SIZE / 2;
                         }
 
                         // change colour according with feedback from robots
@@ -1544,7 +1705,7 @@ namespace fcpp
                         }
                         // otherwise: maintain previous
                         else {
-                            change_color(CALL, node.storage(node_color{}));
+                            // change_color(CALL, node.storage(node_color{}));
                         }
 
                         // update external status in storage
@@ -1676,18 +1837,115 @@ namespace fcpp
             }
         }
 
+        //! @brief Calculate formation error for workers based on scout positions
+        FUN double calculate_formation_error(ARGS) {
+            using namespace tags;
+            if (!isWorker(CALL)) return 0.0;
+
+            vec<3> my_pos = node.position();
+            int my_id = node.uid;
+
+            // Define the tuple type that holds position and worker ID. This type is already exported.
+            using nbr_info_t = tuple<vec<3>, int>;
+
+            // Create a single field of tuples containing neighbor position and their assigned worker ID.
+            field<nbr_info_t> nbr_info_field = nbr(CALL, 
+                make_tuple(
+                    node.position(), 
+                    node.storage(scout_curr_worker{})
+                )
+            );
+
+            // Fold over the neighborhood to find the maximum squared distance from this worker to any of its assigned scouts.
+            double max_dist_sq = fold_hood(CALL, 
+                [&](nbr_info_t nbr_values, double max_sq) {
+                    // Unpack the neighbor's information using get<>() for fcpp::tuple.
+                    vec<3> const& nbr_pos = get<0>(nbr_values);
+                    int const& nbr_worker_id = get<1>(nbr_values);
+                    
+                    // We only care about neighbors that are SCOUTS and belong to THIS worker.
+                    // A scout's worker_id will be my_id. A worker's worker_id is -1, so they are filtered out.
+                    if (nbr_worker_id == my_id) {
+                        vec<3> diff = my_pos - nbr_pos;
+                        double dist_sq = diff * diff; // Dot product for squared norm
+                        return std::max(max_sq, dist_sq);
+                    }
+                    return max_sq; // Otherwise, keep the current max.
+                }, 
+                nbr_info_field, 
+                0.0
+            );
+            
+            // Return the actual distance (sqrt of the max squared distance).
+            return max_dist_sq > 0 ? sqrt(max_dist_sq) : 0.0;
+        }
+
+        //! @brief Manages the detection and logging of recovery metrics for workers.
+        FUN void manage_recovery_metrics(ARGS) {
+            CODE
+            if (!isWorker(CALL)) return;
+
+            int current_scout_count = node.storage(node_numberOfSlave{});
+            int last_scout_count_val = node.storage(last_scout_count{});
+            bool is_in_recovery_val = node.storage(is_in_recovery{});
+            auto current_sim_time = static_cast<long long>(node.current_time() * 1000); // Convert simulation time to milliseconds
+
+            // 1. FAILURE DETECTION
+            if (current_scout_count < last_scout_count_val && node.storage(scout_need{}) >= 2 && !is_in_recovery_val) {
+                node.storage(is_in_recovery{}) = true;
+                node.storage(failure_detected_time{}) = std::chrono::steady_clock::now();
+                log_evaluation_event(current_sim_time, "FAILURE_DETECTED", node.uid, -1, last_scout_count_val, current_scout_count);
+            }
+
+            // 2. LOGGING AND RESOLUTION CHECKS (only if in recovery)
+            if (node.storage(is_in_recovery{})) {
+                // 2a. NEED RESOLUTION DETECTION
+                if (current_scout_count > last_scout_count_val) {
+                    auto failure_time = node.storage(failure_detected_time{});
+                    auto now = std::chrono::steady_clock::now();
+                    double time_to_resolution_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now - failure_time).count();
+                    log_evaluation_event(current_sim_time, "NEED_RESOLVED", node.uid, -1, time_to_resolution_ms);
+                    // This assumes one scout is reassigned. The worker is now waiting for it to arrive.
+                }
+
+                // 2b. FORMATION ERROR CALCULATION & LOGGING
+                double formation_error = calculate_formation_error(CALL);
+                log_evaluation_event(current_sim_time, "FORMATION_ERROR", node.uid, -1, formation_error);
+
+                // 2c. FORMATION RESTORATION DETECTION
+                if (formation_error < FORMATION_ERROR_THRESHOLD) {
+                     auto failure_time = node.storage(failure_detected_time{});
+                     auto now = std::chrono::steady_clock::now();
+                     double time_to_restoration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now - failure_time).count();
+                     log_evaluation_event(current_sim_time, "FORMATION_RESTORED", node.uid, -1, time_to_restoration_ms);
+                     // End of recovery cycle for this worker
+                     node.storage(is_in_recovery{}) = false;
+                }
+            }
+
+            // 3. UPDATE STATE FOR NEXT ROUND
+            node.storage(last_scout_count{}) = current_scout_count;
+        }
+
         //! @brief Main case study function.
         MAIN()
         {
             // for testing purposes
-            int nubmer_of_masters = 2; // TODO: this should be passed in from a user
+            int number_of_masters = 2; // TODO: this should be passed in from a user
             // INITIALIZE VARS
             std::vector<goal_tuple_type> NewGoalsList{};
             int n_round = fcpp::coordination::counter(CALL);
             node.storage(node_countRound{}) = counter(CALL); // TODO: use this instead of n_round
 
             if (!node.storage(node_set{}))
-                init_main_fn(CALL, n_round, nubmer_of_masters);
+                init_main_fn(CALL, n_round, number_of_masters);
+
+            // Failure simulation: After 100 rounds, scouts of worker 1 fail.
+            if (n_round >= 150 && (node.uid == 2 || node.uid == 4)) {
+                change_color(CALL, fcpp::color(fcpp::coordination::failed_goal_color));
+                node.storage(scout_curr_worker{}) = 10; // Assign to a non-existent worker to ensure failure is detected.
+                return; // Stop execution to simulate failure
+            }
 
             // UPDATE DATA
             acquire_new_goals(CALL, NewGoalsList);
@@ -1703,6 +1961,14 @@ namespace fcpp
 
             // MANAGE AND LOG RECOVERY METRICS (for workers)
             manage_recovery_metrics(CALL);
+            
+            // LOG FORMATION METRICS (continuous monitoring)
+            log_formation_metrics(CALL);
+            
+            // Periodically flush measurement buffer (every 50 rounds to avoid overhead)
+            if (n_round % 50 == 0) {
+                flush_measurements();
+            }
 
             // Init Flocking
             // initialization(CALL); // I think we will not need this after the refactoring
@@ -1768,80 +2034,6 @@ namespace fcpp
         {
         };
 
-        //! @brief Manages the detection and logging of recovery metrics for workers.
-        FUN void manage_recovery_metrics(ARGS) {
-            CODE
-            if (!isWorker(CALL)) return;
-
-            int current_scout_count = node.storage(node_numberOfSlave{});
-            int last_scout_count_val = node.storage(last_scout_count{});
-            bool is_in_recovery_val = node.storage(is_in_recovery{});
-            auto current_sim_time = std::chrono::duration_cast<std::chrono::milliseconds>(node.current_time().time_since_epoch()).count();
-
-            // 1. FAILURE DETECTION
-            if (current_scout_count < last_scout_count_val && node.storage(scout_need{}) >= 2 && !is_in_recovery_val) {
-                node.storage(is_in_recovery{}) = true;
-                node.storage(failure_detected_time{}) = std::chrono::steady_clock::now();
-                log_evaluation_event(current_sim_time, "FAILURE_DETECTED", node.uid, -1, last_scout_count_val, current_scout_count);
-            }
-
-            // 2. LOGGING AND RESOLUTION CHECKS (only if in recovery)
-            if (node.storage(is_in_recovery{})) {
-                // 2a. NEED RESOLUTION DETECTION
-                if (current_scout_count > last_scout_count_val) {
-                    auto failure_time = node.storage(failure_detected_time{});
-                    auto now = std::chrono::steady_clock::now();
-                    double time_to_resolution_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now - failure_time).count();
-                    log_evaluation_event(current_sim_time, "NEED_RESOLVED", node.uid, -1, time_to_resolution_ms);
-                    // This assumes one scout is reassigned. The worker is now waiting for it to arrive.
-                }
-
-                // 2b. FORMATION ERROR CALCULATION & LOGGING
-                double formation_error = calculate_formation_error(CALL);
-                log_evaluation_event(current_sim_time, "FORMATION_ERROR", node.uid, -1, formation_error);
-
-                // 2c. FORMATION RESTORATION DETECTION
-                if (formation_error < FORMATION_ERROR_THRESHOLD && current_scout_count >= node.storage(required_scouts{})) {
-                     auto failure_time = node.storage(failure_detected_time{});
-                     auto now = std::chrono::steady_clock::now();
-                     double time_to_restoration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now - failure_time).count();
-                     log_evaluation_event(current_sim_time, "FORMATION_RESTORED", node.uid, -1, time_to_restoration_ms);
-                     // End of recovery cycle for this worker
-                     node.storage(is_in_recovery{}) = false;
-                }
-            }
-
-            // 3. UPDATE STATE FOR NEXT ROUND
-            node.storage(last_scout_count{}) = current_scout_count;
-        }
-
-        FUN double calculate_formation_error(ARGS) {
-            using namespace tags;
-            if (!isWorker(CALL)) return 0.0;
-
-            // Get the current positions of all scouts
-            field<tuple<vec<3>, int>> scout_data = nbr(CALL, node.storage(node_numberOfSlave{}));
-
-            // Now calculate the sum of squared errors
-            double total_error = fold_hood(CALL, [&](scout_info data, double current_error) {
-                vec<3> scout_pos = get<0>(data);
-                int scout_index = get<1>(data);
-                int total_scouts = node.storage(node_numberOfSlave{});
-                if (total_scouts == 0 || scout_index == 0) return current_error;
-
-                // Calculate ideal position for this scout based on its index
-                double ideal_radiant = scout_index * ((2 * pi) / total_scouts);
-                double ideal_x = std::sin(ideal_radiant) * distanceMasterSlave;
-                double ideal_y = std::cos(ideal_radiant) * distanceMasterSlave;
-                vec<3> ideal_pos_relative = make_vec(ideal_x, ideal_y, 0);
-                vec<3> ideal_pos_absolute = node.position() + ideal_pos_relative;
-                
-                // Add squared distance to the total error
-                return current_error + dist_sq(scout_pos, ideal_pos_absolute);
-            }, scout_data, 0.0);
-            
-            return total_error > 0 ? sqrt(total_error) : 0.0;
-        }
 
     }
 }
