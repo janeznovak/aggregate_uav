@@ -1,0 +1,12 @@
+<map id="vrpn_Nikon_Controls" name="vrpn_Nikon_Controls">
+<area shape="rect" id="node1" title=" " alt="" coords="55,513,211,540"/>
+<area shape="rect" id="node2" href="$classvrpn__Serial__Analog.html" title=" " alt="" coords="5,437,152,464"/>
+<area shape="rect" id="node3" href="$classvrpn__Analog.html" title=" " alt="" coords="38,336,141,363"/>
+<area shape="rect" id="node4" href="$classvrpn__BaseClass.html" title=" " alt="" coords="72,260,197,287"/>
+<area shape="rect" id="node10" href="$classvrpn__Analog__Output.html" title=" " alt="" coords="108,387,263,413"/>
+<area shape="rect" id="node5" href="$classvrpn__BaseClassUnique.html" title=" " alt="" coords="49,184,220,211"/>
+<area shape="rect" id="node6" href="$structvrpn__HANDLERPARAM.html" title="This structure is what is passed to a vrpn_Connection message callback." alt="" coords="10,95,177,121"/>
+<area shape="rect" id="node7" href="$classvrpn__Connection.html" title="Generic connection class not specific to the transport mechanism." alt="" coords="201,95,332,121"/>
+<area shape="rect" id="node8" href="$classvrpn_1_1BoundEndpointAllocator.html" title="Combines the function pointer for an Endpoint Allocator with its two arguments into a single callable..." alt="" coords="49,5,263,32"/>
+<area shape="rect" id="node9" href="$classvrpn_1_1EndpointContainer.html" title="Container for endpoints, held by pointer." alt="" coords="288,5,467,32"/>
+</map>

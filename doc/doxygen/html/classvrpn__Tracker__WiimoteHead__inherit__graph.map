@@ -1,0 +1,6 @@
+<map id="vrpn_Tracker_WiimoteHead" name="vrpn_Tracker_WiimoteHead">
+<area shape="rect" id="node1" title="Provides a tracker device given data from a Wii Remote and LED glasses." alt="" coords="5,229,205,256"/>
+<area shape="rect" id="node2" href="$classvrpn__Tracker.html" title=" " alt="" coords="53,155,157,181"/>
+<area shape="rect" id="node3" href="$classvrpn__BaseClass.html" title=" " alt="" coords="43,80,168,107"/>
+<area shape="rect" id="node4" href="$classvrpn__BaseClassUnique.html" title=" " alt="" coords="20,5,191,32"/>
+</map>

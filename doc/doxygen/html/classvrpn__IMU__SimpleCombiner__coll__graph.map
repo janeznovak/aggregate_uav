@@ -1,0 +1,16 @@
+<map id="vrpn_IMU_SimpleCombiner" name="vrpn_IMU_SimpleCombiner">
+<area shape="rect" id="node1" title="This class will turn set of two or three analog devices into a tracker by." alt="" coords="240,703,439,729"/>
+<area shape="rect" id="node2" href="$classvrpn__Tracker.html" title=" " alt="" coords="354,444,458,471"/>
+<area shape="rect" id="node3" href="$classvrpn__BaseClass.html" title=" " alt="" coords="335,275,461,301"/>
+<area shape="rect" id="node12" href="$classvrpn__Analog.html" title=" " alt="" coords="265,386,368,413"/>
+<area shape="rect" id="node4" href="$classvrpn__BaseClassUnique.html" title=" " alt="" coords="313,184,483,211"/>
+<area shape="rect" id="node5" href="$structvrpn__HANDLERPARAM.html" title="This structure is what is passed to a vrpn_Connection message callback." alt="" coords="273,95,440,121"/>
+<area shape="rect" id="node6" href="$classvrpn__Connection.html" title="Generic connection class not specific to the transport mechanism." alt="" coords="465,95,595,121"/>
+<area shape="rect" id="node7" href="$classvrpn_1_1BoundEndpointAllocator.html" title="Combines the function pointer for an Endpoint Allocator with its two arguments into a single callable..." alt="" coords="312,5,527,32"/>
+<area shape="rect" id="node8" href="$classvrpn_1_1EndpointContainer.html" title="Container for endpoints, held by pointer." alt="" coords="551,5,730,32"/>
+<area shape="rect" id="node9" href="$classvrpn__IMU__Vector.html" title=" " alt="" coords="207,584,339,611"/>
+<area shape="rect" id="node10" href="$classvrpn__IMU__Axis__Params.html" title="Describes information describing an IMU axis. It describes the analog channel to use to drive the axi..." alt="" coords="5,495,180,521"/>
+<area shape="rect" id="node11" href="$classvrpn__Analog__Remote.html" title=" " alt="" coords="204,495,365,521"/>
+<area shape="rect" id="node13" href="$classvrpn__Callback__List.html" title=" " alt="" coords="73,379,241,420"/>
+<area shape="rect" id="node14" href="$structvrpn__Callback__List_1_1vrpn__CBS.html" title=" " alt="" coords="67,260,246,316"/>
+</map>

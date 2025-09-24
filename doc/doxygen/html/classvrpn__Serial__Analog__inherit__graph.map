@@ -1,0 +1,23 @@
+<map id="vrpn_Serial_Analog" name="vrpn_Serial_Analog">
+<area shape="rect" id="node1" title=" " alt="" coords="548,411,695,437"/>
+<area shape="rect" id="node5" href="$classvrpn__5dt.html" title="Class to support reading data from serial 5DT data gloves." alt="" coords="795,5,873,32"/>
+<area shape="rect" id="node6" href="$classvrpn__5dt16.html" title=" " alt="" coords="787,56,881,83"/>
+<area shape="rect" id="node7" href="$classvrpn__BiosciencesTools.html" title=" " alt="" coords="750,107,918,133"/>
+<area shape="rect" id="node8" href="$classvrpn__CerealBox.html" title=" " alt="" coords="771,157,897,184"/>
+<area shape="rect" id="node9" href="$classvrpn__GlobalHapticsOrb.html" title=" " alt="" coords="748,208,920,235"/>
+<area shape="rect" id="node10" href="$classvrpn__IDEA.html" title=" " alt="" coords="789,259,879,285"/>
+<area shape="rect" id="node11" href="$classvrpn__ImmersionBox.html" title=" " alt="" coords="757,309,911,336"/>
+<area shape="rect" id="node12" href="$classvrpn__Joystick.html" title=" " alt="" coords="779,360,889,387"/>
+<area shape="rect" id="node13" href="$classvrpn__Magellan.html" title=" " alt="" coords="775,411,893,437"/>
+<area shape="rect" id="node14" href="$classvrpn__Nikon__Controls.html" title=" " alt="" coords="756,461,912,488"/>
+<area shape="rect" id="node15" href="$classvrpn__Radamec__SPI.html" title=" " alt="" coords="761,512,907,539"/>
+<area shape="rect" id="node16" href="$classvrpn__Spaceball.html" title=" " alt="" coords="773,563,895,589"/>
+<area shape="rect" id="node17" href="$classvrpn__Streaming__Arduino.html" title=" " alt="" coords="743,613,925,640"/>
+<area shape="rect" id="node18" href="$classvrpn__Tng3.html" title=" " alt="" coords="789,664,879,691"/>
+<area shape="rect" id="node19" href="$classvrpn__Wanda.html" title=" " alt="" coords="783,715,885,741"/>
+<area shape="rect" id="node20" href="$classvrpn__Zaber.html" title=" " alt="" coords="786,765,882,792"/>
+<area shape="rect" id="node21" href="$classvrpn__inertiamouse.html" title=" " alt="" coords="762,816,906,843"/>
+<area shape="rect" id="node2" href="$classvrpn__Analog.html" title=" " alt="" coords="397,411,500,437"/>
+<area shape="rect" id="node3" href="$classvrpn__BaseClass.html" title=" " alt="" coords="224,411,349,437"/>
+<area shape="rect" id="node4" href="$classvrpn__BaseClassUnique.html" title=" " alt="" coords="5,411,176,437"/>
+</map>

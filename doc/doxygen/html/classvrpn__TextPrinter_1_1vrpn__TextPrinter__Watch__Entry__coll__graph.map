@@ -1,0 +1,11 @@
+<map id="vrpn_TextPrinter::vrpn_TextPrinter_Watch_Entry" name="vrpn_TextPrinter::vrpn_TextPrinter_Watch_Entry">
+<area shape="rect" id="node1" title="Structure to hold the objects that are being watched." alt="" coords="223,349,410,391"/>
+<area shape="rect" id="node2" href="$classvrpn__TextPrinter.html" title=" " alt="" coords="131,453,259,480"/>
+<area shape="rect" id="node3" href="$classvrpn__Semaphore.html" title=" " alt="" coords="5,357,137,383"/>
+<area shape="rect" id="node4" href="$classvrpn__BaseClass.html" title=" " alt="" coords="254,260,379,287"/>
+<area shape="rect" id="node5" href="$classvrpn__BaseClassUnique.html" title=" " alt="" coords="231,184,402,211"/>
+<area shape="rect" id="node6" href="$structvrpn__HANDLERPARAM.html" title="This structure is what is passed to a vrpn_Connection message callback." alt="" coords="192,95,359,121"/>
+<area shape="rect" id="node7" href="$classvrpn__Connection.html" title="Generic connection class not specific to the transport mechanism." alt="" coords="383,95,514,121"/>
+<area shape="rect" id="node8" href="$classvrpn_1_1BoundEndpointAllocator.html" title="Combines the function pointer for an Endpoint Allocator with its two arguments into a single callable..." alt="" coords="231,5,445,32"/>
+<area shape="rect" id="node9" href="$classvrpn_1_1EndpointContainer.html" title="Container for endpoints, held by pointer." alt="" coords="470,5,649,32"/>
+</map>

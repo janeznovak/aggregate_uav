@@ -1,0 +1,9 @@
+<map id="vrpn_Tracker_RazerHydra" name="vrpn_Tracker_RazerHydra">
+<area shape="rect" id="node1" title="Device supporting the Razer Hydra game controller as a tracker, analog device, and button device,..." alt="" coords="110,304,297,331"/>
+<area shape="rect" id="node2" href="$classvrpn__Analog.html" title=" " alt="" coords="5,229,108,256"/>
+<area shape="rect" id="node3" href="$classvrpn__BaseClass.html" title=" " alt="" coords="122,80,247,107"/>
+<area shape="rect" id="node6" href="$classvrpn__Button.html" title=" " alt="" coords="134,155,235,181"/>
+<area shape="rect" id="node7" href="$classvrpn__Tracker.html" title=" " alt="" coords="259,155,363,181"/>
+<area shape="rect" id="node4" href="$classvrpn__BaseClassUnique.html" title=" " alt="" coords="99,5,270,32"/>
+<area shape="rect" id="node5" href="$classvrpn__Button__Filter.html" title=" " alt="" coords="133,229,274,256"/>
+</map>

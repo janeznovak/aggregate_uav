@@ -1,0 +1,6 @@
+<map id="CRTProtocol::SCalibrationCamera" name="CRTProtocol::SCalibrationCamera">
+<area shape="rect" id="node1" title=" " alt="" coords="375,79,561,121"/>
+<area shape="rect" id="node2" href="$structCRTProtocol_1_1SCalibrationFov.html" title=" " alt="" coords="5,28,216,55"/>
+<area shape="rect" id="node3" href="$structCRTProtocol_1_1SCalibrationTransform.html" title=" " alt="" coords="17,79,204,121"/>
+<area shape="rect" id="node4" href="$structCRTProtocol_1_1SCalibrationIntrinsic.html" title=" " alt="" coords="17,145,204,186"/>
+</map>

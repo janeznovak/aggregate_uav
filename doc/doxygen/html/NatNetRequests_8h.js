@@ -1,0 +1,27 @@
+var NatNetRequests_8h =
+[
+    [ "NATNET_REQUEST_CURRENTSESSIONPATH", "NatNetRequests_8h.html#a07537fcf2f11dc70dcee50726a144ae0", null ],
+    [ "NATNET_REQUEST_DISABLEASSET", "NatNetRequests_8h.html#a5cebbf2fd7f44d6e773caeeacc3dc8b8", null ],
+    [ "NATNET_REQUEST_ENABLEASSET", "NatNetRequests_8h.html#aea3c5ace25714e1c6f4866eaa87723a4", null ],
+    [ "NATNET_REQUEST_GETCURRENTMODE", "NatNetRequests_8h.html#ae9e8c6c6e505fd57e7885e413557c3e8", null ],
+    [ "NATNET_REQUEST_GETCURRENTTAKELENGTH", "NatNetRequests_8h.html#a013b5722159cf3869e278a38ade286ef", null ],
+    [ "NATNET_REQUEST_GETFRAMERATE", "NatNetRequests_8h.html#ae4f8bc80ccdef548c126c9797e886620", null ],
+    [ "NATNET_REQUEST_GETPROPERTY", "NatNetRequests_8h.html#af17796517e2b85397917e2f959eb2223", null ],
+    [ "NATNET_REQUEST_GETTAKEPROPERTY", "NatNetRequests_8h.html#a6368fca21272cd377bcb7978e593972d", null ],
+    [ "NATNET_REQUEST_GETUNITSTOMILLIMETERS", "NatNetRequests_8h.html#a6fb0431a10d733a3ff141a45bb608967", null ],
+    [ "NATNET_REQUEST_RECALIBRATEASSET", "NatNetRequests_8h.html#a1f031396d9c24b8ad72e4b9e5a7f9c36", null ],
+    [ "NATNET_REQUEST_SETCURRENTSESSION", "NatNetRequests_8h.html#a32aac90d7b74efe221199c1807a83608", null ],
+    [ "NATNET_REQUEST_SETPLAYBACKCURRENTFRAME", "NatNetRequests_8h.html#a25e5e9f0dd1b7a421dec2b353c6ca8e4", null ],
+    [ "NATNET_REQUEST_SETPLAYBACKLOOPING", "NatNetRequests_8h.html#ad7b554eb6f95a1ed6d5033b6f1d5075b", null ],
+    [ "NATNET_REQUEST_SETPLAYBACKSTARTFRAME", "NatNetRequests_8h.html#a51dabcf344dd795ecdadc76ae4b86123", null ],
+    [ "NATNET_REQUEST_SETPLAYBACKSTOPFRAME", "NatNetRequests_8h.html#a29395105fd34487e636429261c9a3122", null ],
+    [ "NATNET_REQUEST_SETPLAYBACKTAKENAME", "NatNetRequests_8h.html#abc4992417e8730e4bd72c2e7032b9ac9", null ],
+    [ "NATNET_REQUEST_SETPROPETRY", "NatNetRequests_8h.html#a429564a1406b9758ff539f5ca3824734", null ],
+    [ "NATNET_REQUEST_SETRECORDTAKENAME", "NatNetRequests_8h.html#a9b712e1f144264b5e6cf95b28d3026a6", null ],
+    [ "NATNET_REQUEST_STARTRECORDING", "NatNetRequests_8h.html#aae928e52ae1ee409dcc9172beed19634", null ],
+    [ "NATNET_REQUEST_STOPRECORDING", "NatNetRequests_8h.html#aaea37010e87a0bc2d0787664912e3989", null ],
+    [ "NATNET_REQUEST_SWITCHTOEDITMODE", "NatNetRequests_8h.html#a13e22a69f62f52c23c9eb4c98561b338", null ],
+    [ "NATNET_REQUEST_SWITCHTOLIVEMODE", "NatNetRequests_8h.html#aa4a9e6c5acdc5cdab4f97a6823523b2c", null ],
+    [ "NATNET_REQUEST_TIMELINEPLAY", "NatNetRequests_8h.html#a8946048906cf98a9040bb28761358157", null ],
+    [ "NATNET_REQUEST_TIMELINESTOP", "NatNetRequests_8h.html#adf0f5dbdbabed488acdc682983c39221", null ]
+];

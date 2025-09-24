@@ -1,0 +1,9 @@
+<map id="vrpn_raw_SGIBox" name="vrpn_raw_SGIBox">
+<area shape="rect" id="node1" title=" " alt="" coords="78,304,214,331"/>
+<area shape="rect" id="node2" href="$classvrpn__Analog.html" title=" " alt="" coords="5,229,108,256"/>
+<area shape="rect" id="node3" href="$classvrpn__BaseClass.html" title=" " alt="" coords="74,80,199,107"/>
+<area shape="rect" id="node5" href="$classvrpn__Dial.html" title=" " alt="" coords="95,155,179,181"/>
+<area shape="rect" id="node7" href="$classvrpn__Button.html" title=" " alt="" coords="203,155,305,181"/>
+<area shape="rect" id="node4" href="$classvrpn__BaseClassUnique.html" title=" " alt="" coords="51,5,222,32"/>
+<area shape="rect" id="node6" href="$classvrpn__Button__Filter.html" title=" " alt="" coords="183,229,325,256"/>
+</map>

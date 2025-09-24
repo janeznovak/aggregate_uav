@@ -1,0 +1,4 @@
+0.0, 0.0, crazyflie
+1.8, 2.4, crazyflie
+0.0, 0.3, crazyflie
+0.3, 0.0, crazyflie

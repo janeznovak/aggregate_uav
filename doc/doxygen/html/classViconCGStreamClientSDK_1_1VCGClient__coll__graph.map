@@ -1,0 +1,6 @@
+<map id="ViconCGStreamClientSDK::VCGClient" name="ViconCGStreamClientSDK::VCGClient">
+<area shape="rect" id="node1" title=" " alt="" coords="73,185,263,227"/>
+<area shape="rect" id="node2" href="$classViconCGStreamClientSDK_1_1ICGClient.html" title=" " alt="" coords="5,81,195,123"/>
+<area shape="rect" id="node3" href="$classViconCGStream_1_1VObjectEnums.html" title="Used by the server to declare the available object identifiers, and by the client to enable/disable o..." alt="" coords="219,89,445,115"/>
+<area shape="rect" id="node4" href="$classViconCGStream_1_1VItem.html" title="This is the base class for all top level items." alt="" coords="247,5,417,32"/>
+</map>

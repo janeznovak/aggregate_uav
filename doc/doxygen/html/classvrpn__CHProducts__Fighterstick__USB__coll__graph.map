@@ -1,0 +1,16 @@
+<map id="vrpn_CHProducts_Fighterstick_USB" name="vrpn_CHProducts_Fighterstick_USB">
+<area shape="rect" id="node1" title=" " alt="" coords="85,527,336,553"/>
+<area shape="rect" id="node2" href="$classvrpn__CHProducts__Controller__Raw.html" title=" " alt="" coords="233,349,471,376"/>
+<area shape="rect" id="node3" href="$classvrpn__BaseClass.html" title=" " alt="" coords="107,273,232,300"/>
+<area shape="rect" id="node11" href="$classvrpn__Analog.html" title=" " alt="" coords="186,400,289,427"/>
+<area shape="rect" id="node13" href="$classvrpn__Button.html" title=" " alt="" coords="5,349,107,376"/>
+<area shape="rect" id="node14" href="$classvrpn__Dial.html" title=" " alt="" coords="95,400,179,427"/>
+<area shape="rect" id="node4" href="$classvrpn__BaseClassUnique.html" title=" " alt="" coords="84,184,255,211"/>
+<area shape="rect" id="node5" href="$structvrpn__HANDLERPARAM.html" title="This structure is what is passed to a vrpn_Connection message callback." alt="" coords="45,95,211,121"/>
+<area shape="rect" id="node6" href="$classvrpn__Connection.html" title="Generic connection class not specific to the transport mechanism." alt="" coords="236,95,367,121"/>
+<area shape="rect" id="node7" href="$classvrpn_1_1BoundEndpointAllocator.html" title="Combines the function pointer for an Endpoint Allocator with its two arguments into a single callable..." alt="" coords="83,5,298,32"/>
+<area shape="rect" id="node8" href="$classvrpn_1_1EndpointContainer.html" title="Container for endpoints, held by pointer." alt="" coords="323,5,501,32"/>
+<area shape="rect" id="node9" href="$classvrpn__HidInterface.html" title=" " alt="" coords="269,273,408,300"/>
+<area shape="rect" id="node10" href="$classvrpn__HidAcceptor.html" title=" " alt="" coords="334,184,471,211"/>
+<area shape="rect" id="node12" href="$classvrpn__Button__Filter.html" title=" " alt="" coords="5,451,147,477"/>
+</map>

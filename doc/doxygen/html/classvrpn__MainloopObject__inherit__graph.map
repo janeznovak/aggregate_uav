@@ -1,0 +1,6 @@
+<map id="vrpn_MainloopObject" name="vrpn_MainloopObject">
+<area shape="rect" id="node1" title=" " alt="" coords="5,78,165,105"/>
+<area shape="rect" id="node2" href="$classdetail_1_1TypedMainloopObject_3_01T_01_5_01_4.html" title=" " alt="" coords="213,5,420,47"/>
+<area shape="rect" id="node3" href="$classdetail_1_1TypedMainloopObject_3_01vrpn__Connection_01_5_01_4.html" title="Specialization for connections, since they&#39;re reference&#45;counted." alt="" coords="213,71,420,112"/>
+<area shape="rect" id="node4" href="$classdetail_1_1TypedMainloopObject_3_01vrpn__ConnectionPtr_01_4.html" title=" " alt="" coords="213,136,420,177"/>
+</map>

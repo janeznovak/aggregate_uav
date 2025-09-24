@@ -1,0 +1,7 @@
+<map id="vrpn_Generic_Server_Object" name="vrpn_Generic_Server_Object">
+<area shape="rect" id="node1" title=" " alt="" coords="235,184,393,225"/>
+<area shape="rect" id="node2" href="$classvrpn__Connection.html" title="Generic connection class not specific to the transport mechanism." alt="" coords="158,95,289,121"/>
+<area shape="rect" id="node3" href="$classvrpn_1_1BoundEndpointAllocator.html" title="Combines the function pointer for an Endpoint Allocator with its two arguments into a single callable..." alt="" coords="5,5,220,32"/>
+<area shape="rect" id="node4" href="$classvrpn_1_1EndpointContainer.html" title="Container for endpoints, held by pointer." alt="" coords="245,5,423,32"/>
+<area shape="rect" id="node5" href="$classvrpn__MainloopContainer.html" title="A container that holds and owns one or more VRPN objects,." alt="" coords="313,95,494,121"/>
+</map>

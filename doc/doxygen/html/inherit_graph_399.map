@@ -1,0 +1,12 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classlibmotioncapture_1_1MotionCapture.html" title=" " alt="" coords="5,267,192,308"/>
+<area shape="rect" id="node2" href="$classlibmotioncapture_1_1MotionCaptureFZMotion.html" title=" " alt="" coords="257,5,444,47"/>
+<area shape="rect" id="node3" href="$classlibmotioncapture_1_1MotionCaptureMock.html" title=" " alt="" coords="257,71,444,112"/>
+<area shape="rect" id="node4" href="$classlibmotioncapture_1_1MotionCaptureMotionAnalysis.html" title=" " alt="" coords="257,136,444,177"/>
+<area shape="rect" id="node5" href="$classlibmotioncapture_1_1MotionCaptureNokov.html" title=" " alt="" coords="257,201,444,243"/>
+<area shape="rect" id="node6" href="$classlibmotioncapture_1_1MotionCaptureOptitrack.html" title=" " alt="" coords="257,267,444,308"/>
+<area shape="rect" id="node7" href="$classlibmotioncapture_1_1MotionCaptureOptitrackClosedSource.html" title=" " alt="" coords="240,332,461,373"/>
+<area shape="rect" id="node8" href="$classlibmotioncapture_1_1MotionCaptureQualisys.html" title=" " alt="" coords="257,397,444,439"/>
+<area shape="rect" id="node9" href="$classlibmotioncapture_1_1MotionCaptureVicon.html" title=" " alt="" coords="257,463,444,504"/>
+<area shape="rect" id="node10" href="$classlibmotioncapture_1_1MotionCaptureVrpn.html" title=" " alt="" coords="257,528,444,569"/>
+</map>

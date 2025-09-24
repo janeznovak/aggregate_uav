@@ -1,0 +1,12 @@
+<map id="vrpn_Xkeys_Joystick12" name="vrpn_Xkeys_Joystick12">
+<area shape="rect" id="node1" title=" " alt="" coords="189,304,360,331"/>
+<area shape="rect" id="node2" href="$classvrpn__Xkeys__v2.html" title=" " alt="" coords="5,229,125,256"/>
+<area shape="rect" id="node3" href="$classvrpn__Xkeys.html" title=" " alt="" coords="49,155,146,181"/>
+<area shape="rect" id="node4" href="$classvrpn__BaseClass.html" title=" " alt="" coords="200,80,325,107"/>
+<area shape="rect" id="node7" href="$classvrpn__Analog.html" title=" " alt="" coords="150,229,253,256"/>
+<area shape="rect" id="node9" href="$classvrpn__Button.html" title=" " alt="" coords="269,155,371,181"/>
+<area shape="rect" id="node10" href="$classvrpn__Dial.html" title=" " alt="" coords="407,155,491,181"/>
+<area shape="rect" id="node5" href="$classvrpn__BaseClassUnique.html" title=" " alt="" coords="177,5,348,32"/>
+<area shape="rect" id="node6" href="$classvrpn__HidInterface.html" title=" " alt="" coords="28,80,167,107"/>
+<area shape="rect" id="node8" href="$classvrpn__Button__Filter.html" title=" " alt="" coords="277,229,419,256"/>
+</map>

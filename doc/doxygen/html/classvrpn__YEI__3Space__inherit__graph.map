@@ -1,0 +1,12 @@
+<map id="vrpn_YEI_3Space" name="vrpn_YEI_3Space">
+<area shape="rect" id="node1" title="Base class with routines for YEI 3Space units." alt="" coords="168,304,300,331"/>
+<area shape="rect" id="node9" href="$classvrpn__YEI__3Space__Sensor.html" title="Class to support reading data from a wired YEI 3Space unit." alt="" coords="40,386,223,413"/>
+<area shape="rect" id="node10" href="$classvrpn__YEI__3Space__Sensor__Wireless.html" title="Class to support reading data from a wireless YEI 3Space unit." alt="" coords="247,379,429,420"/>
+<area shape="rect" id="node2" href="$classvrpn__Tracker__Server.html" title=" " alt="" coords="5,229,159,256"/>
+<area shape="rect" id="node3" href="$classvrpn__Tracker.html" title=" " alt="" coords="62,155,166,181"/>
+<area shape="rect" id="node4" href="$classvrpn__BaseClass.html" title=" " alt="" coords="171,80,297,107"/>
+<area shape="rect" id="node6" href="$classvrpn__Analog.html" title=" " alt="" coords="183,229,285,256"/>
+<area shape="rect" id="node8" href="$classvrpn__Button.html" title=" " alt="" coords="301,155,402,181"/>
+<area shape="rect" id="node5" href="$classvrpn__BaseClassUnique.html" title=" " alt="" coords="149,5,319,32"/>
+<area shape="rect" id="node7" href="$classvrpn__Button__Filter.html" title=" " alt="" coords="310,229,451,256"/>
+</map>

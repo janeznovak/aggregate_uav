@@ -1,0 +1,13 @@
+<map id="vrpn_Microsoft_Controller_Raw" name="vrpn_Microsoft_Controller_Raw">
+<area shape="rect" id="node1" title=" " alt="" coords="411,173,635,199"/>
+<area shape="rect" id="node5" href="$classvrpn__Microsoft__Controller__Raw__Xbox__360__base.html" title=" " alt="" coords="687,71,877,112"/>
+<area shape="rect" id="node9" href="$classvrpn__Microsoft__Controller__Raw__Xbox__S.html" title=" " alt="" coords="687,136,877,177"/>
+<area shape="rect" id="node10" href="$classvrpn__Microsoft__SideWinder.html" title=" " alt="" coords="683,202,881,229"/>
+<area shape="rect" id="node11" href="$classvrpn__Microsoft__SideWinder__Precision__2.html" title=" " alt="" coords="683,253,881,295"/>
+<area shape="rect" id="node2" href="$classvrpn__BaseClass.html" title=" " alt="" coords="231,147,356,174"/>
+<area shape="rect" id="node3" href="$classvrpn__BaseClassUnique.html" title=" " alt="" coords="5,147,176,174"/>
+<area shape="rect" id="node4" href="$classvrpn__HidInterface.html" title=" " alt="" coords="224,198,363,225"/>
+<area shape="rect" id="node6" href="$classvrpn__Afterglow__Ax1__For__Xbox__360.html" title=" " alt="" coords="949,5,1101,47"/>
+<area shape="rect" id="node7" href="$classvrpn__Microsoft__Controller__Raw__Xbox__360.html" title=" " alt="" coords="930,71,1119,112"/>
+<area shape="rect" id="node8" href="$classvrpn__Microsoft__Controller__Raw__Xbox__360__Wireless.html" title=" " alt="" coords="929,136,1120,177"/>
+</map>

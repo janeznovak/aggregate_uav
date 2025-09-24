@@ -1,0 +1,4 @@
+<map id="ViconCGStream::VGlobalSegments" name="ViconCGStream::VGlobalSegments">
+<area shape="rect" id="node1" title="Contains a vector of segment global poses for a single subject." alt="" coords="5,80,253,107"/>
+<area shape="rect" id="node2" href="$classViconCGStream_1_1VItem.html" title="This is the base class for all top level items." alt="" coords="44,5,215,32"/>
+</map>

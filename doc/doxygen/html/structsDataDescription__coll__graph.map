@@ -1,0 +1,9 @@
+<map id="sDataDescription" name="sDataDescription">
+<area shape="rect" id="node1" title=" " alt="" coords="669,145,804,172"/>
+<area shape="rect" id="node2" href="$structsSkeletonDescription.html" title=" " alt="" coords="310,69,469,96"/>
+<area shape="rect" id="node3" href="$structsRigidBodyDescription.html" title=" " alt="" coords="5,32,175,59"/>
+<area shape="rect" id="node4" href="$structsCameraDescription.html" title=" " alt="" coords="312,120,467,147"/>
+<area shape="rect" id="node5" href="$structsForcePlateDescription.html" title=" " alt="" coords="304,171,475,197"/>
+<area shape="rect" id="node6" href="$structsMarkerSetDescription.html" title=" " alt="" coords="305,221,474,248"/>
+<area shape="rect" id="node7" href="$structsDeviceDescription.html" title=" " alt="" coords="315,272,463,299"/>
+</map>

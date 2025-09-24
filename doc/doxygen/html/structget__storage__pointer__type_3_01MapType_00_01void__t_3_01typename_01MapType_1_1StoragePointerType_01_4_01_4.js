@@ -1,0 +1,4 @@
+var structget__storage__pointer__type_3_01MapType_00_01void__t_3_01typename_01MapType_1_1StoragePointerType_01_4_01_4 =
+[
+    [ "SPT", "structget__storage__pointer__type_3_01MapType_00_01void__t_3_01typename_01MapType_1_1StoragePointerType_01_4_01_4.html#aa972332d4e5911a998c2be2866fa2a61", null ]
+];

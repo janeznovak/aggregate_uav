@@ -1,0 +1,7 @@
+<map id="vrpn_Sound_Client" name="vrpn_Sound_Client">
+<area shape="rect" id="node1" title=" " alt="" coords="57,229,199,256"/>
+<area shape="rect" id="node2" href="$classvrpn__Sound.html" title=" " alt="" coords="5,155,104,181"/>
+<area shape="rect" id="node3" href="$classvrpn__BaseClass.html" title=" " alt="" coords="65,80,191,107"/>
+<area shape="rect" id="node5" href="$classvrpn__Text__Receiver.html" title="Allows a user to handle text messages directly, in addition to having the." alt="" coords="128,155,277,181"/>
+<area shape="rect" id="node4" href="$classvrpn__BaseClassUnique.html" title=" " alt="" coords="43,5,213,32"/>
+</map>

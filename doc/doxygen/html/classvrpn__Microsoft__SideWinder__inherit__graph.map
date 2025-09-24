@@ -1,0 +1,11 @@
+<map id="vrpn_Microsoft_SideWinder" name="vrpn_Microsoft_SideWinder">
+<area shape="rect" id="node1" title=" " alt="" coords="181,304,379,331"/>
+<area shape="rect" id="node2" href="$classvrpn__Microsoft__Controller__Raw.html" title=" " alt="" coords="5,155,229,181"/>
+<area shape="rect" id="node3" href="$classvrpn__BaseClass.html" title=" " alt="" coords="251,80,376,107"/>
+<area shape="rect" id="node6" href="$classvrpn__Analog.html" title=" " alt="" coords="155,229,258,256"/>
+<area shape="rect" id="node8" href="$classvrpn__Button.html" title=" " alt="" coords="304,155,405,181"/>
+<area shape="rect" id="node9" href="$classvrpn__Dial.html" title=" " alt="" coords="449,229,533,256"/>
+<area shape="rect" id="node4" href="$classvrpn__BaseClassUnique.html" title=" " alt="" coords="228,5,399,32"/>
+<area shape="rect" id="node5" href="$classvrpn__HidInterface.html" title=" " alt="" coords="48,80,187,107"/>
+<area shape="rect" id="node7" href="$classvrpn__Button__Filter.html" title=" " alt="" coords="283,229,424,256"/>
+</map>

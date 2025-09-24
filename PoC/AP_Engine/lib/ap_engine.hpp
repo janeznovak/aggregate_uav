@@ -1,0 +1,2041 @@
+// Copyright © 2023 Gianluca Torta, Daniele Bortoluzzi. All Rights Reserved.
+
+/**
+ * @file ap_engine.hpp
+ * @brief AP code for the engine with multiple workers.
+ *
+ * It's used for simulation and embedded deployment.
+ */
+
+#ifndef NODES_AP_ENGINE_H_
+#define NODES_AP_ENGINE_H_
+
+#include <string>
+#include <ctime>
+#include <cmath>
+#include <fstream>
+#include <iostream>
+#include <iomanip>
+#include <sstream>
+
+#include "lib/poc_config.hpp"
+#include "lib/fcpp.hpp"
+#include "lib/file_utils.hpp"
+
+#include "lib/common_data.hpp"
+#include "lib/ap_engine_setup.hpp"
+#include "lib/action_writer.hpp"
+#include <cstdlib>
+#include <optional>
+#include <mutex>
+#include "lib/goal_parser.h"
+
+namespace fcpp
+{
+
+    namespace coordination
+    {
+
+        using namespace fcpp::coordination::tags;
+        using namespace fcpp::option::data;
+        using namespace fcpp::option;
+        using namespace common;
+        using namespace std::chrono;
+        using spawn_result_type = std::unordered_map<goal_tuple_type, times_t, fcpp::common::hash<goal_tuple_type>>;
+
+        constexpr int worker_requirements[5] = {2, 2, 0, 0, 0};
+        // Defines the initial number of scouts assigned to each worker at the start of the simulation.
+        // The size of this array implicitly defines the number of masters.
+        // Example: {3, 2, 4} -> Master 0 starts with 3 scouts, Master 1 with 2, Master 2 with 4.
+        constexpr int initial_scouts_per_worker[] = {2, 2};
+
+        // CSV LOGGING CONFIGURATION
+        const std::string CSV_FILENAME = "goal_completion_log.csv";
+        const std::string EVALUATION_LOG_FILENAME = "evaluation_log.csv";
+        constexpr double FORMATION_ERROR_THRESHOLD = 2.0; // Meters. Max distance threshold to consider formation restored.
+
+        // TIMING & METRICS STORAGE TAGS
+        // DECLARE_TAGGED_TUPLE_ELEMENT(last_scout_count, int);
+        // DECLARE_TAGGED_TUPLE_ELEMENT(is_in_recovery, bool);
+        // DECLARE_TAGGED_TUPLE_ELEMENT(failure_detected_time, std::chrono::steady_clock::time_point);
+        // DECLARE_TAGGED_TUPLE_ELEMENT(reassigning_scout_start_pos, vec<3>);
+        
+        // TIMING STORAGE TAGS
+        // DECLARE_TAGGED_TUPLE_ELEMENT(goal_start_time, std::chrono::time_point<std::chrono::steady_clock>);
+        // DECLARE_TAGGED_TUPLE_ELEMENT(was_running_last_round, bool);
+
+        // UTILS AP
+
+        FUN bool isWorker(ARGS)
+        {
+            return node.storage(node_isWorker{}) ? true : false;
+        }
+
+        FUN bool isCharging(ARGS) {
+            if(!isWorker(CALL)) {
+                return node.storage(scout_isCharging{});
+            } else return false;   
+        }
+
+        //! @brief Change color of node, passing in argument
+        FUN void change_color(ARGS, fcpp::color color)
+        {
+            CODE
+            //     node.storage(left_color{}) = fcpp::color(color);
+            // node.storage(right_color{}) = fcpp::color(color);
+            // node.storage(node_color{}) = fcpp::color(color);
+        }
+
+        //! @brief Blink color of node
+        FUN void blink_computing_color(ARGS, int n_round)
+        {
+            CODE
+                fcpp::color computing_color = fcpp::color(fcpp::coordination::computing_colors[n_round % 2]);
+            change_color(CALL, computing_color);
+        }
+
+        //! @brief Get robot name from AP node_uid
+        FUN string get_real_robot_name(ARGS, device_t node_uid)
+        {
+            CODE return get_robot_name(ROBOTS, static_cast<int>(node_uid));
+        }
+
+        //! @brief Update in the storage the tag "node_external_status_update_time"
+        FUN void update_last_goal_update_time(ARGS)
+        {
+            CODE
+                std::time_t now = std::time(nullptr);
+            std::asctime(std::localtime(&now));
+            node.storage(node_external_status_update_time{}) = now;
+        }
+
+        //! @brief Check if is passed "diff_time_ms" milliseconds from last REACHED change status
+        FUN bool has_ms_passed_from_last_goal_update(ARGS, long diff_time_ms)
+        {
+            CODE
+                std::time_t now = std::time(nullptr);
+            milliseconds millis_to_check(diff_time_ms);
+            std::time_t stored_time = node.storage(node_external_status_update_time{});
+
+            milliseconds millis_computed = duration_cast<milliseconds>(system_clock::from_time_t(now) - system_clock::from_time_t(stored_time));
+            return millis_computed >= millis_to_check;
+        }
+
+        //! @brief Add current goal to computing map
+        FUN void add_goal_to_computing_map(ARGS, goal_tuple_type const &goal)
+        {
+            CODE
+                node.storage(node_process_computing_goals{})[get<goal_code>(goal)] = goal;
+        }
+
+        //! @brief Remove current goal to computing map
+        FUN void remove_goal_from_computing_map(ARGS, std::string goal_code)
+        {
+            CODE
+                std::cout << "I am removing the goal " << goal_code << " from the computing map for node " << node.uid << std::endl;
+                node.storage(node_process_computing_goals{})
+                    .erase(goal_code);
+        }
+
+        //! @brief Send "stop" command to robot and change "node_process_status" after it
+        FUN void send_stop_command_to_robot(ARGS, string action, device_t node_uid, goal_tuple_type const &goal, ProcessingStatus ps)
+        {
+            CODE
+                std::string robot_chosen = get_real_robot_name(CALL, node_uid);
+            std::cout << "ROBOT_MASTER " << robot_chosen << " is chosen for receiving ABORT command for goal " << get<goal_code>(goal) << endl;
+            std::cout << endl;
+
+            action::ActionData action_data = {
+                .action = action,
+                .goal_code = get<goal_code>(goal),
+                .robot = robot_chosen,
+                .pos_x = get<goal_pos_x>(goal),
+                .pos_y = get<goal_pos_y>(goal),
+                .pos_z = get<goal_pos_z>(goal),
+                .orient_w = get<goal_orient_w>(goal)};
+
+            action::manager::ActionManager::new_action(action_data);
+
+            // clear goal info if in idle
+            if (ProcessingStatus::IDLE == ps)
+            {
+                node.storage(node_process_goal{}) = "";
+            }
+
+            // clear processing status
+            node.storage(node_process_status{}) = ps;
+        }
+
+        // Flocking Utils
+
+        bool compare(double a, double b)
+        {
+            return a < b;
+        }
+
+        FUN bool isActive(ARGS){
+            return (node.storage(node_active{}) == 1) ? true : false;
+        }
+
+        // IMPROVED MEASUREMENT SYSTEM
+        
+        // Thread-safe measurement data collection
+        struct MeasurementData {
+            std::string timestamp;
+            int node_id;
+            double value;
+            std::string metric_type;
+            std::string additional_info;
+        };
+        
+        // Buffered measurement collector for better performance
+        class MeasurementCollector {
+        private:
+            static std::vector<MeasurementData> measurement_buffer;
+            static std::mutex buffer_mutex;
+            static constexpr size_t BUFFER_SIZE = 1000;
+            
+        public:
+            static void add_measurement(const std::string& timestamp, int node_id, 
+                                      double value, const std::string& metric_type, 
+                                      const std::string& additional_info = "") {
+                std::lock_guard<std::mutex> lock(buffer_mutex);
+                measurement_buffer.push_back({timestamp, node_id, value, metric_type, additional_info});
+                
+                // Flush buffer when it gets full
+                if (measurement_buffer.size() >= BUFFER_SIZE) {
+                    flush_buffer_internal();
+                }
+            }
+            
+            static void flush_buffer() {
+                std::lock_guard<std::mutex> lock(buffer_mutex);
+                flush_buffer_internal();
+            }
+            
+        private:
+            static void flush_buffer_internal() {
+                if (measurement_buffer.empty()) return;
+                
+                std::string out_path = string(OUTPUT_FOLDER_BASE_PATH) + string("from_ap/to_log/");
+                create_folder_if_not_exists(out_path);
+                std::string measurement_file = out_path + "measurements.csv";
+                
+                std::ofstream file(measurement_file, std::ios::app);
+                if (file.is_open()) {
+                    // Write header if file is new
+                    file.seekp(0, std::ios::end);
+                    if (file.tellp() == 0) {
+                        file << "timestamp,node_id,value,metric_type,additional_info\n";
+                    }
+                    
+                    // Write all buffered measurements
+                    for (const auto& data : measurement_buffer) {
+                        file << data.timestamp << "," 
+                             << data.node_id << "," 
+                             << std::fixed << std::setprecision(6) << data.value << "," 
+                             << data.metric_type << "," 
+                             << data.additional_info << "\n";
+                    }
+                    file.close();
+                }
+                measurement_buffer.clear();
+            }
+        };
+        
+        // Static member definitions (would normally go in .cpp file)
+        std::vector<MeasurementData> MeasurementCollector::measurement_buffer;
+        std::mutex MeasurementCollector::buffer_mutex;
+        
+        // Improved error logging function
+        void log_error(string uid, string time, double error)
+        {
+            MeasurementCollector::add_measurement(time, std::stoi(uid), error, "position_error");
+        }
+        
+        // Measurement utility functions
+        void flush_measurements() {
+            MeasurementCollector::flush_buffer();
+        }
+        
+        // Enhanced measurement functions for common use cases
+        FUN void log_performance_metric(ARGS, const std::string& metric_name, double value, const std::string& context = "") {
+            CODE
+            std::string timestamp = std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(
+                std::chrono::system_clock::now().time_since_epoch()).count());
+            MeasurementCollector::add_measurement(timestamp, node.uid, value, metric_name, context);
+        }
+        
+        // Forward declaration
+        FUN double calculate_formation_error(ARGS);
+        
+        FUN void log_formation_metrics(ARGS) {
+            CODE
+            if (!isWorker(CALL)) return;
+            
+            // Log current formation state - use simulation time directly
+            std::string timestamp = std::to_string(static_cast<long long>(node.current_time() * 1000)); // Convert to milliseconds
+            
+            int scout_count = node.storage(node_numberOfSlave{});
+            int required_scout_count = node.storage(required_scouts{});
+            double formation_error = calculate_formation_error(CALL);
+            bool recovery_status = node.storage(is_in_recovery{});
+            
+            MeasurementCollector::add_measurement(timestamp, node.uid, scout_count, "current_scout_count");
+            MeasurementCollector::add_measurement(timestamp, node.uid, required_scout_count, "required_scout_count");
+            MeasurementCollector::add_measurement(timestamp, node.uid, formation_error, "formation_error_continuous");
+            MeasurementCollector::add_measurement(timestamp, node.uid, recovery_status ? 1.0 : 0.0, "recovery_status");
+            
+            // Calculate formation efficiency
+            double efficiency = scout_count > 0 ? (double)std::min(scout_count, required_scout_count) / required_scout_count : 0.0;
+            MeasurementCollector::add_measurement(timestamp, node.uid, efficiency, "formation_efficiency");
+        }
+
+        // CSV LOGGING UTILITIES
+
+        void initialize_csv_file() {
+            std::string out_path = string(OUTPUT_FOLDER_BASE_PATH) + string("from_ap/to_log/");
+            create_folder_if_not_exists(out_path);
+            
+            std::string csv_path = out_path + CSV_FILENAME;
+            std::ifstream check_file(csv_path);
+            
+            // If file doesn't exist, create it and write headers
+            if (!check_file.good()) {
+                std::ofstream file(csv_path);
+                if (file.is_open()) {
+                    file << "drone_name,goal_reached,time_taken_ms,enough_scouts,scout_count,need_parameter,timestamp\n";
+                    file.close();
+                }
+            }
+            check_file.close();
+        }
+
+        void log_goal_completion(const std::string& drone_name, bool goal_reached, 
+                               double time_taken_ms, bool enough_scouts, int scout_count, 
+                               int need_parameter) {
+            // Legacy CSV logging (kept for compatibility)
+            std::string out_path = string(OUTPUT_FOLDER_BASE_PATH) + string("from_ap/to_log/");
+            create_folder_if_not_exists(out_path);
+            
+            std::string csv_path = out_path + CSV_FILENAME;
+            std::ofstream file(csv_path, std::ios::app);
+            
+            if (file.is_open()) {
+                auto now = std::chrono::system_clock::now();
+                auto time_t_now = std::chrono::system_clock::to_time_t(now);
+                
+                file << drone_name << ","
+                     << (goal_reached ? "true" : "false") << ","
+                     << std::fixed << std::setprecision(2) << time_taken_ms << ","
+                     << (enough_scouts ? "true" : "false") << ","
+                     << scout_count << ","
+                     << need_parameter << ","
+                     << std::put_time(std::localtime(&time_t_now), "%Y-%m-%d %H:%M:%S")
+                     << "\n";
+                file.close();
+            }
+            
+            // Enhanced measurement logging
+            auto timestamp = std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(
+                std::chrono::system_clock::now().time_since_epoch()).count());
+            
+            // Extract node ID from drone name (assuming format like "robot_1")
+            int node_id = 0;
+            std::size_t pos = drone_name.find_last_of("_");
+            if (pos != std::string::npos) {
+                node_id = std::stoi(drone_name.substr(pos + 1));
+            }
+            
+            // Log multiple metrics
+            MeasurementCollector::add_measurement(timestamp, node_id, time_taken_ms, "goal_completion_time");
+            MeasurementCollector::add_measurement(timestamp, node_id, goal_reached ? 1.0 : 0.0, "goal_success_rate");
+            MeasurementCollector::add_measurement(timestamp, node_id, scout_count, "scout_count", 
+                                                 "need=" + std::to_string(need_parameter));
+            MeasurementCollector::add_measurement(timestamp, node_id, enough_scouts ? 1.0 : 0.0, "scout_sufficiency");
+        }
+
+        void initialize_evaluation_log() {
+            std::string out_path = string(OUTPUT_FOLDER_BASE_PATH) + string("from_ap/to_log/");
+            create_folder_if_not_exists(out_path);
+            
+            std::string csv_path = out_path + EVALUATION_LOG_FILENAME;
+            std::ifstream check_file(csv_path);
+            
+            if (!check_file.good()) {
+                std::ofstream file(csv_path);
+                if (file.is_open()) {
+                    file << "sim_time_ms,event_type,worker_id,scout_id,value1,value2,value3\n";
+                    file.close();
+                }
+            }
+            check_file.close();
+        }
+
+        void log_evaluation_event(long long sim_time_ms, const std::string& event_type, int worker_id, int scout_id = -1, double value1 = 0.0, double value2 = 0.0, double value3 = 0.0) {
+            // Legacy CSV logging (kept for compatibility)
+            std::string out_path = string(OUTPUT_FOLDER_BASE_PATH) + string("from_ap/to_log/");
+            std::string csv_path = out_path + EVALUATION_LOG_FILENAME;
+            std::ofstream file(csv_path, std::ios::app);
+            
+            if (file.is_open()) {
+                file << sim_time_ms << ","
+                     << event_type << ","
+                     << worker_id << ","
+                     << scout_id << ","
+                     << value1 << ","
+                     << value2 << ","
+                     << value3 << "\n";
+                file.close();
+            }
+            
+            // Enhanced measurement logging with better organization
+            std::string timestamp = std::to_string(sim_time_ms);
+            std::string additional_info = "worker=" + std::to_string(worker_id);
+            if (scout_id >= 0) {
+                additional_info += ",scout=" + std::to_string(scout_id);
+            }
+            if (value2 != 0.0) {
+                additional_info += ",val2=" + std::to_string(value2);
+            }
+            if (value3 != 0.0) {
+                additional_info += ",val3=" + std::to_string(value3);
+            }
+            
+            MeasurementCollector::add_measurement(timestamp, worker_id, value1, event_type, additional_info);
+        }
+
+        FUN void start_goal_timing(ARGS) {
+            CODE
+                node.storage(goal_start_time{}) = std::chrono::steady_clock::now();
+        }
+
+        FUN double get_goal_duration_ms(ARGS) {
+            CODE
+                auto now = std::chrono::steady_clock::now();
+                auto start = node.storage(goal_start_time{});
+                auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - start);
+                return static_cast<double>(duration.count());
+        }
+
+        // STATE MACHINE
+
+        //! @brief Manage state machine when battery is discharged
+        FUN void manage_battery_discharged_node(ARGS)
+        {
+            CODE
+                change_color(CALL, fcpp::color(fcpp::coordination::discharged_color));
+                std::cout << "I am discharging and I am drone" << node.uid << std::endl;
+        }
+
+        //! @brief Manage state machine when robot is running a goal
+        FUN void manage_running_goal_status(ARGS)
+        {
+            CODE
+                change_color(CALL, fcpp::color(fcpp::coordination::running_color));
+        }
+
+        //! @brief Manage state machine when robot has reached the goal
+        FUN void manage_reached_goal_status(ARGS)
+        {
+            CODE
+                fcpp::color new_color;
+            std::cout << "I have reached the goal and I am drone" << node.uid << std::endl;
+            // and previous state is NOT REACHED: new color is "reached" and deletes goal storage
+            if (feedback::GoalStatus::REACHED != node.storage(node_external_status{}))
+            {
+                std::cout << "I have reached the goal in if " << node.uid << std::endl;
+                new_color = fcpp::color(fcpp::coordination::reached_goal_color);
+                // set to terminating processing status
+                node.storage(node_process_status{}) = ProcessingStatus::TERMINATING;
+                // update time
+                update_last_goal_update_time(CALL);
+
+                // Log goal completion for workers
+                if (isWorker(CALL)) {
+                    std::string drone_name = get_real_robot_name(CALL, node.uid);
+                    double time_taken = get_goal_duration_ms(CALL);
+                    int scout_count = node.storage(node_numberOfSlave{});
+                    int need_param = node.storage(required_scouts{});
+                    bool enough_scouts = scout_count >= need_param;
+                    
+                    log_goal_completion(drone_name, true, time_taken, enough_scouts, scout_count, need_param);
+                }
+
+                // and if process node is SELECTED, then AP has selected new node and simulation is ready to start
+            }
+            else if (node.storage(node_process_status{}) == ProcessingStatus::SELECTED)
+            {
+                new_color = fcpp::color(fcpp::coordination::running_color);
+
+                // otherwise: new color is "reached"
+            }
+            else
+            {
+                std::cout << "I have reached the goal in else " << node.uid << std::endl;
+                new_color = fcpp::color(fcpp::coordination::reached_goal_color);
+            }
+            change_color(CALL, new_color);
+        }
+
+        //! @brief Manage state machine when robot reported an UNKNOWN error
+        FUN void manage_unknown_goal_status(ARGS)
+        {
+            CODE
+                fcpp::color new_color;
+            std::cout << "I have an unknown goal and I am drone" << node.uid << std::endl;
+            // and if process node is SELECTED, then AP has selected new node and simulation is ready to start
+            if (node.storage(node_process_status{}) == ProcessingStatus::SELECTED)
+            {
+                new_color = fcpp::color(fcpp::coordination::running_color);
+            }
+            else
+            {
+                new_color = fcpp::color(fcpp::coordination::idle_color);
+                std::cout << "change color to idle 1 and I am drone" << node.uid << std::endl;
+                // update time
+                update_last_goal_update_time(CALL);
+            }
+            change_color(CALL, new_color);
+        }
+
+        //! @brief Manage state machine when robot reported an abort of the current goal
+        FUN void manage_aborted_goal_status(ARGS)
+        {
+            CODE
+                fcpp::color new_color;
+            std::cout << "I have aborted goal and I am drone" << node.uid << std::endl;
+            // and if process node is SELECTED, then AP has selected new node and simulation is ready to start
+            if (node.storage(node_process_status{}) == ProcessingStatus::SELECTED)
+            {
+                new_color = fcpp::color(fcpp::coordination::running_color);
+            }
+            else
+            {
+                new_color = fcpp::color(fcpp::coordination::aborted_goal_color);
+                // update time
+                update_last_goal_update_time(CALL);
+            }
+            change_color(CALL, new_color);
+        }
+
+        //! @brief Manage state machine when robot reported a FAILED error
+        FUN void manage_failed_goal_status(ARGS)
+        {
+            CODE
+                fcpp::color new_color;
+            std::cout << "I have failed goal and I am drone" << node.uid << std::endl;
+            // and previous state is not FAILED (first time of FAILED status): change internal status to IDLE
+            if (feedback::GoalStatus::FAILED != node.storage(node_external_status{}))
+            {
+                new_color = fcpp::color(fcpp::coordination::failed_goal_color);
+                // resetting processing status
+                node.storage(node_process_status{}) = ProcessingStatus::IDLE;
+                // update time
+                update_last_goal_update_time(CALL);
+
+                // Log goal failure for workers
+                if (isWorker(CALL)) {
+                    std::string drone_name = get_real_robot_name(CALL, node.uid);
+                    double time_taken = get_goal_duration_ms(CALL);
+                    int scout_count = node.storage(node_numberOfSlave{});
+                    int need_param = node.storage(required_scouts{});
+                    bool enough_scouts = scout_count >= need_param;
+                    
+                    log_goal_completion(drone_name, false, time_taken, enough_scouts, scout_count, need_param);
+                }
+
+                // or previous state is FAILED (it's NOT the first time of FAILED status)
+            }
+            else
+            {
+                // and if process node is SELECTED, then AP has selected new node and simulation is ready to start
+                if (node.storage(node_process_status{}) == ProcessingStatus::SELECTED)
+                {
+                    new_color = fcpp::color(fcpp::coordination::running_color);
+                }
+                else
+                {
+                    new_color = fcpp::color(fcpp::coordination::failed_goal_color);
+                }
+            }
+            change_color(CALL, new_color);
+        }
+
+        //! @brief Manage state machine when robot has not yet executed a goal
+        FUN void manage_no_goal_status(ARGS)
+        {
+            CODE
+                fcpp::color new_color;
+            std::cout << "I have no goal and I am drone" << node.uid << std::endl;
+            // and if process node is SELECTED, then AP has selected new node and simulation is ready to start
+            if (node.storage(node_process_status{}) == ProcessingStatus::SELECTED)
+            {
+                new_color = fcpp::color(fcpp::coordination::running_color);
+                if (!isWorker(CALL)) {
+                    node.storage(was_running_last_round{}) = true;
+                }
+            }
+            else
+            {
+                new_color = fcpp::color(fcpp::coordination::idle_color);
+                std::cout << "change color to idle 2 and I am drone" << node.uid << std::endl;
+                std::cout << "I have no goal in else and I am drone" << node.uid << " and was_running_last_round: " << node.storage(was_running_last_round{}) << std::endl;
+                if (!isWorker(CALL) && node.storage(was_running_last_round{})) {
+                    node.storage(was_running_last_round{}) = false;
+                    std::string drone_name = get_real_robot_name(CALL, node.uid);
+                    double time_taken = get_goal_duration_ms(CALL);
+                    int scout_count = 0;
+                    int need_param = 0;
+                    bool enough_scouts = true;
+                    
+                    log_goal_completion(drone_name, true, time_taken, enough_scouts, scout_count, need_param);
+                }
+            }
+            change_color(CALL, new_color);
+        }
+
+        // FLOCKING
+
+        //! @brief controllo l'indice e nel caso non fosse valido lo riassegno...
+        FUN void fixIndex(ARGS)
+        {
+            using namespace tags;
+            if (!isWorker(CALL))
+            {
+                if ((get<1>(node.storage(node_indexSlave{}))) > 0)
+                {
+                    field<tuple<int, int>> f = nbr(CALL, node.storage(node_indexSlave{}));
+                    tuple<int, int> check = max_hood(CALL, f);
+                    if (get<1>(node.storage(node_indexSlave{})) == get<1>(check) && get<0>(node.storage(node_indexSlave{})) != get<0>(check))
+                    {
+                        node.storage(node_fixIndex{}) = true;
+                        // if (!(node.storage(node_secondReturn{})))
+                        // {
+                        //     get<1>(node.storage(node_indexSlave{})) += 1;
+                        // }
+                        // else
+                        // {
+                        //     get<1>(node.storage(node_indexSlave{})) -= 1;
+                        // }
+                        get<1>(node.storage(node_indexSlave{})) += 1;
+                    }
+                }
+            }
+        }
+
+        // to calculate where in the circumference the slave is
+        FUN void calculateMyCorner(ARGS)
+        {
+            using namespace tags;
+            // std::cout << "Calculating my corner before " << node.storage(node_vecMyVersor{}) << std::endl;
+            // if it has a master
+            if (get<0>(node.storage(node_posMaster{})))
+            {
+                double myRadiant = (get<1>(node.storage(node_indexSlave{}))) * ((2 * pi) / node.storage(node_numberOfSlave{}));
+                node.storage(node_myRadiant{}) = myRadiant;
+                // my radiant
+                // std::cout << "Calculating my radiant " << node.storage(node_myRadiant{}) << std::endl;
+                double sine_value = std::sin(myRadiant);
+                double cosine_value = std::cos(myRadiant);
+                double x = sine_value * distanceMasterSlave;
+                double y = cosine_value * distanceMasterSlave;
+                if (node.storage(node_fixIndex{}))
+                {
+                    x = sine_value * distanceCircularCrown;
+                    y = cosine_value * distanceCircularCrown;
+                }
+                vec<3> vecMyRadiant = make_vec(x, y, 0);
+                node.storage(node_vecMyRadiant{}) = vecMyRadiant;
+                // this is my radiant
+                // std::cout << "Calculating my vec_radiant " << node.storage(node_vecMyRadiant{}) << std::endl;
+
+                /**traslazione del cerchio attorno al master*/
+                vec<3> dist = get<1>(node.storage(node_posMaster{})) - node.position();
+                vec<3> versore = vecMyRadiant + dist;
+                // versore[2] = 0;
+                node.storage(node_vecMyVersor{}) = versore;
+                node.storage(node_vecMyVersor{})[2] += 0.1;
+                // this is my versore
+                // std::cout << "Calculating my vec_versore " << node.storage(node_vecMyVersor{}) << std::endl;
+                // std::cout << "My node_indexSlave " << get<1>(node.storage(node_indexSlave{})) << std::endl;
+                // std::cout << "Calculating my corner after " << node.storage(node_vecMyVersor{}) << std::endl;
+                // if (!(isnan(versore[0]) && isnan(versore[1]))) {
+                // node.propulsion() = versore / norm(versore);
+                // }
+                // node.propulsion() += node.propulsion() * incrementAcceleration;
+            }
+        }
+
+        //! @brief if slave nodes exit the circumference, reset the indices of the slaves within the circumference that exceed the maximum index...
+        FUN bool decrementIndex(ARGS)
+        {
+            using namespace tags;
+            int current_slaves = max_hood(CALL, nbr(CALL, node.storage(node_numberOfSlave{})));
+            if (get<1>(node.storage(node_indexSlave{})) > current_slaves && current_slaves != 0)
+            {
+                get<1>(node.storage(node_indexSlave{})) = 1;
+                return true;
+            }
+            return false;
+        }
+
+        FUN void errorCalculator(ARGS)
+        {
+            using namespace tags;
+            if (get<0>(node.storage(node_posMaster{})))
+            {
+                double theta = (get<1>(node.storage(node_indexSlave{}))) * ((2 * pi) / node.storage(node_numberOfSlave{}));
+                double x = std::sin(theta) * distanceMasterSlave;
+                double y = std::cos(theta) * distanceMasterSlave;
+                vec<3> vecTheta = make_vec(x, y, 0);
+                vec<3> exactPosition = vecTheta + get<1>(node.storage(node_posMaster{}));
+                double error = distance(exactPosition, node.position());
+                double normalizedError = error / distanceMasterSlave;
+                
+                // Store error for local use
+                node.storage(position_error{}) = error;
+                
+                // Enhanced logging with additional metrics
+                std::string timestamp = std::to_string(time_point_cast<milliseconds>(system_clock::now()).time_since_epoch().count());
+                
+                // Log both absolute and normalized error
+                MeasurementCollector::add_measurement(timestamp, node.uid, error, "position_error", 
+                                                     "master=" + std::to_string(node.storage(scout_curr_worker{})));
+                MeasurementCollector::add_measurement(timestamp, node.uid, normalizedError, "normalized_position_error");
+                
+                // Also track formation quality metrics
+                int total_scouts = node.storage(node_numberOfSlave{});
+                if (total_scouts > 0) {
+                    MeasurementCollector::add_measurement(timestamp, node.uid, 
+                                                         get<1>(node.storage(node_indexSlave{})), "scout_index", 
+                                                         "total_scouts=" + std::to_string(total_scouts));
+                }
+                
+                // Legacy logging (for backward compatibility)
+                log_error(std::to_string(node.uid), timestamp, error);
+            }
+        }
+
+        FUN void collisionAvoidance(ARGS)
+        {
+            using namespace tags;
+            if (!isWorker(CALL))
+            {
+                if (get<0>(node.storage(node_posMaster{})))
+                {
+                    // Get current position and master position
+                    vec<3> current_pos = node.position();
+                    vec<3> master_pos = get<1>(node.storage(node_posMaster{}));
+                    
+                    // Calculate distance to master (only in x-y plane)
+                    double dist_to_master = std::sqrt(std::pow(current_pos[0] - master_pos[0], 2) + 
+                                                    std::pow(current_pos[1] - master_pos[1], 2));
+                    
+                    // Define safety zones
+                    const double min_safe_distance = minDistance;
+                    const double transition_zone = min_safe_distance * 1.5; // Smooth transition zone
+                    
+                    // Initialize avoidance forces
+                    vec<3> avoidance_force = make_vec(0, 0, 0);
+                    
+                    // Calculate base repulsion force
+                    if (dist_to_master < transition_zone) {
+                        // Calculate direction vector (only in x-y plane)
+                        vec<3> direction = make_vec(
+                            (current_pos[0] - master_pos[0]) / dist_to_master,
+                            (current_pos[1] - master_pos[1]) / dist_to_master,
+                            0
+                        );
+                        
+                        // Calculate force magnitude with smooth transition
+                        double force_magnitude = 0;
+                        if (dist_to_master < min_safe_distance) {
+                            // Strong repulsion in danger zone
+                            force_magnitude = hardnessMasterSlave * (1.0 - (dist_to_master / min_safe_distance));
+                        } else {
+                            // Smooth transition in transition zone
+                            force_magnitude = hardnessMasterSlave * 0.5 * (1.0 - ((dist_to_master - min_safe_distance) / (transition_zone - min_safe_distance)));
+                        }
+                        
+                        // Apply horizontal avoidance only
+                        avoidance_force[0] = direction[0] * force_magnitude;
+                        avoidance_force[1] = direction[1] * force_magnitude;
+                    }
+                    
+                    // Store the avoidance force
+                    // node.storage(node_collisionAvoidanceMaster{}) = avoidance_force;
+                    
+                    // Calculate inter-UAV avoidance
+                    tuple<bool, vec<3>> neighbor_avoidance = sum_hood(CALL, map_hood([](vec<3> v, double d, double l, double constAvoid) {
+                        tuple<bool, vec<3>> result = make_tuple(false, make_vec(0, 0, 0));
+                        
+                        // Calculate horizontal distance only
+                        double horizontal_dist = std::sqrt(std::pow(v[0], 2) + std::pow(v[1], 2));
+                        
+                        if (horizontal_dist < l * 1.5) { // Check in transition zone
+                            vec<3> direction = make_vec(
+                                v[0] / horizontal_dist,
+                                v[1] / horizontal_dist,
+                                0
+                            );
+                            double force_magnitude = 0;
+                            
+                            if (horizontal_dist < constAvoid) {
+                                // Strong repulsion in danger zone
+                                force_magnitude = hardnessSlaveSlave * (1.0 - (horizontal_dist / constAvoid));
+                            } else {
+                                // Smooth transition
+                                force_magnitude = hardnessSlaveSlave * 0.5 * (1.0 - ((horizontal_dist - constAvoid) / (l * 1.5 - constAvoid)));
+                            }
+                            
+                            // Apply horizontal avoidance only
+                            get<1>(result)[0] = direction[0] * force_magnitude;
+                            get<1>(result)[1] = direction[1] * force_magnitude;
+                            
+                            get<0>(result) = true;
+                        }
+                        
+                        return result;
+                    }, node.nbr_vec(), node.nbr_dist(), distanceMasterSlave, minDistance), tuple<bool, vec<3>>{});
+                    
+                    // Store neighbor avoidance force
+                    // node.storage(node_collisionAvoidanceSlaves{}) = get<1>(neighbor_avoidance);
+                    
+                    // Update flag based on any avoidance forces
+                    node.storage(node_flagDistance{}) = (norm(avoidance_force) > 0.001 || norm(get<1>(neighbor_avoidance)) > 0.001);
+                    
+                    // Apply avoidance forces if they are valid
+                    if (!std::isnan(avoidance_force[0]) && !std::isinf(avoidance_force[0])) {
+                        node.storage(node_vecMyVersor{}) += avoidance_force;
+                        
+                        vec<3> neighbor_force = get<1>(neighbor_avoidance);
+                        if (!std::isnan(neighbor_force[0]) && !std::isinf(neighbor_force[0])) {
+                            node.storage(node_vecMyVersor{}) += neighbor_force;
+                        }
+                    }
+                }
+            }
+        }
+
+        /**
+         * @brief 2D Buffered Voronoi Cell (BVC) collision avoidance for scouts, using pure FCPP aggregate programming.
+         * This function computes the BVC for the current scout among its siblings (same master) and the master,
+         * then projects the desired position into the buffered cell to ensure collision-free movement.
+         *
+         * Uses only FCPP aggregate functions without creating intermediate arrays.
+         *
+         * @param ARGS Macro for FCPP function arguments
+         */
+        FUN void collisionAvoidanceBVC(ARGS) {
+            using namespace tags;
+            if (isWorker(CALL)) return;
+
+            // --- Parameters ---
+            constexpr double drone_radius = 0.2; // meters (example)
+            constexpr double buffer = drone_radius * 1.1; // 10% safety margin
+
+            // Get my current and desired position (in 2D)
+            vec<3> my_pos3d = node.position();
+            vec<3> desired_pos3d = node.storage(node_vecMyRadiant{}); // calculated in calculateMyCorner
+            vec<2> my_pos = make_vec(my_pos3d[0], my_pos3d[1]);
+            vec<2> desired_pos = make_vec(desired_pos3d[0], desired_pos3d[1]);
+
+            int my_master = node.storage(scout_curr_worker{});
+
+            // --- Aggregate computation: Project desired position away from each relevant neighbor ---
+            vec<2> safe_pos = fold_hood(CALL, 
+                [&](vec<3> nbr_pos3d, int nbr_master, bool nbr_is_worker, vec<2> current_safe_pos) {
+                    // Only consider scouts with the same master (exclude workers and different masters)
+                    if (nbr_is_worker || nbr_master != my_master) {
+                        return current_safe_pos; // Skip this neighbor
+                    }
+
+                    vec<2> nbr_pos = make_vec(nbr_pos3d[0], nbr_pos3d[1]);
+                    
+                    // Compute perpendicular bisector and project if needed
+                    vec<2> vec_to_nbr = nbr_pos - my_pos;
+                    double dist_to_nbr = norm(vec_to_nbr);
+                    
+                    if (dist_to_nbr < 1e-6) return current_safe_pos; // Skip if too close
+                    
+                    vec<2> normal = vec_to_nbr / dist_to_nbr; // Unit vector from me to neighbor
+                    
+                    // Buffered boundary point (shifted toward me by buffer distance)
+                    vec<2> boundary_point = my_pos + normal * (dist_to_nbr / 2.0 - buffer);
+                    
+                    // Check if current safe position is on the unsafe side of the boundary
+                    double projection = (current_safe_pos - boundary_point) * normal;
+                    if (projection > 0) {
+                        // Project to the safe side
+                        return current_safe_pos - normal * projection;
+                    }
+                    
+                    return current_safe_pos; // Already safe
+                },
+                nbr(CALL, node.position()),
+                nbr(CALL, node.storage(scout_curr_worker{})),
+                nbr(CALL, isWorker(CALL)),
+                desired_pos // Start with the desired formation position
+            );
+
+            // --- Handle master avoidance if master exists ---
+            if (get<0>(node.storage(node_posMaster{}))) {
+                vec<3> master_pos3d = get<1>(node.storage(node_posMaster{}));
+                vec<2> master_pos = make_vec(master_pos3d[0], master_pos3d[1]);
+                
+                vec<2> vec_to_master = master_pos - my_pos;
+                double dist_to_master = norm(vec_to_master);
+                
+                if (dist_to_master > 1e-6) {
+                    vec<2> normal = vec_to_master / dist_to_master;
+                    vec<2> boundary_point = my_pos + normal * (dist_to_master / 2.0 - buffer);
+                    
+                    double projection = (safe_pos - boundary_point) * normal;
+                    if (projection > 0) {
+                        safe_pos = safe_pos - normal * projection;
+                    }
+                }
+            }
+
+            // Update the target position (in node_vecMyVersor, as in calculateMyCorner)
+            node.storage(node_vecMyVersor{})[0] = safe_pos[0];
+            node.storage(node_vecMyVersor{})[1] = safe_pos[1];
+            // z remains unchanged
+        }
+
+        /**
+         * @brief Field Calculus implementation of 2D Buffered Voronoi Cell (BVC) collision avoidance.
+         *
+         * This function ensures collision-free navigation for a scout drone by calculating a safe
+         * target position. It operates in two main stages, both using field calculus:
+         * 1. It computes a safe position considering all other peer scouts in its swarm.
+         * 2. It then refines that position to ensure it alFalseered in `node_vecMyVersor`.
+         * This approach is decentralized and relies on local information only.
+         *
+         * @param ARGS Macro for FCPP function arguments.
+         */
+        FUN void collisionAvoidanceBVC_FC(ARGS)
+        {
+            using namespace tags;
+            // This logic is only for scouts.
+            if (isWorker(CALL)) return;
+            std::cout << "peder is here" << std::endl;
+            // --- 1. Define Parameters and High-Level Goal ---
+            
+            // Safety buffer is the drone's physical radius plus a 10% safety margin.
+            constexpr double drone_radius = 0.2; // Example radius in meters
+            constexpr double buffer = drone_radius * 1.1;
+
+            // My current 2D position.
+            vec<3> my_pos3d = node.position();
+            vec<2> my_pos2d = make_vec(my_pos3d[0], my_pos3d[1]);
+
+            // Calculate my high-level GOAL: the absolute position I want to be in the formation.
+            // This is my "preferred" destination before safety checks.
+            vec<3> master_pos3d = get<1>(node.storage(node_posMaster{}));
+            vec<3> formation_vector = node.storage(node_vecMyRadiant{}); // My spot relative to the master.
+            vec<3> desired_pos_3d = master_pos3d + formation_vector;
+            vec<2> initial_desired_pos = make_vec(desired_pos_3d[0], desired_pos_3d[1]);
+
+            // --- 2. Field Calculus for Scout-to-Scout Avoidance ---
+
+            // Define the information each node needs to share for BVC calculations.
+            // We share our unique ID, our 2D position, and our master ID.
+            using BVCInfo = tuple<device_t, vec<2>, int>;
+            BVCInfo my_bvc_info = make_tuple(node.uid, my_pos2d, node.storage(scout_curr_worker{}));
+
+            // Get a field of combined BVC info from all neighbors.
+            field<BVCInfo> nbr_bvc_info = nbr(CALL, my_bvc_info);
+
+            // Iteratively project the desired position into the safe zone of each PEER scout.
+            // A peer is a scout that shares the same master as me.
+            vec<2> safe_pos_after_scouts = fold_hood(CALL,
+                [&](BVCInfo nbr_info, vec<2> current_safe_pos) {
+                    device_t nbr_uid = get<0>(nbr_info);
+                    vec<2> nbr_pos = get<1>(nbr_info);
+                    int nbr_master_id = get<2>(nbr_info);
+                    
+                    // Check if the neighbor is a peer scout (same master, not me).
+                    if (nbr_master_id != node.storage(scout_curr_worker{}) || nbr_uid == node.uid) {
+                        return current_safe_pos; // Not a peer, ignore.
+                    }
+
+                    // Define the half-plane boundary. It's the perpendicular bisector of the line between us.
+                    vec<2> vec_to_nbr = nbr_pos - my_pos2d;
+                    double dist_to_nbr = norm(vec_to_nbr);
+                    if (dist_to_nbr < 1e-6) return current_safe_pos; // Drones are on top of each other, ignore.
+
+                    vec<2> normal = vec_to_nbr / dist_to_nbr; // Unit vector pointing from me to the neighbor.
+
+                    // The buffered boundary is shifted towards me by `buffer`.
+                    // The safe region is on "my" side of this shifted line.
+                    // A point `p` on the buffered boundary is `p = my_pos2d + normal * (dist_to_nbr / 2.0 - buffer)`.
+                    vec<2> point_on_buffered_boundary = my_pos2d + normal * (dist_to_nbr / 2.0 - buffer);
+
+                    // Check if the current desired position is already in the safe half-plane.
+                    // If `dot product > 0`, it's on the "unsafe" side of the boundary.
+                    if ((current_safe_pos - point_on_buffered_boundary) * normal > 0) {
+                        // It's not safe. Project it onto the buffered boundary line to make it safe.
+                        return current_safe_pos - normal * ((current_safe_pos - point_on_buffered_boundary) * normal);
+                    }
+                    
+                    // It's already safe with respect to this neighbor, no change needed.
+                    return current_safe_pos;
+                },
+                nbr_bvc_info,
+                initial_desired_pos // Start with the ideal formation position.
+            );
+
+            // --- 3. Final Projection for Master Drone Avoidance ---
+            // The master drone is a high-priority agent. We apply its constraint last.
+            vec<2> final_safe_pos = safe_pos_after_scouts;
+            if (get<0>(node.storage(node_posMaster{}))) {
+                vec<2> master_pos2d = make_vec(master_pos3d[0], master_pos3d[1]);
+                vec<2> vec_to_master = master_pos2d - my_pos2d;
+                double dist_to_master = norm(vec_to_master);
+
+                if (dist_to_master > 1e-6) {
+                    vec<2> normal = vec_to_master / dist_to_master;
+                    vec<2> point_on_buffered_boundary = my_pos2d + normal * (dist_to_master / 2.0 - buffer);
+                    if ((final_safe_pos - point_on_buffered_boundary) * normal > 0) {
+                        final_safe_pos = final_safe_pos - normal * ((final_safe_pos - point_on_buffered_boundary) * normal);
+                    }
+                }
+            }
+
+            // --- 4. Update Node State with the Final Safe Vector ---
+
+            // The result `final_safe_pos` is the safest place to go.
+            // We now calculate the DIRECTION VECTOR needed to move towards it.
+            vec<2> safe_direction_vector = final_safe_pos - my_pos2d;
+
+            // Update the versor used for propulsion with the new, safe direction.
+            // This correctly provides a vector for movement, not an absolute position.
+            node.storage(node_vecMyVersor{})[0] = safe_direction_vector[0];
+            node.storage(node_vecMyVersor{})[1] = safe_direction_vector[1];
+            // Z-component remains unchanged to maintain altitude.
+            // node.storage(node_vecMyVersor{})[2] is not modified.
+        }
+
+        FUN void run_flocking(ARGS)
+        {
+            CODE
+                /**controllo nel caso degli indici si sovrapponessero*/
+                field<tuple<int, int>>
+                    identifierWrongIndex = nbr(CALL, node.storage(node_indexSlave{}));
+
+            // Aggiungere a true la batteria è a 0
+            bool flagIndex = all_hood(CALL, map_hood([](tuple<int, int> t, tuple<int, int> myValue)
+                                                    {
+                if (get<1>(myValue) == get<1>(t) && get<0>(myValue) != get<0>(t)) {
+                    return false;
+                }
+                else {
+                    return true;
+                } }, identifierWrongIndex, node.storage(node_indexSlave{})));
+
+            // if (!(flagIndex && decrementIndex(CALL)))
+            // {
+            //     fixIndex(CALL);
+            // }
+            // else
+            // {
+            //     node.storage(node_fixIndex{}) = false;
+            // }
+
+            if (!isWorker(CALL))
+            {
+                // instead calculateMyCorner we should have the slave move to a
+                // position of interest based on something(maybe master, maybe goal from
+                // a user, ...)
+                calculateMyCorner(CALL);
+                //! Sistema di collision avoidance
+                // collisionAvoidance(CALL);
+                // collisionAvoidanceBVC(CALL);
+                collisionAvoidanceBVC_FC(CALL);
+                errorCalculator(CALL);
+            }
+
+            if (!isWorker(CALL))
+            {
+                if (!(get<0>(node.storage(node_posMaster{}))))
+                {
+                    node.storage(node_startPosition{}) = node.position();
+                }
+                else
+                {
+                    node.storage(node_startPosition{}) = node.position();
+                }
+            }
+        }
+
+        FUN void updateWorker(ARGS)
+        {
+            CODE
+                infoWorkerType infoWorker = make_tagged_tuple<infoW_active, infoW_need, infoW_nodeDistance, infoW_position, infoW_nodeId>(false, INT_MIN, INT_MAX, make_vec(0, 0, 0), node.uid);
+            if (isWorker(CALL))
+            {
+                infoWorker = make_tagged_tuple<infoW_active, infoW_need, infoW_nodeDistance, infoW_position, infoW_nodeId>(true, node.storage(scout_need{}), INT_MAX, node.position(), node.uid);
+            }
+            else
+            {
+                // TODO: maybe have a use case for extra scouts
+            }
+            node.storage(expected_dist_worker_scout{}) = distanceMasterSlave;
+
+            // // TODO: maybe do a out of order simulation
+
+            int workerId = node.storage(scout_curr_worker{});
+
+            field<infoWorkerType> infoWorkerField = nbr(CALL, infoWorker);
+
+            // Used to retrive the info of the current scout's worker. I think the acc is a placeholder again, and is used if the scout doesn't have a worker
+            infoWorkerType currWorker = fold_hood(CALL, [&](infoWorkerType val, infoWorkerType acc) { 
+                if(get<infoW_nodeId>(val) == workerId) {
+                    return val;
+                } else return acc;
+            }, infoWorkerField, make_tagged_tuple<infoW_active, infoW_need, infoW_nodeDistance, infoW_position, infoW_velocity, infoW_nodeId>(false, INT_MIN, INT_MAX, make_vec(0, 0, 0), make_vec(0, 0, 0), node.uid));   
+
+            if (node.uid == 2)
+            {
+                std::cout << "My worker is: " << get<infoW_nodeId>(currWorker) << std::endl;
+            }
+            
+
+            // Update the scout's info on the worker
+            if(get<infoW_active>(currWorker)) {
+                node.storage(node_posMaster{}) = make_tuple(get<infoW_active>(currWorker), get<infoW_position>(currWorker));
+            }
+
+            // Update the distance of the scout to the workers(multiple, since we used nbr and we have multiple workers)
+            field<infoWorkerType> updatedInfoWorkerField = map_hood([&](infoWorkerType workerData) {
+                double dist = -(distance(get<infoW_position>(workerData), node.position()));
+
+                get<infoW_nodeDistance>(workerData) = dist;
+
+                return workerData;
+            }, infoWorkerField);
+
+            infoWorkerType newWorkerInfo = max_hood(CALL, updatedInfoWorkerField); // gets the worker with the smallest distance to the scout
+            // smallest because, we negate the distance in the map_hood function, so the smallest distance is then the largest value
+
+            if (node.uid == 2)
+            {
+                std::cout << "The closest worker is: " << get<infoW_nodeId>(newWorkerInfo) << std::endl;
+            }
+            
+
+            // for testing purposes there is 250, can be changed
+            if (get<infoW_active>(newWorkerInfo)
+            //  && node.storage(node_countRound{}) > 250
+                ) // check with Gianluca if we need the roundcount
+            {
+            //     // only for scouts
+                if (!isWorker(CALL))
+                {
+                    // find the closest scout. If there is a need for a new scout, we will reassign one, otherwise nothing
+                    // TODO: would it be better here to first check if the worker actually needs a new scout?
+
+                    tuple<vec<3>, int> closestScout = make_tuple(node.position(), -1);
+
+                    split(CALL, node.storage(scout_curr_worker{}), [&]() { // executes only in the network of the given key, which in this case is the current worker of the current scout
+                        tuple<vec<3>, int> tupleScout = make_tuple(node.position(), node.uid);
+
+                        field<tuple<vec<3>, int>> fieldScout = nbr(CALL, tupleScout); // field of scouts(I think only the scouts of the network of the current worker), since the worker cannot get into this code
+
+                        closestScout = fold_hood(CALL, [&](tuple<vec<3>, int> val, tuple<vec<3>, int> acc) { // acc is the starting value, and after the return what is returned is the new acc
+
+                            double accDist = distance(get<infoW_position>(newWorkerInfo), get<0>(acc));
+                            double valDist = distance(get<infoW_position>(newWorkerInfo), get<0>(val));
+
+                            return valDist < accDist ? val : acc;
+                        }, fieldScout, make_tuple(node.position(), node.uid));
+                    });
+
+                    if(node.storage(scout_curr_worker{}) < 0 || (get<infoW_need>(newWorkerInfo) > 0 && node.uid == get<1>(closestScout) && get<infoW_need>(currWorker) < get<infoW_need>(newWorkerInfo) - 1)) {
+                        if(!isWorker(CALL)) node.storage(scout_curr_worker{}) = get<infoW_nodeId>(newWorkerInfo);
+
+                        // change the worker for current scout
+                        node.storage(node_posMaster{}) = make_tuple(get<infoW_active>(newWorkerInfo), get<infoW_position>(newWorkerInfo));
+                        // print out I am scout "scout" and I am assigned to worker "worker"
+                        std::cout << "I am scout " << node.uid << " and now I am assigned to worker " << get<infoW_nodeId>(newWorkerInfo) << std::endl;
+                    } 
+                }
+                
+            }
+            
+        }
+
+        FUN void updateFollowersCount(ARGS) {
+            if(isActive(CALL)) {
+                int num_scouts = count_hood(CALL) - 1;
+                // I am worker "worker" and I have "num_scouts" scouts
+                if (isWorker(CALL))
+                {
+                    std::cout << "I am worker " << node.uid << " and I have " << num_scouts << " scouts" << std::endl;
+                }
+
+                if(isWorker(CALL)) node.storage(scout_need{}) = node.storage(required_scouts{}) - num_scouts;
+                node.storage(node_numberOfSlave{}) = num_scouts;
+            }
+        }
+
+        FUN void assignScout(ARGS) {
+            /**When a node identifies the position of the worker, it is assigned an index that corresponds
+             * to the order of arrival within the circle.*/
+            if (isActive(CALL)) {
+                std::cout << "For node: " << node.uid << " the current worker is: " << node.storage(scout_curr_worker{}) << std::endl;
+                std::cout << "My index before assign: " << get<1>(node.storage(node_indexSlave{})) << std::endl;
+
+                tuple<int, int> scoutVal = make_tuple(node.storage(scout_curr_worker{}), get<1>(node.storage(node_indexSlave{}))); // id of the scouts current worker and the index of the scout
+                field<tuple<int, int>> fieldScoutVal = nbr(CALL, scoutVal); // just a field of the scoutVal tuple of the neighbors
+
+                tuple<int, int> currMaxIndex = fold_hood(CALL, [&](tuple<int, int> val, tuple<int, int> acc) {
+                    if(get<1>(val) > get<1>(acc) && node.storage(scout_curr_worker{}) == get<0>(val) && !isWorker(CALL)) { // check if the current node has a higher value than the previous max value, that the worker of both is the same and that the current node is not the worker
+                        return val;
+                    } else return acc;
+                }, fieldScoutVal, make_tuple(node.storage(scout_curr_worker{}), 0));
+
+
+                int maxIndex = nbr(CALL, 0, [&](field<int> indexes) {
+                    maxIndex = get<1>(currMaxIndex); // globaly max index of a scout
+                    if (get<1>(node.storage(node_indexSlave{})) == 0 && !isWorker(CALL)) { // if the scout has no index, we assign one more than the max
+                        return maxIndex + 1;
+                    } else {
+                        return maxIndex;
+                    }
+                });
+                // the maxindex
+                // std::cout << "Max index: " << maxIndex << std::endl;
+                // Assign the found value, but just if the scout has no index
+                if ((get<1>(node.storage(node_indexSlave{}))) == 0 && !isWorker(CALL)) {
+                    // I am setting the index of the scout to the max index
+                    // std::cout << "Setting index to: " << maxIndex << "for node: " << node.uid << std::endl;
+                    std::cout << "Changing index for node: " << node.uid << " from: " << get<1>(node.storage(node_indexSlave{})) << " to: " << maxIndex << std::endl;
+                    node.storage(node_indexSlave{}) = make_tuple(node.uid, maxIndex);
+                }
+                std::cout << "My index after assign: " << get<1>(node.storage(node_indexSlave{})) << std::endl;
+            } 
+        }
+
+        /**
+         * Check if my index is equal to that of a neighbor.
+         * Returns TRUE if it finds duplicates of its index
+     */
+        FUN bool checkDuplicateIndex(ARGS) { CODE
+            /**Check in case the indexes overlap*/
+            bool duplicateExists = false;
+            if (!isWorker(CALL) && isActive(CALL)) { // TODO: could we remove the !isWorker(CALL) check, so that the master propagates the indexes of the slaves as well
+                field<tuple<int, int>> identifierWrongIndex = nbr(CALL, node.storage(node_indexSlave{}));
+                duplicateExists = any_hood(CALL, map_hood([](tuple<int, int> t, tuple<int, int> myValue) {
+                    if (get<1>(myValue) == get<1>(t) && get<0>(myValue) != get<0>(t)) { // check if current node has the same index as the one from neighbour and that the node is not the same one, so you don't compare me to me
+                        return true;
+                    }else{
+                        return false;
+                    }
+                }, identifierWrongIndex, node.storage(node_indexSlave{})));
+            }
+            return duplicateExists;
+        }
+
+        FUN void correctIndexes(ARGS) {
+            if (isActive(CALL) && !isCharging(CALL)) 
+            {
+                // Check for duplicate indexes
+                bool duplicatedIndexes = split(CALL, node.storage(scout_curr_worker{}), [&]() {return checkDuplicateIndex(CALL);}); // check for duplicates in the network of the current worker
+                
+                if (duplicatedIndexes)
+                {
+                    std::cout << "Found duplicate indexes for node: " << node.uid << " with index: " << get<1>(node.storage(node_indexSlave{})) << std::endl;
+                    // If there are duplicates, adjust the indexes accordingly
+                    split(CALL, node.storage(scout_curr_worker{}), [&]() {return fixIndex(CALL);}); // do for the network of the current worker
+                } else {
+                    node.storage(node_fixIndex{}) = false;
+                }       
+
+                // Decrement indexes higher than the current number of scouts
+                // In the next round, they will be seen as duplicates and will be fixed
+                split(CALL, node.storage(scout_curr_worker{}), [&]() {return decrementIndex(CALL);}); // do for the network of the current worker
+            }
+        }
+
+        // AP PROCESS
+
+        //! @brief A robot has reached a goal and now try to terminate the process
+        FUN process_tuple_type ends_processed_goal(ARGS, process_tuple_type &process, goal_tuple_type const &goal, status *status_end)
+        {
+            CODE
+
+                    std::cout
+                << "Robot " << node.uid << " is trying to terminate goal " << get<goal_code>(goal) << endl;
+            std::cout << endl;
+
+            *status_end = status::terminated_output; // stop propagation
+            return process;
+        }
+
+        //! @brief A robot has discharged the battery, so AP send a stop command
+        FUN void battery_discharged_when_it_is_running(ARGS, process_tuple_type &p, status *status_discharged)
+        {
+            CODE
+                *status_discharged = status::border; // listen neighbours, but not send messages
+        }
+
+        //! @brief Send a GOAL action to selected node and update the AP state machine of the robot to SELECTED
+        FUN void send_action_to_selected_node(ARGS, goal_tuple_type const &goal)
+        {
+            CODE
+                std::string robot_chosen = get_real_robot_name(CALL, node.uid);
+
+            if (isWorker(CALL))
+            {
+                // std::cout << "Robot " << robot_chosen << " is chosen for goal " << get<goal_code>(goal) << endl;
+                // print the goal_code_robot_id and node.uid
+                // std::cout << "Goal code robot id: " << goal_code_robot_id << " Node uid: " << node.uid << endl;
+                // std::cout << endl;
+
+                // set processing status to SELECTED
+                node.storage(node_process_status{}) = ProcessingStatus::SELECTED;
+                
+                // Start timing for goal completion
+                start_goal_timing(CALL);
+
+                // save goal
+                node.storage(node_process_goal{}) = get<goal_code>(goal);
+
+                // send action to file
+                action::ActionData action_data = {
+                    .action = get<goal_action>(goal),
+                    .goal_code = get<goal_code>(goal),
+                    .robot = robot_chosen,
+                    .pos_x = get<goal_pos_x>(goal),
+                    .pos_y = get<goal_pos_y>(goal),
+                    .pos_z = get<goal_pos_z>(goal),
+                    .orient_w = get<goal_orient_w>(goal)};
+                action::manager::ActionManager::new_action(action_data);
+                // print the position of x
+                // std::cout << "Position x: " << get<goal_pos_x>(goal) << endl;
+            }
+            else
+            {
+                // print I am sending this action and then every part of the action
+                std::cout << "I am sending this action" << endl;
+                std::cout << "Goal action: " << get<goal_action>(goal) << endl;
+                std::cout << "Goal code: " << get<goal_code>(goal) << endl;
+                std::cout << "Robot chosen: " << robot_chosen << endl;
+                std::cout << "Position x: " << (float)node.storage(node_vecMyVersor{})[0] << endl;
+                std::cout << "Position y: " << (float)node.storage(node_vecMyVersor{})[1] << endl;
+                std::cout << "Position z: " << (float)node.storage(node_vecMyVersor{})[2] << endl;
+                std::cout << "Orientation w: " << get<goal_orient_w>(goal) << endl;
+                // send action to file a.k.a send the goal to the scout/slave
+                action::ActionData action_data = {
+                    .action = get<goal_action>(goal),
+                    .goal_code = get<goal_code>(goal),
+                    .robot = robot_chosen,
+                    .pos_x = (float)node.storage(node_vecMyVersor{})[0],
+                    .pos_y = (float)node.storage(node_vecMyVersor{})[1],
+                    .pos_z = (float)node.storage(node_vecMyVersor{})[2],
+                    .orient_w = 0.0};
+                action::manager::ActionManager::new_action(action_data);
+            }
+        }
+
+        // ACTION
+
+        //! @brief Manage when the user has requested an ABORT of a goal
+        FUN void manage_action_abort(ARGS, goal_tuple_type const &goal, status *status_abort)
+        {
+            CODE
+                    std::cout
+                << "Process ABORT " << get<goal_code>(goal) << " in node " << node.uid << " with status "
+                << node.storage(node_process_status{}) << endl;
+            // if and only if robot is in status RUNNING, sends stop command to robot
+            if (node.storage(node_process_status{}) == ProcessingStatus::SELECTED)
+            {
+                send_stop_command_to_robot(CALL, "ABORT", node.uid, goal, ProcessingStatus::TERMINATING);
+
+                std::cout << "Robot " << node.uid << " is trying to terminate ABORT " << get<goal_code>(goal) << endl;
+            }
+            else
+            {
+                if (AP_ENGINE_DEBUG)
+                {
+                    std::cout << "Robot " << node.uid << " is waiting to terminate ABORT " << get<goal_code>(goal) << endl;
+                }
+            }
+            *status_abort = status::terminated_output; // stop propagation
+        }
+
+        //! @brief Manage when the user has requested a new GOAL
+        FUN void manage_action_goal(ARGS, goal_tuple_type const &goal, status *status_goal, int n_round)
+        {
+            CODE
+
+                // std::cout << "Process GOAL " << get<goal_code>(goal) << ", action " << get<goal_action>(goal) << " in node " << node.uid << endl;
+                add_goal_to_computing_map(CALL, goal);
+
+            old(CALL, make_tagged_tuple<goal_code>(get<goal_code>(goal)), [&](process_tuple_type process)
+                {
+
+                // compute charge of battery in percent
+                float percent_charge = node.storage(node_battery_charge{}) / 100.0;
+
+                // if i'm terminating the current goal, i have to terminate goal for all nodes TODO: IS IT MEANT FOR ALL THE NODES IN THE PROCESS
+                if (get<goal_code>(goal) == node.storage(node_process_goal{}) && //i was running current goal in the process
+                    get<goal_code>(goal) == node.storage(node_external_goal{}) && //the robot was running current goal
+                    ProcessingStatus::TERMINATING == node.storage(node_process_status{})) { //but now i'm terminating
+                    return ends_processed_goal(CALL, process, goal, status_goal);
+                }
+
+                // if battery is empty, then stop at current position
+                if (percent_charge <= 0.0) { //the battery is full discharged
+                    battery_discharged_when_it_is_running(CALL, process, status_goal);
+                }
+
+                // Battery charged
+                else {
+                    if (isWorker(CALL)) {
+                        int c = 0;
+                        int goal_code_robot_id = std::stoi(get_robot_id_from_goal_code(get<goal_code>(goal)));
+                        if(node.storage(node_process_status{}) == ProcessingStatus::IDLE && node.uid == goal_code_robot_id && (c = counter(CALL)) == 1){
+                            std::cout << "Process GOAL " << c;
+                            // I think here there should also be movement
+                            // calculated(in a function), since we don't have a
+                            // predetermined path, but get the end position from the
+                            // goal
+                            send_action_to_selected_node(CALL, goal);
+                        }
+                    }
+
+                    if (!isWorker(CALL)) {
+                        // std::cout << "I am running the flocking" << std::endl;
+                        run_flocking(CALL);
+                        int goal_code_robot_id = std::stoi(get_robot_id_from_goal_code(get<goal_code>(goal)));
+                        // print out what is sent to send_action_to_selected_node, so the goal and the process
+                        std::cout << "Goal code: " << get<goal_code>(goal) << " Process: " << process << std::endl;
+                        // if (std::stoi(get_robot_id_from_goal_code(get<goal_code>(goal))) == node.storage(scout_curr_worker{})) 
+                        // {
+                            if (node.uid == 1)
+                            {
+                                std::cout << "I am sending the action" << std::endl;
+
+                            }
+                            if (node.storage(scout_curr_worker{}) == goal_code_robot_id)
+                            {
+                                // Start timing for scout goal completion
+                                start_goal_timing(CALL);
+                                send_action_to_selected_node(CALL, goal);
+                            }
+                        // }
+                    }
+                }
+                // blinking colors if not running
+                if (get<goal_code>(goal) != node.storage(node_process_goal{}) &&
+                    node.storage(node_process_status{}) != ProcessingStatus::SELECTED) {
+                    blink_computing_color(CALL, n_round);
+                    // TODO: i think here the scouts are, so it means that they are running, or are not idle. This means that was running should be true and when they get to idle and running was true, they should be set to false and log to csv
+                }
+
+                // TODO
+                return process; });
+        }
+
+        //! @brief Termination logic using share (see SHARE termination in ACSOS22 paper)
+        FUN void termination_logic(ARGS, status &status_terminate, goal_tuple_type const &)
+        {
+            bool terminatingMyself = status_terminate == status::terminated_output;
+            bool terminatingNeigh = nbr(CALL, terminatingMyself, [&](field<bool> nt)
+                                        { return any_hood(CALL, nt) or terminatingMyself; });
+            bool exiting = all_hood(CALL, nbr(CALL, terminatingNeigh), terminatingNeigh);
+
+            if (exiting)
+            {
+                status_terminate = status::border;
+            }
+            else if (terminatingMyself)
+            {
+                status_terminate = status::internal_output;
+            }
+        }
+
+        //! @brief Read new goals from shared variable and insert them in NewGoalsList
+        void read_new_goals(std::vector<goal_tuple_type> &NewGoalsList, std::optional<std::string> source)
+        {
+            std::vector<InputGoal> InputGoalsBySource;
+
+            // if source is specified
+            if (source.has_value())
+            {
+                // keep only goals with source = node_ext_name
+                std::copy_if(InputGoalList.begin(), InputGoalList.end(), std::back_inserter(InputGoalsBySource), [&](InputGoal ig)
+                            { return get_robot_id_from_goal_code(ig.goal_code) == source.value(); });
+            }
+            else
+            {
+                // otherwise, copy all InputGoal
+                InputGoalsBySource = InputGoalList;
+            }
+
+            std::lock_guard lgg(GoalMutex);
+            auto map_op = [](InputGoal ig)
+            {
+                return make_tagged_tuple<goal_action, goal_code, goal_pos_x, goal_pos_y, goal_pos_z, goal_orient_w, goal_source, goal_priority, goal_subcode>(
+                    ig.action,
+                    ig.goal_code,
+                    ig.pos_x,
+                    ig.pos_y,
+                    ig.pos_z,
+                    ig.orient_w,
+                    ig.source,
+                    ig.priority,
+                    ig.subcode);
+            };
+            std::transform(InputGoalsBySource.begin(), InputGoalsBySource.end(), std::back_inserter(NewGoalsList), map_op);
+
+            // delete only goals with source = node_ext_name
+            if (source.has_value())
+            {
+                // std::cout << "I am erasing" << std::endl;
+                // std::cout << "This is the source value" << source.value() << std::endl;
+                InputGoalList.erase(
+                    std::remove_if(InputGoalList.begin(), InputGoalList.end(), [&](InputGoal ig)
+                                { return get_robot_id_from_goal_code(ig.goal_code) == source.value(); }),
+                    InputGoalList.end());
+            }
+            else
+            {
+                // std::cout << "I am clearing" << std::endl;
+                InputGoalList.clear();
+            }
+        }
+
+        //! @brief Acquire new goals from storage, in according with node_type.
+        FUN void acquire_new_goals(ARGS, std::vector<goal_tuple_type> &NewGoalsList)
+        {
+            CODE
+                read_new_goals(NewGoalsList, std::optional<string>(std::to_string(node.uid)));
+        }
+
+        // MAIN FUNCTIONS
+
+        //! @brief Initialize MAIN function, selecting correct node_type, run only ONCE per simulation
+        FUN void init_main_fn(ARGS, int n_round, int number_of_masters)
+        {
+            // std::cout << "range: " << fcpp::coordination::comm << std::endl;
+
+            if (AP_ENGINE_DEBUG) {
+                std::cout << std::endl << std::endl;
+                std::cout << "[node-" << node.uid << "] Time: " <<
+                    std::chrono::time_point_cast<std::chrono::milliseconds>(
+                        std::chrono::system_clock::now()).time_since_epoch(
+                        ).count() << endl;
+            }
+
+            // set node type in the storage
+            #if defined(RUN_SIMULATION)
+                if (node.uid < number_of_masters)
+                {
+                    node.storage(node_isWorker{}) = true;
+                    // node.storage(node_label_text{}) = "RM." + std::to_string(node.uid);
+
+                    node.storage(required_scouts{}) = worker_requirements[node.uid];
+                    // when each worker starts with same number of scouts
+                    // node.storage(scout_need{}) = worker_requirements[node.uid] - nWorkerScout;
+                    // The number of scouts a worker needs is its requirement minus its starting allocation.
+                    node.storage(scout_need{}) = worker_requirements[node.uid] - initial_scouts_per_worker[node.uid];
+                    node.storage(scout_curr_worker{}) = -1; // the worker is not assigned to a scout
+                    // when each worker starts with same number of scouts
+                    // node.storage(node_numberOfSlave{}) = nWorkerScout; // number of scouts assigned to each worker
+                    // The number of scouts a worker has at the start is defined by the new configuration array.
+                    node.storage(node_numberOfSlave{}) = initial_scouts_per_worker[node.uid];
+                }
+                else
+                {
+                    node.storage(node_isWorker{}) = false;
+                    // node.storage(node_label_text{}) = "RS." + std::to_string(node.uid);
+
+                    // Assign scout to a worker based on the initial_scouts_per_worker configuration.
+                    int scout_index = node.uid - number_of_masters; // a 0-based index for the scout
+                    int cumulative_scouts = 0;
+                    int assigned_master = -1;
+
+                    for (int i = 0; i < number_of_masters; ++i) {
+                        cumulative_scouts += initial_scouts_per_worker[i];
+                        if (scout_index < cumulative_scouts) {
+                            assigned_master = i;
+                            break;
+                        }
+                    }
+
+                    if (assigned_master != -1) {
+                        node.storage(scout_curr_worker{}) = assigned_master;
+                    }
+
+                    // TODO: the battery is not use yet, can be in the future
+                    node.storage(scout_need{}) = -1;
+                    node.storage(scout_isCharging{}) = false;
+                    // node.storage(scout_battery_percentage{}) = 100;
+                    // node.storage(scout_min_battery_percaentage{}) = 15;
+
+                    // TODO: here set the battery discharge rate, depeneding on the type of the battery
+                    // node.storage(scout_battery_discharge_rate{}) = 0.1; // this is just a placeholder for now, for real test it should be a
+                    // different rate, based on what user chose
+
+
+                    
+                }
+            #elif defined(RUN_EMBEDDED)
+                node.storage(node_isWorker{}) = node.uid == 0 ? true : false;
+            #endif
+            if (AP_ENGINE_DEBUG)
+            {
+                std::cout << "MAIN FUNCTION in node " << node.uid << " of type " << (isWorker(CALL) ? "worker" : "scout") << endl;
+            }
+
+            // TODO: this might be needs to be used more than just once in the debug mode
+            field<int> test_nbr = fcpp::coordination::nbr(CALL, n_round);
+            if (AP_ENGINE_DEBUG)
+            {
+                std::cout << "test_nbr_main_fn: " << test_nbr << "; nbr_uid: " << nbr_uid(CALL) << std::endl;
+            }
+
+            // set parameters that will not change and mark that they have been initialised
+            // node.storage(node_size{}) = NODE_SIZE;
+            // node.storage(node_label_size{}) = LABEL_SIZE;
+            node.storage(node_shape{}) = shape::sphere;
+            // node.storage(node_shadow_color{}) = fcpp::color(0x837E7CFF);
+            // node.storage(node_shadow_shape{}) = shape::sphere;
+            // node.storage(expected_dist_worker_scout{}) = distanceMasterSlave;
+
+
+            // Initialize timing storage
+            node.storage(goal_start_time{}) = std::chrono::steady_clock::now();
+            node.storage(was_running_last_round{}) = false;
+            
+            // Initialize recovery metrics storage
+            node.storage(last_scout_count{}) = isWorker(CALL) ? initial_scouts_per_worker[node.uid] : 0;
+            node.storage(is_in_recovery{}) = false;
+            node.storage(failure_detected_time{}) = std::chrono::steady_clock::now();
+            
+            node.storage(node_set{}) = true;
+            
+            // Initialize CSV file for goal completion logging
+            initialize_csv_file();
+            // Initialize CSV file for evaluation metrics logging
+            initialize_evaluation_log();
+        }
+
+        //! @brief Initialize variables (storage, etc...) of a robot using feedback data.
+        FUN void apply_feedback_to_ap(ARGS)
+        {
+            // std::cout << "Robot " << prefix << node.uid << " initialized" << std::endl;
+
+            // set position in AP(based on data from ROS2) and change color according with goal_status
+            old(CALL, robot_phase::IDLE, [&](robot_phase ph)
+                {
+                std::string rname = ROBOT_PREFIX + std::to_string(node.uid); // name is obtained from node ID
+                node.storage(node_external_name{}) = rname;
+
+                std::lock_guard lgr(RobotStatesMutex);
+                // if robot is in the map
+                if (RobotStatesMap.find(rname) != RobotStatesMap.end()) {
+                    // for each status of the robot
+                    for (RobotStatus rs : RobotStatesMap[rname]) {
+                        // print out the robot status
+                        std::cout << "Robot " << rname << " status: "
+                                << "pos_x: " << rs.pos_x << ", "
+                                << "pos_y: " << rs.pos_y << ", "
+                                << "pos_z: " << rs.pos_z << ", "
+                                << "orient_w: " << rs.orient_w << ", "
+                                << "battery_percent_charge: " << rs.battery_percent_charge << ", "
+                                << "goal_status: " << rs.goal_status << ", "
+                                << "goal_code: " << rs.goal_code << std::endl;
+                        // add offset to match with background
+                        real_t pos_x_offset = node.storage(node_offset_pos_x{});
+                        real_t pos_y_offset = node.storage(node_offset_pos_y{});
+                        // set position
+                        node.position() = make_vec(rs.pos_x + pos_x_offset, rs.pos_y + pos_y_offset, rs.pos_z);
+
+                        // truncate percentage to simply the output: 98 -> 90; 92 -> 90; 85 -> 80
+                        float battery_percent_charge_trunc = std::trunc(rs.battery_percent_charge / 10) * 10;
+                        if (rs.battery_percent_charge >= 0) {
+                            // resize the node according with the battery percent charge
+                            // node.storage(node_size{}) = (battery_percent_charge_trunc / 100.0) * NODE_SIZE;
+                            // node.storage(node_shadow_size{}) = (battery_percent_charge_trunc / 100.0) * NODE_SHADOW_SIZE;
+                        }
+                        else {
+                            // node.storage(node_size{}) = NODE_SIZE / 2;
+                            // node.storage(node_shadow_size{}) = NODE_SHADOW_SIZE / 2;
+                        }
+
+                        // change colour according with feedback from robots
+                        fcpp::color new_color = fcpp::color(fcpp::coordination::idle_color);
+                        std::cout << "change color to idle 3 and I am drone" << node.uid << std::endl;
+                        // if new state is RUNNING: change to "running color"
+                        if (feedback::GoalStatus::RUNNING == rs.goal_status) {
+                            // print that the robot is running
+                            // std::cout << "Robot " << rname << " is in running" << endl;
+                            manage_running_goal_status(CALL);
+                        }
+                        // if new state is REACHED:
+                        else if (feedback::GoalStatus::REACHED == rs.goal_status) {
+                            // std::cout << "Robot " << rname << " is in reached" << endl;
+                            manage_reached_goal_status(CALL);
+                        }
+                        // if new state is UNKNOWN: new color is idle    
+                        else if (feedback::GoalStatus::UNKNOWN == rs.goal_status) {
+                            // std::cout << "Robot " << rname << " is in unknown" << endl;
+                            manage_unknown_goal_status(CALL);
+                        }
+                        // if new state is FAILED: new color is failed        
+                        else if (feedback::GoalStatus::FAILED == rs.goal_status) {
+                            // std::cout << "Robot " << rname << " is in failed" << endl;
+                            manage_failed_goal_status(CALL);
+                        }
+                        // if new state is ABORTED: new color is aborted        
+                        else if (feedback::GoalStatus::ABORTED == rs.goal_status) {
+                            // std::cout << "Robot " << rname << " is in aborted" << endl;
+                            manage_aborted_goal_status(CALL);
+                        }
+                        // if new state is NO GOAL: new color is idle        
+                        else if (feedback::GoalStatus::NO_GOAL == rs.goal_status) {
+                            // std::cout << "Robot " << rname << " is in no goal" << endl;
+                            manage_no_goal_status(CALL);
+                        }
+                        // otherwise: maintain previous
+                        else {
+                            // change_color(CALL, node.storage(node_color{}));
+                        }
+
+                        // update external status in storage
+                        node.storage(node_external_status{}) = feedback::GoalStatus(rs.goal_status);
+                        // update external goal in storage
+                        node.storage(node_external_goal{}) = rs.goal_code;
+                        node.storage(node_battery_charge{}) = battery_percent_charge_trunc;
+
+                        // if battery is full discharged, change color to discharged
+                        if (battery_percent_charge_trunc <= 0) {
+                            manage_battery_discharged_node(CALL);
+                        }
+                    }
+                    // delete element from map, because it's already used and if there are new feedbacks, they will be added
+                    RobotStatesMap.erase(rname);
+                }
+
+                return ph; });
+        }
+
+        // PROCESS MANAGEMENT
+
+        //! @brief Spawn process from goal list acquired, which you get from the feedback.
+        FUN spawn_result_type spawn_process(ARGS, ::vector<goal_tuple_type> &NewGoalsList, int n_round)
+        {
+            // process new goals, emptying NewGoalsList
+            return coordination::spawn(CALL, [&](goal_tuple_type const &goal)
+                                    {
+                status st = status::internal_output;
+
+                field<int> test_nbr = fcpp::coordination::nbr(CALL, n_round);
+                if (AP_ENGINE_DEBUG) {
+                    std::cout << "test_nbr_in_process: " << test_nbr << std::endl;
+                }
+
+                // std::cout << "I am robot " << node.uid << " and my master is " << node.storage(scout_curr_worker{}) << std::endl;
+
+                // if (isWorker(CALL))
+                // {
+                //     // print the goal_code and goal_action and which round it is
+                //     std::cout << "Goal code: " << get<goal_code>(goal) << " Goal action: " << get<goal_action>(goal) << " Round: " << n_round << endl;
+                //     std::cout << endl;
+                // }
+                // node.storage(node_active{}) = 1;
+
+                // assign index to the scout
+                assignScout(CALL);
+
+                // correct the indexes of scouts
+                correctIndexes(CALL);
+                
+
+                // ACTION: ABORT GOAL
+                // the two lines of check for process_goal and external_goal are because, we have simulation in AP and in gazebo(feedback)
+                if (ABORT_ACTION == get<goal_action>(goal) &&
+                    node.storage(node_process_goal{}) == get<goal_code>(goal) &&
+                    node.storage(node_external_goal{}) == get<goal_code>(goal)) {
+                    // std::cout << "Robot " << node.uid << " is in abort action" << endl;
+
+                    manage_action_abort(CALL, goal, &st);
+                }
+
+                // ACTION: REACH GOAL
+                else if (GOAL_ACTION == get<goal_action>(goal) && isActive(CALL)) {
+                    // std::cout << "Robot " << node.uid << " is in goal action" << endl;
+                    // print the goal_action and goal_action
+                    // std::cout << "Goal action: " << get<goal_action>(goal) << " Goal code: " << get<goal_code>(goal) << " for robot " << node.uid << endl;
+
+                    manage_action_goal(CALL, goal, &st, n_round);
+                }
+
+                termination_logic(CALL, st, goal);
+
+                // Landing if status == border and pos_z > 0 
+                if (!isWorker(CALL) && st == status::border && counter(CALL) == 1) {
+                    action::ActionData action_data = {
+                        .action = "LAND",
+                        .goal_code = node.storage(node_process_goal{}),
+                        .robot = get_real_robot_name(CALL, node.uid),
+                        .pos_x = 0,
+                        .pos_y = 0,
+                        .pos_z = 0,
+                        .orient_w = 0
+                    };
+                    action::manager::ActionManager::new_action(action_data);
+                }
+            return make_tuple(node.current_time(), st); }, NewGoalsList);
+        }
+
+        //! @brief Manage termination of the spawn processes.
+        FUN void manage_termination(ARGS, spawn_result_type &r)
+        {
+            // if process was terminating and now it's terminated, we have to change state machine to IDLE
+            if (node.storage(node_process_status{}) == ProcessingStatus::TERMINATING)
+            {
+                // if process has been terminated, it isn't in the result map of spawn
+                bool process_found = false;
+                for (auto const &x : r)
+                {
+                    auto goal = x.first;
+                    if (get<goal_code>(goal) == node.storage(node_process_goal{}))
+                    {
+                        process_found = true;
+                    }
+                }
+                if (!process_found)
+                {
+                    std::cout << "Process with code " << node.storage(node_process_goal{}) << " not found, so move robot to IDLE" << endl;
+                    node.storage(node_process_status{}) = ProcessingStatus::IDLE;
+                }
+            }
+
+            // search on results if the computing processes has been terminated:
+            //  - if it's terminated (or in other words, if the goal it's not in the "r" variable), we delete it from the map in the storage
+            std::vector<std::string> goals_to_remove = {};
+            for (auto const &x : node.storage(node_process_computing_goals{}))
+            {
+                auto goal = x.second;
+                if (r.find(goal) == r.end())
+                {
+                    std::cout << "Remove process with code " << get<goal_code>(goal) << endl;
+                    goals_to_remove.push_back(get<goal_code>(goal));
+                }
+            }
+            for (auto const &gc : goals_to_remove)
+            {
+                // std::cout << "I am removing the goal " << gc << " from the computing map" << std::endl;
+                remove_goal_from_computing_map(CALL, gc);
+            }
+        }
+
+        //! @brief Calculate formation error for workers based on scout positions
+        FUN double calculate_formation_error(ARGS) {
+            using namespace tags;
+            if (!isWorker(CALL)) return 0.0;
+
+            vec<3> my_pos = node.position();
+            int my_id = node.uid;
+
+            // Define the tuple type that holds position and worker ID. This type is already exported.
+            using nbr_info_t = tuple<vec<3>, int>;
+
+            // Create a single field of tuples containing neighbor position and their assigned worker ID.
+            field<nbr_info_t> nbr_info_field = nbr(CALL, 
+                make_tuple(
+                    node.position(), 
+                    node.storage(scout_curr_worker{})
+                )
+            );
+
+            // Fold over the neighborhood to find the maximum squared distance from this worker to any of its assigned scouts.
+            double max_dist_sq = fold_hood(CALL, 
+                [&](nbr_info_t nbr_values, double max_sq) {
+                    // Unpack the neighbor's information using get<>() for fcpp::tuple.
+                    vec<3> const& nbr_pos = get<0>(nbr_values);
+                    int const& nbr_worker_id = get<1>(nbr_values);
+                    
+                    // We only care about neighbors that are SCOUTS and belong to THIS worker.
+                    // A scout's worker_id will be my_id. A worker's worker_id is -1, so they are filtered out.
+                    if (nbr_worker_id == my_id) {
+                        vec<3> diff = my_pos - nbr_pos;
+                        double dist_sq = diff * diff; // Dot product for squared norm
+                        return std::max(max_sq, dist_sq);
+                    }
+                    return max_sq; // Otherwise, keep the current max.
+                }, 
+                nbr_info_field, 
+                0.0
+            );
+            
+            // Return the actual distance (sqrt of the max squared distance).
+            return max_dist_sq > 0 ? sqrt(max_dist_sq) : 0.0;
+        }
+
+        //! @brief Manages the detection and logging of recovery metrics for workers.
+        FUN void manage_recovery_metrics(ARGS) {
+            CODE
+            if (!isWorker(CALL)) return;
+
+            int current_scout_count = node.storage(node_numberOfSlave{});
+            int last_scout_count_val = node.storage(last_scout_count{});
+            bool is_in_recovery_val = node.storage(is_in_recovery{});
+            auto current_sim_time = static_cast<long long>(node.current_time() * 1000); // Convert simulation time to milliseconds
+
+            // 1. FAILURE DETECTION
+            if (current_scout_count < last_scout_count_val && node.storage(scout_need{}) >= 2 && !is_in_recovery_val) {
+                node.storage(is_in_recovery{}) = true;
+                node.storage(failure_detected_time{}) = std::chrono::steady_clock::now();
+                log_evaluation_event(current_sim_time, "FAILURE_DETECTED", node.uid, -1, last_scout_count_val, current_scout_count);
+            }
+
+            // 2. LOGGING AND RESOLUTION CHECKS (only if in recovery)
+            if (node.storage(is_in_recovery{})) {
+                // 2a. NEED RESOLUTION DETECTION
+                if (current_scout_count > last_scout_count_val) {
+                    auto failure_time = node.storage(failure_detected_time{});
+                    auto now = std::chrono::steady_clock::now();
+                    double time_to_resolution_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now - failure_time).count();
+                    log_evaluation_event(current_sim_time, "NEED_RESOLVED", node.uid, -1, time_to_resolution_ms);
+                    // This assumes one scout is reassigned. The worker is now waiting for it to arrive.
+                }
+
+                // 2b. FORMATION ERROR CALCULATION & LOGGING
+                double formation_error = calculate_formation_error(CALL);
+                log_evaluation_event(current_sim_time, "FORMATION_ERROR", node.uid, -1, formation_error);
+
+                // 2c. FORMATION RESTORATION DETECTION
+                if (formation_error < FORMATION_ERROR_THRESHOLD) {
+                     auto failure_time = node.storage(failure_detected_time{});
+                     auto now = std::chrono::steady_clock::now();
+                     double time_to_restoration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now - failure_time).count();
+                     log_evaluation_event(current_sim_time, "FORMATION_RESTORED", node.uid, -1, time_to_restoration_ms);
+                     // End of recovery cycle for this worker
+                     node.storage(is_in_recovery{}) = false;
+                }
+            }
+
+            // 3. UPDATE STATE FOR NEXT ROUND
+            node.storage(last_scout_count{}) = current_scout_count;
+        }
+
+        //! @brief Main case study function.
+        MAIN()
+        {
+            // for testing purposes
+            int number_of_masters = 2; // TODO: this should be passed in from a user
+            // INITIALIZE VARS
+            std::vector<goal_tuple_type> NewGoalsList{};
+            int n_round = fcpp::coordination::counter(CALL);
+            node.storage(node_countRound{}) = counter(CALL); // TODO: use this instead of n_round
+
+            if (!node.storage(node_set{}))
+                init_main_fn(CALL, n_round, number_of_masters);
+
+            // Failure simulation: After 100 rounds, scouts of worker 1 fail.
+            if (n_round >= 150 && (node.uid == 2 || node.uid == 4)) {
+                change_color(CALL, fcpp::color(fcpp::coordination::failed_goal_color));
+                node.storage(scout_curr_worker{}) = 10; // Assign to a non-existent worker to ensure failure is detected.
+                return; // Stop execution to simulate failure
+            }
+
+            // UPDATE DATA
+            acquire_new_goals(CALL, NewGoalsList);
+
+            // multi_worker_doesn't have this, since it is applied directly in the AP itself, and it doesn't have ROS2
+            apply_feedback_to_ap(CALL);
+
+            // call updateWorker so that the scouts get the correct worker. TODO: MOVE TO THE PROCESS. FOR NOW DECIDED TO NOT MOVE IT
+            updateWorker(CALL);
+
+            // update the count of scouts
+            split(CALL, (isWorker(CALL)) ? node.uid : node.storage(scout_curr_worker{}), [&]() {return updateFollowersCount(CALL);}); // split according to the uid if current node is worker, otherwise use the worker of the current scout
+
+            // MANAGE AND LOG RECOVERY METRICS (for workers)
+            manage_recovery_metrics(CALL);
+            
+            // LOG FORMATION METRICS (continuous monitoring)
+            log_formation_metrics(CALL);
+            
+            // Periodically flush measurement buffer (every 50 rounds to avoid overhead)
+            if (n_round % 50 == 0) {
+                flush_measurements();
+            }
+
+            // Init Flocking
+            // initialization(CALL); // I think we will not need this after the refactoring
+
+            // Assign index to the scout, TODO: MOVE TO THE PROCESS
+            // assignScout(CALL);
+
+            // correctIndexes(CALL);
+
+            // TODO: HERE IS WHERE I STOPPED. NOW THE INDEXES SHOULD BE CORRECT, THE SLAVES SHOULD BELONG TO CORRECT WORKERS
+            // NOW THE GOAL NEEDS TO BE FOLLOWED(WORKER MOVED ACCORDING TO WHAT THE GOAL FROM ROS2 IS AND SLAVES SHOULD POSITION
+            // ACCORDING TO ITS WORKER)
+
+            // PROCESS MANAGEMENT
+            if (node.uid == 1)
+            {
+                // print the NewGoalsList
+                std::cout << "NewGoalsList: " << std::endl;
+                for (auto const &goal : NewGoalsList)
+                {
+                    std::cout << "I have a new goal and I am drone 1: " << std::endl;
+                    std::cout << "Goal code: " << get<goal_code>(goal) << " Goal action: " << get<goal_action>(goal) << std::endl;
+                }
+            }
+            
+            spawn_result_type r = spawn_process(CALL, NewGoalsList, n_round);
+
+            manage_termination(CALL, r);
+        }
+
+        //! @brief Export types used by the *_connection functions.
+        FUN_EXPORT any_connection_t = export_list<
+            int,
+            bool,
+            goal_tuple_type,
+            robot_phase,
+            process_tuple_type,
+            infoWorkerType>;
+
+        // TODO: refactor (cancellare le funzioni da togliere)
+        FUN_EXPORT flocking_t = export_list<
+            double,
+            int,
+            tuple<int, vec<3>>,
+            vec<3>,
+            tuple<bool, vec<3>>,
+            tuple<int, int>,
+            tuple<bool, double>,
+            bool,
+            tuple<bool, bool>,
+            tuple<vec<3>, int>,
+            tuple<device_t, vec<2>, int>  // BVCInfo type for collision avoidance
+            // std::chrono::time_point<std::chrono::steady_clock>
+            >;  // For goal timing
+
+        //! @brief Export types used by the main function (update it when expanding the program).
+        struct main_t : public export_list<
+                            any_connection_t,
+                            flocking_t,
+                            spawn_t<goal_tuple_type, status>,
+                            diameter_election_t<tuple<real_t, device_t>>>
+
+        {
+        };
+
+
+    }
+}
+
+#endif // NODES_AP_ENGINE_H_

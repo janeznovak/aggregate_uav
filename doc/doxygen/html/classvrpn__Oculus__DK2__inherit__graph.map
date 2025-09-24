@@ -1,0 +1,10 @@
+<map id="vrpn_Oculus_DK2" name="vrpn_Oculus_DK2">
+<area shape="rect" id="node1" title="Oculus Rift DK2 head&#45;mounted display base class for both intertial&#45; only and LED&#45;enabled version." alt="" coords="127,304,263,331"/>
+<area shape="rect" id="node7" href="$classvrpn__Oculus__DK2__LEDs.html" title="Oculus Rift DK2 head&#45;mounted display (LEDs enabled)" alt="" coords="5,379,180,405"/>
+<area shape="rect" id="node8" href="$classvrpn__Oculus__DK2__inertial.html" title="Oculus Rift DK2 head&#45;mounted display (inertial measurement unit only)" alt="" coords="205,379,394,405"/>
+<area shape="rect" id="node2" href="$classvrpn__Oculus.html" title="Oculus Rift head&#45;mounted display base class." alt="" coords="144,229,247,256"/>
+<area shape="rect" id="node3" href="$classvrpn__Analog.html" title=" " alt="" coords="72,155,175,181"/>
+<area shape="rect" id="node4" href="$classvrpn__BaseClass.html" title=" " alt="" coords="61,80,186,107"/>
+<area shape="rect" id="node5" href="$classvrpn__BaseClassUnique.html" title=" " alt="" coords="38,5,209,32"/>
+<area shape="rect" id="node6" href="$classvrpn__HidInterface.html" title=" " alt="" coords="199,155,338,181"/>
+</map>

@@ -1,0 +1,13 @@
+<map id="vrpn_Tracker_RazerHydra" name="vrpn_Tracker_RazerHydra">
+<area shape="rect" id="node1" title="Device supporting the Razer Hydra game controller as a tracker, analog device, and button device,..." alt="" coords="62,513,249,540"/>
+<area shape="rect" id="node2" href="$classvrpn__Analog.html" title=" " alt="" coords="5,387,108,413"/>
+<area shape="rect" id="node3" href="$classvrpn__BaseClass.html" title=" " alt="" coords="93,260,218,287"/>
+<area shape="rect" id="node10" href="$classvrpn__Button.html" title=" " alt="" coords="105,336,206,363"/>
+<area shape="rect" id="node11" href="$classvrpn__Tracker.html" title=" " alt="" coords="206,387,310,413"/>
+<area shape="rect" id="node4" href="$classvrpn__BaseClassUnique.html" title=" " alt="" coords="70,184,241,211"/>
+<area shape="rect" id="node5" href="$structvrpn__HANDLERPARAM.html" title="This structure is what is passed to a vrpn_Connection message callback." alt="" coords="31,95,197,121"/>
+<area shape="rect" id="node6" href="$classvrpn__Connection.html" title="Generic connection class not specific to the transport mechanism." alt="" coords="222,95,353,121"/>
+<area shape="rect" id="node7" href="$classvrpn_1_1BoundEndpointAllocator.html" title="Combines the function pointer for an Endpoint Allocator with its two arguments into a single callable..." alt="" coords="69,5,284,32"/>
+<area shape="rect" id="node8" href="$classvrpn_1_1EndpointContainer.html" title="Container for endpoints, held by pointer." alt="" coords="309,5,487,32"/>
+<area shape="rect" id="node9" href="$classvrpn__Button__Filter.html" title=" " alt="" coords="85,437,226,464"/>
+</map>

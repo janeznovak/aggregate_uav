@@ -1,0 +1,5 @@
+<map id="fcpp::os::transceiver" name="fcpp::os::transceiver">
+<area shape="rect" id="node1" title="Low&#45;level interface for hardware network capabilities. It uses UDP messages and broadcast communicati..." alt="" coords="5,199,160,225"/>
+<area shape="rect" id="node2" href="$structfcpp_1_1os_1_1transceiver_1_1data__type.html" title="Default&#45;constructible type for settings." alt="" coords="5,95,160,136"/>
+<area shape="rect" id="node3" title=" " alt="" coords="53,5,112,32"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="vrpn_Connection_Loopback" name="vrpn_Connection_Loopback">
+<area shape="rect" id="node1" title="Constructor for a Loopback connection that will basically just pass messages between objects that are..." alt="" coords="123,171,323,197"/>
+<area shape="rect" id="node2" href="$classvrpn__Connection.html" title="Generic connection class not specific to the transport mechanism." alt="" coords="158,95,289,121"/>
+<area shape="rect" id="node3" href="$classvrpn_1_1BoundEndpointAllocator.html" title="Combines the function pointer for an Endpoint Allocator with its two arguments into a single callable..." alt="" coords="5,5,220,32"/>
+<area shape="rect" id="node4" href="$classvrpn_1_1EndpointContainer.html" title="Container for endpoints, held by pointer." alt="" coords="245,5,423,32"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="vrpn_Text_Sender" name="vrpn_Text_Sender">
+<area shape="rect" id="node1" title="Allows a user to send text messages from a device (usually,." alt="" coords="22,155,159,181"/>
+<area shape="rect" id="node4" href="$classvrpn__Sound__Server.html" title=" " alt="" coords="17,229,164,256"/>
+<area shape="rect" id="node2" href="$classvrpn__BaseClass.html" title=" " alt="" coords="28,80,153,107"/>
+<area shape="rect" id="node3" href="$classvrpn__BaseClassUnique.html" title=" " alt="" coords="5,5,176,32"/>
+</map>

@@ -1,0 +1,11 @@
+<map id="vrpn_CHProducts_Fighterstick_USB" name="vrpn_CHProducts_Fighterstick_USB">
+<area shape="rect" id="node1" title=" " alt="" coords="169,304,419,331"/>
+<area shape="rect" id="node2" href="$classvrpn__CHProducts__Controller__Raw.html" title=" " alt="" coords="5,155,244,181"/>
+<area shape="rect" id="node3" href="$classvrpn__BaseClass.html" title=" " alt="" coords="263,80,389,107"/>
+<area shape="rect" id="node6" href="$classvrpn__Analog.html" title=" " alt="" coords="169,229,272,256"/>
+<area shape="rect" id="node8" href="$classvrpn__Button.html" title=" " alt="" coords="319,155,421,181"/>
+<area shape="rect" id="node9" href="$classvrpn__Dial.html" title=" " alt="" coords="463,229,547,256"/>
+<area shape="rect" id="node4" href="$classvrpn__BaseClassUnique.html" title=" " alt="" coords="241,5,411,32"/>
+<area shape="rect" id="node5" href="$classvrpn__HidInterface.html" title=" " alt="" coords="55,80,194,107"/>
+<area shape="rect" id="node7" href="$classvrpn__Button__Filter.html" title=" " alt="" coords="297,229,438,256"/>
+</map>

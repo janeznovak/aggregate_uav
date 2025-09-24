@@ -1,0 +1,8 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" title=" " alt="" coords="5,104,124,131"/>
+<area shape="rect" id="node2" href="$classMyException5.html" title=" " alt="" coords="221,5,336,32"/>
+<area shape="rect" id="node4" href="$structvrpn__MainloopObject_1_1CannotWrapNullPointerIntoMainloopObject.html" title="Exception thrown when trying to wrap a NULL pointer." alt="" coords="175,56,382,112"/>
+<area shape="rect" id="node5" href="$structvrpn__SerialPort_1_1AlreadyOpen.html" title=" " alt="" coords="172,136,385,163"/>
+<area shape="rect" id="node6" href="$structvrpn__SerialPort_1_1NotOpen.html" title=" " alt="" coords="185,187,372,213"/>
+<area shape="rect" id="node3" href="$classMyException5__1.html" title=" " alt="" coords="433,5,563,32"/>
+</map>

@@ -1,0 +1,25 @@
+var classvrpn__BaseClassUnique =
+[
+    [ "SendTextMessageBoundCall", "classvrpn__BaseClassUnique_1_1SendTextMessageBoundCall.html", "classvrpn__BaseClassUnique_1_1SendTextMessageBoundCall" ],
+    [ "vrpn_BaseClassUnique", "classvrpn__BaseClassUnique.html#a43f6b3cadd09b483ff7f3bd559d2222a", null ],
+    [ "~vrpn_BaseClassUnique", "classvrpn__BaseClassUnique.html#a833bb0e8b30f05a645004ce3b5f15dc4", null ],
+    [ "client_mainloop", "classvrpn__BaseClassUnique.html#a4504901f557bbc1b6dbb97fbda3f387c", null ],
+    [ "connectionPtr", "classvrpn__BaseClassUnique.html#af698d24609b743a1962dbaad58578fb7", null ],
+    [ "register_autodeleted_handler", "classvrpn__BaseClassUnique.html#a1a15c881a0b56108e3487f2d166095f7", null ],
+    [ "send_text_message", "classvrpn__BaseClassUnique.html#acd24b78dcc2319a95c8c59790e34333a", null ],
+    [ "send_text_message", "classvrpn__BaseClassUnique.html#a2528031427a6680f61b6f7fb500787e0", null ],
+    [ "server_mainloop", "classvrpn__BaseClassUnique.html#a88779aa9b2c55746df4be39c3d8b5092", null ],
+    [ "SendTextMessageBoundCall", "classvrpn__BaseClassUnique.html#a4a705ffe5c433e0023489f26f5224f21", null ],
+    [ "vrpn_TextPrinter", "classvrpn__BaseClassUnique.html#abecdcd6b34fed7d3dca25d73638c70c7", null ],
+    [ "d_connection", "classvrpn__BaseClassUnique.html#a1ac9b6c5f84ecd0e5cc1bcf6fea10bb5", null ],
+    [ "d_ping_message_id", "classvrpn__BaseClassUnique.html#af45187bacdd63c4e68cd3dc22627b0e7", null ],
+    [ "d_pong_message_id", "classvrpn__BaseClassUnique.html#a685226d6bf9ec5d6229473f6d3c6b08b", null ],
+    [ "d_sender_id", "classvrpn__BaseClassUnique.html#a76a17dfdb46b7aedc5dfec7b6fe78c98", null ],
+    [ "d_servicename", "classvrpn__BaseClassUnique.html#aff3db8ad1212e27aa329ad0ab557ba69", null ],
+    [ "d_text_message_id", "classvrpn__BaseClassUnique.html#ab2bcdfcdc53c64089f15403508a917b8", null ],
+    [ "handler", "classvrpn__BaseClassUnique.html#a4e190e9cd9b160445341dca9e408a2ac", null ],
+    [ "sender", "classvrpn__BaseClassUnique.html#a5249ac126c820107578e8c285d2d826e", null ],
+    [ "shutup", "classvrpn__BaseClassUnique.html#a23f4ba348e5e1dfbbdddb44c15b05a8d", null ],
+    [ "type", "classvrpn__BaseClassUnique.html#ab5d75e392533b4963baf9994e204eeb4", null ],
+    [ "userdata", "classvrpn__BaseClassUnique.html#aaec43a975b13bf70e705a1aa1078f49f", null ]
+];

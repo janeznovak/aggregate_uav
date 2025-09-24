@@ -1,0 +1,13 @@
+<map id="vrpn_Tracker_Flock_Parallel" name="vrpn_Tracker_Flock_Parallel">
+<area shape="rect" id="node1" title=" " alt="" coords="62,668,209,709"/>
+<area shape="rect" id="node2" href="$classvrpn__Tracker__Flock.html" title=" " alt="" coords="57,488,203,515"/>
+<area shape="rect" id="node11" href="$classvrpn__Tracker__Flock__Parallel__Slave.html" title=" " alt="" coords="151,564,298,605"/>
+<area shape="rect" id="node3" href="$classvrpn__Tracker__Serial.html" title=" " alt="" coords="56,412,204,439"/>
+<area shape="rect" id="node4" href="$classvrpn__Tracker.html" title=" " alt="" coords="78,336,182,363"/>
+<area shape="rect" id="node5" href="$classvrpn__BaseClass.html" title=" " alt="" coords="67,260,193,287"/>
+<area shape="rect" id="node6" href="$classvrpn__BaseClassUnique.html" title=" " alt="" coords="45,184,215,211"/>
+<area shape="rect" id="node7" href="$structvrpn__HANDLERPARAM.html" title="This structure is what is passed to a vrpn_Connection message callback." alt="" coords="5,95,172,121"/>
+<area shape="rect" id="node8" href="$classvrpn__Connection.html" title="Generic connection class not specific to the transport mechanism." alt="" coords="197,95,327,121"/>
+<area shape="rect" id="node9" href="$classvrpn_1_1BoundEndpointAllocator.html" title="Combines the function pointer for an Endpoint Allocator with its two arguments into a single callable..." alt="" coords="44,5,259,32"/>
+<area shape="rect" id="node10" href="$classvrpn_1_1EndpointContainer.html" title="Container for endpoints, held by pointer." alt="" coords="283,5,462,32"/>
+</map>

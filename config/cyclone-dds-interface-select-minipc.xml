@@ -1,0 +1,86 @@
+<CycloneDDS>
+    <Domain id="1">
+        <General>
+            <!-- all interfaces of mini-pc -->
+            <Interfaces>
+                <NetworkInterface name="wlp1s0" />
+                <NetworkInterface name="enp2s0" />
+            </Interfaces>
+            <AllowMulticast>true</AllowMulticast>
+        </General>
+        <Discovery>
+          <ParticipantIndex>auto</ParticipantIndex>
+	      <MaxAutoParticipantIndex>100</MaxAutoParticipantIndex>
+        </Discovery>
+        <!-- uncomment to enable cyclonedds logging  -->
+        <!--<Tracing>-->
+        <!--    <Verbosity>config</Verbosity>-->
+        <!--    <OutputFile>stdout</OutputFile>-->
+        <!--</Tracing>-->
+    </Domain>
+    <Domain id="2">
+        <General>
+            <Interfaces>
+                <NetworkInterface name="wlp1s0" />
+                <NetworkInterface name="enp2s0" />
+            </Interfaces>
+            <AllowMulticast>true</AllowMulticast>
+        </General>
+        <Discovery>
+          <ParticipantIndex>auto</ParticipantIndex>
+	      <MaxAutoParticipantIndex>100</MaxAutoParticipantIndex>
+        </Discovery>
+    </Domain>
+    <Domain id="3">
+        <General>
+            <Interfaces>
+                <NetworkInterface name="wlp1s0" />
+                <NetworkInterface name="enp2s0" />
+            </Interfaces>
+            <AllowMulticast>true</AllowMulticast>
+        </General>
+        <Discovery>
+          <ParticipantIndex>auto</ParticipantIndex>
+	      <MaxAutoParticipantIndex>100</MaxAutoParticipantIndex>
+        </Discovery>
+    </Domain>
+    <Domain id="4">
+        <General>
+            <Interfaces>
+                <NetworkInterface name="wlp1s0" />
+                <NetworkInterface name="enp2s0" />
+            </Interfaces>
+            <AllowMulticast>true</AllowMulticast>
+        </General>
+        <Discovery>
+          <ParticipantIndex>auto</ParticipantIndex>
+	      <MaxAutoParticipantIndex>100</MaxAutoParticipantIndex>
+        </Discovery>
+    </Domain>
+    <Domain id="5">
+        <General>
+            <Interfaces>
+                <NetworkInterface name="wlp1s0" />
+                <NetworkInterface name="enp2s0" />
+            </Interfaces>
+            <AllowMulticast>true</AllowMulticast>
+        </General>
+        <Discovery>
+          <ParticipantIndex>auto</ParticipantIndex>
+	      <MaxAutoParticipantIndex>100</MaxAutoParticipantIndex>
+        </Discovery>
+    </Domain>
+    <Domain id="100">
+        <General>
+            <!-- only wireless interface of mini-pc -->
+            <Interfaces>
+                <NetworkInterface name="wlp1s0" />
+            </Interfaces>
+            <AllowMulticast>true</AllowMulticast>
+        </General>
+        <Discovery>
+          <ParticipantIndex>auto</ParticipantIndex>
+          <MaxAutoParticipantIndex>100</MaxAutoParticipantIndex>
+        </Discovery>
+    </Domain>
+</CycloneDDS>

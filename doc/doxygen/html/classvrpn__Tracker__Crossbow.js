@@ -1,0 +1,25 @@
+var classvrpn__Tracker__Crossbow =
+[
+    [ "raw_packet", "structvrpn__Tracker__Crossbow_1_1raw__packet.html", "structvrpn__Tracker__Crossbow_1_1raw__packet" ],
+    [ "vrpn_Tracker_Crossbow", "classvrpn__Tracker__Crossbow.html#a32a52497c0ffb762b5ad968f522e4091", null ],
+    [ "~vrpn_Tracker_Crossbow", "classvrpn__Tracker__Crossbow.html#a31df089db894e9a267364accd5635ce4", null ],
+    [ "convert_scalar", "classvrpn__Tracker__Crossbow.html#a0330a2d111421616094ee92952abb8ef", null ],
+    [ "get_report", "classvrpn__Tracker__Crossbow.html#a583d0543961fc1edfe327d57a77d33da", null ],
+    [ "get_serial_number", "classvrpn__Tracker__Crossbow.html#a92c0b79dd0350bed35bb4e7132446cbc", null ],
+    [ "get_version_string", "classvrpn__Tracker__Crossbow.html#a080493360b7c30e5a3f89e44d4fbe5db", null ],
+    [ "mainloop", "classvrpn__Tracker__Crossbow.html#a17b649feb58a417dfa44271a961e17c7", null ],
+    [ "ping", "classvrpn__Tracker__Crossbow.html#a19743d4c46408cda952057189283281f", null ],
+    [ "process_packet", "classvrpn__Tracker__Crossbow.html#a398a1459b1c4954e571354f9c755fb84", null ],
+    [ "recalibrate", "classvrpn__Tracker__Crossbow.html#a6d9be71a29deae0ef6374cfa9382e606", null ],
+    [ "reset", "classvrpn__Tracker__Crossbow.html#a7e26e53deac62d2c8411571ac9688741", null ],
+    [ "send_report", "classvrpn__Tracker__Crossbow.html#a5171bb17b4d899a71df32c438293029d", null ],
+    [ "unbuffer_packet", "classvrpn__Tracker__Crossbow.html#a0f714520a70283755512181627bf211c", null ],
+    [ "validate_packet", "classvrpn__Tracker__Crossbow.html#a32217d3d38386529fde85a0d73d8d378", null ],
+    [ "xb_quat_from_euler", "classvrpn__Tracker__Crossbow.html#adc3d9928db9127d5d1e45048097a6f1e", null ],
+    [ "ang_accel_range", "classvrpn__Tracker__Crossbow.html#a7a1d9a5272a476e9198b3891308b7dff", null ],
+    [ "device_serial", "classvrpn__Tracker__Crossbow.html#a637a26b277f865e9a0d524e65b13a7a6", null ],
+    [ "device_version", "classvrpn__Tracker__Crossbow.html#a2a3d564e15a15109852bb3dde938dc0d", null ],
+    [ "init_time", "classvrpn__Tracker__Crossbow.html#a063f6eb73539e156407e44b13710d9a3", null ],
+    [ "just_read_something", "classvrpn__Tracker__Crossbow.html#a672bce011121ae212f1cf32ce728e418", null ],
+    [ "lin_accel_range", "classvrpn__Tracker__Crossbow.html#afeb54608f425c1ac345a15cfdffb132e", null ]
+];

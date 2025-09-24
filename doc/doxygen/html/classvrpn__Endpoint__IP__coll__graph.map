@@ -1,0 +1,11 @@
+<map id="vrpn_Endpoint_IP" name="vrpn_Endpoint_IP">
+<area shape="rect" id="node1" title="Encapsulation of the data and methods for a single IP&#45;based connection to take care of one part of ma..." alt="" coords="1095,108,1229,135"/>
+<area shape="rect" id="node2" href="$classvrpn__Endpoint.html" title="Encapsulation of the data and methods for a single generic connection to take care of one part of man..." alt="" coords="931,108,1045,135"/>
+<area shape="rect" id="node3" href="$classvrpn__Connection.html" title="Generic connection class not specific to the transport mechanism." alt="" coords="691,56,821,83"/>
+<area shape="rect" id="node4" href="$classvrpn_1_1BoundEndpointAllocator.html" title="Combines the function pointer for an Endpoint Allocator with its two arguments into a single callable..." alt="" coords="253,5,468,32"/>
+<area shape="rect" id="node5" href="$classvrpn_1_1EndpointContainer.html" title="Container for endpoints, held by pointer." alt="" coords="271,56,450,83"/>
+<area shape="rect" id="node6" href="$classvrpn__Log.html" title=" " alt="" coords="715,145,797,172"/>
+<area shape="rect" id="node7" href="$structvrpnLogFilterEntry.html" title=" " alt="" coords="290,145,431,172"/>
+<area shape="rect" id="node8" href="$structvrpn__LOGLIST.html" title="Placed here so vrpn_FileConnection can use it too." alt="" coords="305,249,417,276"/>
+<area shape="rect" id="node9" href="$structvrpn__HANDLERPARAM.html" title="This structure is what is passed to a vrpn_Connection message callback." alt="" coords="5,249,172,276"/>
+</map>

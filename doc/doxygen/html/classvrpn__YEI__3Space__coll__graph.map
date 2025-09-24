@@ -1,0 +1,14 @@
+<map id="vrpn_YEI_3Space" name="vrpn_YEI_3Space">
+<area shape="rect" id="node1" title="Base class with routines for YEI 3Space units." alt="" coords="131,513,263,540"/>
+<area shape="rect" id="node2" href="$classvrpn__Tracker__Server.html" title=" " alt="" coords="5,437,159,464"/>
+<area shape="rect" id="node3" href="$classvrpn__Tracker.html" title=" " alt="" coords="49,336,153,363"/>
+<area shape="rect" id="node4" href="$classvrpn__BaseClass.html" title=" " alt="" coords="134,260,259,287"/>
+<area shape="rect" id="node10" href="$classvrpn__Analog.html" title=" " alt="" coords="145,387,248,413"/>
+<area shape="rect" id="node12" href="$classvrpn__Button.html" title=" " alt="" coords="243,336,345,363"/>
+<area shape="rect" id="node5" href="$classvrpn__BaseClassUnique.html" title=" " alt="" coords="111,184,282,211"/>
+<area shape="rect" id="node6" href="$structvrpn__HANDLERPARAM.html" title="This structure is what is passed to a vrpn_Connection message callback." alt="" coords="72,95,239,121"/>
+<area shape="rect" id="node7" href="$classvrpn__Connection.html" title="Generic connection class not specific to the transport mechanism." alt="" coords="263,95,394,121"/>
+<area shape="rect" id="node8" href="$classvrpn_1_1BoundEndpointAllocator.html" title="Combines the function pointer for an Endpoint Allocator with its two arguments into a single callable..." alt="" coords="111,5,325,32"/>
+<area shape="rect" id="node9" href="$classvrpn_1_1EndpointContainer.html" title="Container for endpoints, held by pointer." alt="" coords="350,5,529,32"/>
+<area shape="rect" id="node11" href="$classvrpn__Button__Filter.html" title=" " alt="" coords="234,437,375,464"/>
+</map>

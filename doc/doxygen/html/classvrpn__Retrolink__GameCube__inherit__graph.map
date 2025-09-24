@@ -1,0 +1,10 @@
+<map id="vrpn_Retrolink_GameCube" name="vrpn_Retrolink_GameCube">
+<area shape="rect" id="node1" title=" " alt="" coords="95,304,291,331"/>
+<area shape="rect" id="node2" href="$classvrpn__Retrolink.html" title=" " alt="" coords="45,155,163,181"/>
+<area shape="rect" id="node3" href="$classvrpn__BaseClass.html" title=" " alt="" coords="168,80,293,107"/>
+<area shape="rect" id="node6" href="$classvrpn__Analog.html" title=" " alt="" coords="142,229,245,256"/>
+<area shape="rect" id="node8" href="$classvrpn__Button.html" title=" " alt="" coords="271,155,372,181"/>
+<area shape="rect" id="node4" href="$classvrpn__BaseClassUnique.html" title=" " alt="" coords="145,5,316,32"/>
+<area shape="rect" id="node5" href="$classvrpn__HidInterface.html" title=" " alt="" coords="5,80,144,107"/>
+<area shape="rect" id="node7" href="$classvrpn__Button__Filter.html" title=" " alt="" coords="269,229,411,256"/>
+</map>
