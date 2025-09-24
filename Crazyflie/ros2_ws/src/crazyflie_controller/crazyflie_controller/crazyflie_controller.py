@@ -106,7 +106,7 @@ class CrazyflyController(Node):
         # acceleration = goal_vel / time_to_reach_final_velocity
         acceleration = np.array([0.0, 0.0, 0.0])
 
-        # Angolo di beccheggio e accelerazione angolare (presumibilmente zero in questo caso)
+        # Disable yaw control for stability - force yaw to 0
         yaw_angle = 0.0
         angular_velocity = np.array([0.0, 0.0, 0.0])
         
@@ -155,19 +155,21 @@ class CrazyflyController(Node):
             if t > traj.duration:
                 # Make sure the drone reaches the final state precisely
                 if traj.duration > 0: # Avoid evaluation at t=0 if duration is 0
-                    e = traj.eval(traj.duration)
+                    e = traj.eval(traj.duration - 1e-9)
                     self.get_logger().info(f"Sending final trajectory point at t={traj.duration}")
-                    self.cmdFullState(e.pos, e.vel, e.acc, e.yaw, e.omega)
+                    if e is not None:
+                        self.cmdFullState(e.pos, e.vel, e.acc, 0.0, np.array([0.0, 0.0, 0.0]))
                 break # Exit loop
 
             e = traj.eval(t)
-            self.cmdFullState(
-                e.pos,
-                e.vel,
-                e.acc,
-                e.yaw,
-                e.omega,
-            )
+            if e is not None:
+                self.cmdFullState(
+                    e.pos,
+                    e.vel,
+                    e.acc,
+                    0.0,  # Force yaw to 0 for stability
+                    np.array([0.0, 0.0, 0.0]),  # Force angular velocity to 0
+                )
             # Optional: Add a small sleep within the loop if publishing too fast
             # time.sleep(0.01) # e.g., sleep for 10ms
 
